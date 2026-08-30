@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../../context/LanguageContext";
 import { profile, wanted } from "../../data/content";
-import mugshot from "../../assets/photos/ilham-mugshot.png";
+import mugshot from "../../assets/photos/ilham-mugshot.jpg";
 import { PushpinIcon, StampMark } from "../icons";
 
 /**

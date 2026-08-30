@@ -19,11 +19,19 @@ export function InterestsSection() {
             <PushpinIcon className="w-6 h-6 absolute -top-4 z-10" />
             <EvidenceItem caseFile={item} size={110}>
               {item.icon === "manutd" ? (
-                <img src={manutdCrest} alt="Manchester United" className="w-full h-full object-contain drop-shadow" />
+                <img
+                  src={manutdCrest}
+                  alt="Manchester United"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-contain drop-shadow"
+                />
               ) : item.photoSrc ? (
                 <img
                   src={item.photoSrc}
                   alt={item.title.id}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover rounded-sm border-4 border-[#fbf6e8] shadow-pinned sepia-[0.1]"
                 />
               ) : (

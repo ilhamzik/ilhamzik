@@ -26,7 +26,12 @@ export function PolaroidPhoto({ src, caption, rotate = -4, className = "", clipp
       {clipped && <PaperclipIcon className="absolute -top-4 left-3 w-6 h-9 -rotate-12 z-10" />}
       <div className="relative w-40 h-40 bg-paper-200 overflow-hidden border border-ink-300/30">
         {src ? (
-          <img src={src} alt={caption ? t(caption) : ""} className="w-full h-full object-cover sepia-[0.35] contrast-105" />
+          <img
+            src={src}
+            alt={caption ? t(caption) : ""}
+            decoding="async"
+            className="w-full h-full object-cover sepia-[0.35] contrast-105"
+          />
         ) : (
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <rect width="100" height="100" fill="#e5d3a3" />
