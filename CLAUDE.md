@@ -198,6 +198,31 @@ carikan logo, ikuti pola yang sama (biarkan pakai fallback fingerprint).
 — dipakaikan logo SQLite karena itu database engine konkret yang dipakai di
 salah satu proyek (`proj-ecommerce`), bukan klaim bahwa SQL = SQLite.
 
+## Mobile/tablet di-gate, bukan dioptimasi lebih jauh (2026-08-31)
+
+Setelah beberapa iterasi optimasi (hapus blend-mode/blur/will-change,
+kompres gambar, virtualization section) masih belum cukup dan user nggak
+suka trade-off estetika dari salah satu percobaan (pindah tekstur kertas
+ke per-section bikin tampilannya jadi "sobekan-sobekan terpisah", bukan
+satu koran utuh) — user putuskan untuk **stop mengejar performa HP**, dan
+sebagai gantinya **mobile/tablet di-gate** ke halaman "Coming Soon" statis
+(`MobileComingSoon.tsx`), nyaranin buka via browser desktop/laptop.
+
+Deteksi device ada di `useIsMobileOrTablet.ts` (regex user-agent + fallback
+touch-points untuk iPad modern yang UA-nya ngaku "Macintosh"). Bukan
+security-grade, cuma gate UX yang ramah — nggak masalah kalau ada
+false-positive/negative sesekali.
+
+**Kalau user minta lanjutkan dukungan mobile lagi di masa depan**: virtualization
+section (`MapNode.tsx`, buffer 220 world-px) dan fade-in animation-nya TETAP
+dipertahankan (nggak di-revert, itu nggak masalah buat user) — cuma tekstur
+kertas per-section yang di-revert balik ke satu div dunia utuh
+(`WorldCanvas.tsx`). Kalau mau coba lagi optimasi HP, mulai dari situ, TAPI
+user sudah cukup capek gonta-ganti tanpa hasil pasti (karena Claude nggak
+bisa tes di HP fisik beneran) — pertimbangkan matang-matang sebelum
+mengusulkan iterasi baru, atau minta user rekam video/profil performa
+asli dari HP-nya dulu biar nggak nebak-nebak lagi.
+
 ## Virtualization / lazy-mount section (2026-08-30, mobile perf lanjutan)
 
 CSS-level fix (hapus blend-mode/blur/will-change, kompres gambar) ternyata

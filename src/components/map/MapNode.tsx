@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMap } from "../../context/MapContext";
 
 interface MapNodeProps {
@@ -12,9 +13,10 @@ interface MapNodeProps {
 }
 
 /** World-space slack around the visible viewport before a node mounts/unmounts.
- * Big enough that content is ready just before it scrolls into view (no visible
- * pop-in), small enough that far-away sections stay fully unmounted. */
-const CULL_BUFFER = 650;
+ * Kept small on purpose — sections near "home" sit only ~200-250px away from
+ * it by design, so a big buffer used to pull them all in regardless of pan
+ * position, defeating the point. The fade-in below hides the tighter timing. */
+const CULL_BUFFER = 220;
 
 /**
  * A single "location" on the big pannable map — and the virtualization
@@ -22,7 +24,8 @@ const CULL_BUFFER = 650;
  * clipped by the viewport's overflow:hidden, they get unmounted entirely
  * (no images decoded, no Framer Motion instances alive, nothing in the
  * DOM), so panning over a big empty stretch of paper stays cheap. Nodes
- * re-mount automatically once they're back near the visible area.
+ * re-mount automatically once they're back near the visible area, fading
+ * in rather than popping in stiffly.
  */
 export function MapNode({ x, y, width, height, children, className = "" }: MapNodeProps) {
   const { offset, scale, viewportRef } = useMap();
@@ -31,8 +34,6 @@ export function MapNode({ x, y, width, height, children, className = "" }: MapNo
   const vw = vp?.clientWidth ?? (typeof window !== "undefined" ? window.innerWidth : 1280);
   const vh = vp?.clientHeight ?? (typeof window !== "undefined" ? window.innerHeight : 800);
 
-  // Visible viewport rect, converted into world coordinates, padded by the
-  // cull buffer on every side.
   const viewLeft = -offset.x / scale - CULL_BUFFER;
   const viewTop = -offset.y / scale - CULL_BUFFER;
   const viewRight = viewLeft + vw / scale + CULL_BUFFER * 2;
@@ -42,7 +43,19 @@ export function MapNode({ x, y, width, height, children, className = "" }: MapNo
 
   return (
     <div className={`absolute ${className}`} style={{ left: x, top: y, width }}>
-      {isNearView ? children : null}
+      <AnimatePresence>
+        {isNearView && (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

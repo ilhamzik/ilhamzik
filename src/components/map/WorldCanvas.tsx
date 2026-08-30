@@ -41,13 +41,6 @@ export function WorldCanvas({ children, initialCenter }: WorldCanvasProps) {
           height: WORLD_HEIGHT,
           transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
           transformOrigin: "0 0",
-          // No will-change here on purpose: on a layer this big (thousands
-          // of CSS px, x2-3 again for a phone's device pixel ratio),
-          // will-change can force the browser to pre-rasterize the whole
-          // thing as one oversized GPU texture up front — fine on a
-          // desktop GPU, brutal on a phone's. Modern engines already
-          // auto-promote an element once they see it being transformed
-          // repeatedly, without needing the hint.
         }}
       >
         {children}

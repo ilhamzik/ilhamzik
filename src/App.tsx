@@ -22,6 +22,8 @@ import { CaseFileModal } from "./components/evidence/CaseFileModal";
 import { StickyNote } from "./components/evidence/StickyNote";
 import { pressCredits, profile, stickyNotes } from "./data/content";
 import { useLanguage } from "./context/LanguageContext";
+import { useIsMobileOrTablet } from "./hooks/useIsMobileOrTablet";
+import { MobileComingSoon } from "./components/MobileComingSoon";
 
 function Footer() {
   const { t } = useLanguage();
@@ -37,6 +39,11 @@ function Footer() {
 
 function App() {
   const home = NODES.home;
+  const isMobileOrTablet = useIsMobileOrTablet();
+
+  if (isMobileOrTablet) {
+    return <MobileComingSoon />;
+  }
 
   return (
     <LanguageProvider>
