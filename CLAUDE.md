@@ -198,6 +198,34 @@ carikan logo, ikuti pola yang sama (biarkan pakai fallback fingerprint).
 — dipakaikan logo SQLite karena itu database engine konkret yang dipakai di
 salah satu proyek (`proj-ecommerce`), bukan klaim bahwa SQL = SQLite.
 
+## Virtualization / lazy-mount section (2026-08-30, mobile perf lanjutan)
+
+CSS-level fix (hapus blend-mode/blur/will-change, kompres gambar) ternyata
+belum cukup — user masih lapor berat parah di HP asli. Root cause
+sebenarnya: **semua 7 section (plus semua evidence item, foto, Framer Motion
+instance di dalamnya) selalu ke-mount di DOM sejak awal**, terlepas dari
+posisi pan. `overflow:hidden` di viewport cuma nyembunyiin secara visual,
+browser tetap kerja keras buat semuanya.
+
+Fix-nya di `MapNode.tsx`: setiap node sekarang cek posisinya sendiri
+relatif ke area yang kelihatan di viewport (pakai `offset`/`scale` dari
+`useMap()`), dengan buffer 650px world-space di tiap sisi. Kalau di luar
+area itu, `children`-nya di-render `null` (dilepas total dari DOM, bukan
+cuma `display:none`) — semua foto/animasi di dalamnya ikut lenyap dari
+memory. Begitu digeser mendekat, otomatis mount lagi.
+
+**Penting kalau nambah node baru ke map**: `MapNodeConfig` sekarang wajib
+punya field `height` (perkiraan tinggi render, dibulatkan ke atas biar
+nggak underestimate — nggak akan motong konten kalau meleset, cuma
+mempengaruhi kapan node itu di-mount/unmount). Ukur beneran pakai teknik di
+bawah (bukan nebak) kalau mau presisi, sama seperti waktu benerin WORLD_WIDTH/HEIGHT.
+
+Efek samping yang diharapkan: kalau di-zoom out jauh (gampang di desktop),
+banyak/semua node otomatis ke-mount lagi karena masuk area kelihatan +
+buffer — jadi "lihat semua sekaligus" tetap bisa, cuma nggak lagi bawaan
+default. Di HP ini nggak masalah karena zoom-out-jauh-buat-lihat-semua
+bukan use case yang penting (teksnya bakal kekecilan buat dibaca).
+
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.
 - `TOTAL_CASES` di `CaseFileContext.tsx` dihitung otomatis dari panjang array content (education+experience+projects+skills+interests+stickyNotes) — kalau nambah/kurang entri, angka meter ikut otomatis, tidak perlu update manual.

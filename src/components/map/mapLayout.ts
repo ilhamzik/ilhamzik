@@ -4,6 +4,11 @@ export interface MapNodeConfig {
   x: number;
   y: number;
   width: number;
+  /** Approximate rendered height, in world px — used only to decide whether
+   * this node is near the visible viewport (virtualization), rounded up
+   * generously from measured values so it's never an underestimate. Content
+   * still renders at its natural height regardless; this never clips it. */
+  height: number;
   /** Where the red string "pin" attaches on this node, in world coordinates. */
   pin: { x: number; y: number };
 }
@@ -22,13 +27,13 @@ export const WORLD_HEIGHT = 3780;
  * Tune these after a visual pass if something ends up overlapping.
  */
 export const NODES: Record<string, MapNodeConfig> = {
-  home: { x: 950, y: 40, width: 1100, pin: { x: 1500, y: 480 } },
-  education: { x: 60, y: 300, width: 640, pin: { x: 380, y: 500 } },
-  interests: { x: 2250, y: 300, width: 640, pin: { x: 2570, y: 480 } },
-  experience: { x: 900, y: 1020, width: 1100, pin: { x: 1450, y: 1230 } },
-  skills: { x: 1850, y: 1750, width: 900, pin: { x: 2300, y: 1950 } },
-  projects: { x: 120, y: 1750, width: 1000, pin: { x: 620, y: 1950 } },
-  contact: { x: 1150, y: 2550, width: 600, pin: { x: 1450, y: 2680 } },
+  home: { x: 950, y: 40, width: 1100, height: 950, pin: { x: 1500, y: 480 } },
+  education: { x: 60, y: 300, width: 640, height: 1150, pin: { x: 380, y: 500 } },
+  interests: { x: 2250, y: 300, width: 640, height: 800, pin: { x: 2570, y: 480 } },
+  experience: { x: 900, y: 1020, width: 1100, height: 1120, pin: { x: 1450, y: 1230 } },
+  skills: { x: 1850, y: 1750, width: 900, height: 920, pin: { x: 2300, y: 1950 } },
+  projects: { x: 120, y: 1750, width: 1000, height: 700, pin: { x: 620, y: 1950 } },
+  contact: { x: 1150, y: 2550, width: 600, height: 1250, pin: { x: 1450, y: 2680 } },
 };
 
 /** Traversal order for the red string connecting sections across the map. */
