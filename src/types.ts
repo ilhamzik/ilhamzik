@@ -28,7 +28,7 @@ export interface CaseFile {
   /** Optional external link (repo, demo, article, social profile...). */
   link?: { href: string; label: Bilingual };
   /** Stamp text overlay on the popup, e.g. "CASE CLOSED", "VERIFIED". */
-  stamp?: string;
+  stamp?: Bilingual;
   /** Optional tech-stack pills shown in the "forensic report" facts area. */
   techStack?: string[];
   /** Optional line rendered behind a redacted black bar, revealed on hover/tap. */
@@ -44,7 +44,7 @@ export interface EducationEntry extends CaseFile {
 export interface ExperienceEntry extends CaseFile {
   role: Bilingual;
   organization: Bilingual;
-  period: string;
+  period: Bilingual;
 }
 
 export interface ProjectEntry extends CaseFile {

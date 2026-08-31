@@ -111,7 +111,7 @@ yang benar selalu masuk ke `src/assets/photos/`.
 
 ## Foto asli — status per 2026-08-30
 
-Sudah terpasang: lambang SDIT PB Soedirman/SMPN 49/SMAN 39 (dipasang sebagai
+Sudah terpasang: lambang SDI PB Soedirman/SMPN 49/SMAN 39 (dipasang sebagai
 `photoSrc` kartu pendidikan, muncul di polaroid modal), foto wisuda asli
 (`ilham-wisuda.jpg`, gantikan `ilham.png` di kartu kuliah), foto di kantor
 Telkom (`telkom.jpg`), foto tim kampanye BEM (`bem-campaign.jpg`), foto tim
@@ -250,6 +250,36 @@ banyak/semua node otomatis ke-mount lagi karena masuk area kelihatan +
 buffer — jadi "lihat semua sekaligus" tetap bisa, cuma nggak lagi bawaan
 default. Di HP ini nggak masalah karena zoom-out-jauh-buat-lihat-semua
 bukan use case yang penting (teksnya bakal kekecilan buat dibaca).
+
+## Nilai akademik dihapus dari narasi (2026-08-31)
+
+User minta angka NEM (SD/SMP) dan cGPA (kuliah) dihapus semua dari
+`content.ts` — cukup dinarasikan "deliver di akademisnya walaupun bukan
+yang terbaik" tanpa angka konkret. Yang sudah dilakukan:
+- `facts` array edu-sd/edu-smp/edu-kuliah sekarang cuma sisa "Lulus/Graduated
+  [tahun]" — baris NEM dan cGPA dihapus total.
+- Sticky note `stickyNotes.education` (dulu "note-nem", isinya ngomongin
+  angka NEM) diganti jadi "note-grades" — tetap ada notenya, tapi isinya
+  kualitatif ("nggak pernah juara umum, tapi juga nggak pernah remedial").
+- Body teks edu-kuliah yang tadinya nyebut "cGPA-nya 3,34" ditulis ulang
+  jadi "nilainya bukan yang paling mentereng, tapi solid" — tanpa angka.
+- **Angka lain (jumlah data proyek, tanggal, statistik teknis proyek) TETAP
+  ada** — itu beda kategori (fakta teknis proyek, bukan skor personal),
+  jangan ikut dihapus kalau diminta hal serupa lagi.
+
+Sekalian ketemu 2 bug bilingual yang sejenis (field bukan `Bilingual`
+padahal isinya ada kata Indonesia) waktu ngerjain ini, langsung dibenerin:
+- `ExperienceEntry.period` (types.ts) dari `string` jadi `Bilingual` — dulu
+  versi EN tetap nampilin "Sekarang"/"Agu"/"Des" karena field-nya nggak
+  pernah di-`t()`. Kalau nambah experience baru, WAJIB isi `period` sebagai
+  `{id, en}`, bukan string polos.
+- `CaseFile.stamp` (types.ts) dari `string` jadi `Bilingual` juga — stempel
+  "LULUS"/"AKTIF" dulu nggak ikut translate ke "GRADUATED"/"ACTIVE" di mode
+  EN. Sama, isi sebagai `{id, en}` kalau nambah stamp baru.
+- `EducationEntry.years` masih `string` polos (ada "Lulus 2016" dst) TAPI
+  field ini ternyata nggak dipakai/dirender di mana pun (dead field, info
+  yang sama sudah ada di `facts`) — dibiarkan apa adanya, nggak perlu
+  dibenerin kecuali suatu saat mulai dipakai di komponen.
 
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.

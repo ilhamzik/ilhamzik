@@ -67,7 +67,7 @@ export function CaseFileModal() {
                   <PolaroidPhoto src={activeCase.photoSrc} caption={activeCase.photoCaption} rotate={-3} />
                   {activeCase.stamp && (
                     <div className="absolute -bottom-3 -right-6 w-32 opacity-90 animate-stampIn pointer-events-none rotate-[-10deg] z-10">
-                      <StampMark text={activeCase.stamp} />
+                      <StampMark text={t(activeCase.stamp)} />
                     </div>
                   )}
                 </div>

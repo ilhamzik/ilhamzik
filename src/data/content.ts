@@ -63,7 +63,7 @@ export const education: EducationEntry[] = [
     level: "sd",
     tag: "KARTU-01",
     title: { id: "Sekolah Dasar", en: "Elementary School" },
-    institution: { id: "SDIT PB Soedirman, Cijantung", en: "SDIT PB Soedirman, Cijantung" },
+    institution: { id: "SDI PB Soedirman, Cijantung", en: "SDI PB Soedirman, Cijantung" },
     years: "Lulus 2016",
     subtitle: { id: "Kartu Pelajar", en: "Student Card" },
     body: [
@@ -76,10 +76,7 @@ export const education: EducationEntry[] = [
         en: "Half his free time went to the football field with friends, but whenever a math competition came around, he was usually one of the most eager to join, not for bragging rights, just because he genuinely enjoyed the challenge of the numbers.",
       },
     ],
-    facts: [
-      { label: { id: "Lulus", en: "Graduated" }, value: { id: "2016", en: "2016" } },
-      { label: { id: "NEM", en: "National Exam Score" }, value: { id: "28,9", en: "28.9" } },
-    ],
+    facts: [{ label: { id: "Lulus", en: "Graduated" }, value: { id: "2016", en: "2016" } }],
     photoSrc: sditSoedirmanLogo,
     photoCaption: { id: "Lambang sekolah, ditempel di berkas.", en: "School crest, pinned into the file." },
   },
@@ -97,10 +94,7 @@ export const education: EducationEntry[] = [
         en: "Football was still a daily routine, but the math-competition mileage kept adding up too. The kind of kid who was quick on the field but just as happy wrestling with a hard problem in class.",
       },
     ],
-    facts: [
-      { label: { id: "Lulus", en: "Graduated" }, value: { id: "2019", en: "2019" } },
-      { label: { id: "NEM", en: "National Exam Score" }, value: { id: "383,5", en: "383.5" } },
-    ],
+    facts: [{ label: { id: "Lulus", en: "Graduated" }, value: { id: "2019", en: "2019" } }],
     photoSrc: smpn49Logo,
     photoCaption: { id: "Lambang sekolah, ditempel di berkas.", en: "School crest, pinned into the file." },
   },
@@ -135,8 +129,8 @@ export const education: EducationEntry[] = [
     subtitle: { id: "Medali Wisuda", en: "Graduation Medal" },
     body: [
       {
-        id: "Bukti kelulusan yang tergantung di berkas, hasil akhir dari empat tahun penyelidikan akademik di Fasilkom UI. cGPA-nya 3,34, bukan angka tertinggi di angkatan, tapi cukup untuk membawanya wisuda tepat waktu.",
-        en: "The proof of completion hanging in the file, the result of four years of academic investigation at Fasilkom UI. His cGPA landed at 3.34, not the top of the class, but enough to get him through graduation on time.",
+        id: "Bukti kelulusan yang tergantung di berkas, hasil akhir dari empat tahun penyelidikan akademik di Fasilkom UI. Nilainya sendiri bukan yang paling mentereng di angkatan, tapi cukup solid untuk membawanya wisuda tepat waktu tanpa drama.",
+        en: "The proof of completion hanging in the file, the result of four years of academic investigation at Fasilkom UI. His grades were never the flashiest in the cohort, but solid enough to get him through graduation on time, no drama.",
       },
       {
         id: "Skripsi: klasifikasi pola prompt GenAI, coding kualitatif untuk menyusun taksonomi 5 kelas penggunaan, divalidasi dengan Krippendorff's Alpha (≈ 0,85), lalu dibangun model klasifikasi teks multi-kelas di atasnya.",
@@ -147,11 +141,8 @@ export const education: EducationEntry[] = [
         en: "Key coursework: Data Mining, E-Commerce, Business Process Management, AI and Data Science, Statistics and Probability, Deep Learning, Computer Vision, Database.",
       },
     ],
-    facts: [
-      { label: { id: "cGPA", en: "cGPA" }, value: { id: "3,34", en: "3.34" } },
-      { label: { id: "Lulus", en: "Graduated" }, value: { id: "2026", en: "2026" } },
-    ],
-    stamp: "LULUS",
+    facts: [{ label: { id: "Lulus", en: "Graduated" }, value: { id: "2026", en: "2026" } }],
+    stamp: { id: "LULUS", en: "GRADUATED" },
     photoSrc: ilhamWisuda,
     photoCaption: { id: "Foto arsip, sedikit ternoda usia.", en: "Archive photo, slightly tarnished with age." },
   },
@@ -164,14 +155,14 @@ export const experience: ExperienceEntry[] = [
     title: { id: "Praktikan, Tim CPO", en: "Intern, CPO Team" },
     role: { id: "Praktikan, Tim CPO (Divisi SDA)", en: "Intern, CPO Team (SDA Division)" },
     organization: { id: "Telkom Indonesia", en: "Telkom Indonesia" },
-    period: "Jul 2026 – Sekarang",
+    period: { id: "Jul 2026 – Sekarang", en: "Jul 2026 – Present" },
     body: [
       {
         id: "Baru memasuki bulan kedua magang, dan sudah berkesempatan ikut serta di beberapa proyek tim ini. Detail lengkap berkas ini masih dalam proses pengumpulan dan akan menyusul.",
         en: "Just entering the second month of this internship, and already had the chance to take part in a few of the team's projects. Full case details are still being compiled and will follow soon.",
       },
     ],
-    stamp: "AKTIF",
+    stamp: { id: "AKTIF", en: "ACTIVE" },
     photoSrc: telkomPhoto,
     photoCaption: { id: "Di depan Divisi SDA.", en: "In front of the SDA Division." },
   },
@@ -184,7 +175,7 @@ export const experience: ExperienceEntry[] = [
       id: "Tim Kampanye Pemilihan BEM (Student Executive Board)",
       en: "Student Executive Board (BEM) Election Campaign Team",
     },
-    period: "Des 2024 – Apr 2025",
+    period: { id: "Des 2024 – Apr 2025", en: "Dec 2024 – Apr 2025" },
     body: [
       {
         id: "Menganalisis dan memvisualisasikan data survei untuk mendukung pengambilan keputusan strategis kampanye, lalu membangun dashboard dan laporan visual yang mengarahkan strategi dan alokasi sumber daya tim kampanye.",
@@ -200,7 +191,7 @@ export const experience: ExperienceEntry[] = [
     title: { id: "Data Scientist Freelance", en: "Freelance Data Scientist" },
     role: { id: "Data Scientist Freelance", en: "Freelance Data Scientist" },
     organization: { id: "Tentang Kopi", en: "Tentang Kopi" },
-    period: "Agu – Des 2024",
+    period: { id: "Agu – Des 2024", en: "Aug – Dec 2024" },
     body: [
       {
         id: "Melakukan analisis product bundling dengan teknik association rule mining (support, confidence, lift) untuk menemukan kombinasi produk berperforma tinggi, dan berhasil mengembangkan beberapa bundel yang membantu Tentang Kopi meminimalkan bahan baku terbuang karena kedaluwarsa.",
@@ -214,7 +205,7 @@ export const experience: ExperienceEntry[] = [
     title: { id: "VPIC & Staf Public Relations", en: "VPIC & Public Relations Staff" },
     role: { id: "VPIC & Staf Public Relations", en: "VPIC & Public Relations Staff" },
     organization: { id: "Open House & BEM Fasilkom UI", en: "Open House & BEM Fasilkom UI" },
-    period: "Agu – Des 2023",
+    period: { id: "Agu – Des 2023", en: "Aug – Dec 2023" },
     body: [
       {
         id: "Turut memimpin operasional divisi PR, mengarahkan kampanye video “Fasilkom Rewind” dan mengelola distribusi talent MC lintas divisi, serta menjalankan program outreach sekolah dan jejaring lintas fakultas.",
@@ -391,8 +382,8 @@ export const pressCredits = {
  */
 export const articles: Record<string, Bilingual> = {
   education: {
-    id: "Sejak bangku SDIT PB Soedirman Cijantung, bocah asal Jakarta Timur ini bikin guru-gurunya bingung: kakinya di lapangan bola, tapi sesekali juga ikut lomba matematika, dan dua-duanya jalan beriringan sampai ke SMPN 49 Jakarta. Semua berubah waktu pandemi menyerang di awal masa SMAN 39 Jakarta: lapangan ditutup, dan yang tersisa cuma Mobile Legends, Valorant, dan maraton Netflix sampai larut malam. Untungnya arah hidupnya lurus lagi begitu masuk Fasilkom Universitas Indonesia, dan empat tahun kemudian, keluar membawa gelar S.Kom, dengan nilai yang menurutnya sendiri masih biasa saja.",
-    en: "Since his days at SDIT PB Soedirman Cijantung, this East Jakarta kid has been confusing his teachers: feet on the football field, occasionally also entering math competitions, and both ran side by side all the way through SMPN 49 Jakarta. Everything changed when the pandemic hit right at the start of SMAN 39 Jakarta: the field shut down, leaving only Mobile Legends, Valorant, and late-night Netflix marathons. Luckily his trajectory straightened out again once he entered the Faculty of Computer Science, University of Indonesia, and four years later, walked out with a computer science degree and grades he'd describe as nothing special.",
+    id: "Sejak bangku SDI PB Soedirman Cijantung, bocah asal Jakarta Timur ini bikin guru-gurunya bingung: kakinya di lapangan bola, tapi sesekali juga ikut lomba matematika, dan dua-duanya jalan beriringan sampai ke SMPN 49 Jakarta. Semua berubah waktu pandemi menyerang di awal masa SMAN 39 Jakarta: lapangan ditutup, dan yang tersisa cuma Mobile Legends, Valorant, dan maraton Netflix sampai larut malam. Untungnya arah hidupnya lurus lagi begitu masuk Fasilkom Universitas Indonesia, dan empat tahun kemudian, keluar membawa gelar S.Kom, dengan nilai yang menurutnya sendiri masih biasa saja.",
+    en: "Since his days at SDI PB Soedirman Cijantung, this East Jakarta kid has been confusing his teachers: feet on the football field, occasionally also entering math competitions, and both ran side by side all the way through SMPN 49 Jakarta. Everything changed when the pandemic hit right at the start of SMAN 39 Jakarta: the field shut down, leaving only Mobile Legends, Valorant, and late-night Netflix marathons. Luckily his trajectory straightened out again once he entered the Faculty of Computer Science, University of Indonesia, and four years later, walked out with a computer science degree and grades he'd describe as nothing special.",
   },
   experience: {
     id: "Rekam jejak kerjanya dimulai dari balik layar booth Open House Fasilkom UI, lalu masuk ke dunia data lewat sebuah kedai kopi lokal, tempat analisis bundling produknya sukses menekan bahan baku terbuang. Aksinya berlanjut di tim kampanye pemilihan BEM, mengubah tumpukan data survei jadi dashboard yang benar-benar dipakai untuk ambil keputusan. Ceritanya kini berlanjut di kantor Telkom Indonesia sebagai praktikan di Tim CPO, baru dua bulan, tapi sudah berkesempatan ikut serta di beberapa proyek tim.",
@@ -434,13 +425,13 @@ export const stickyNotes: Partial<Record<string, CaseFile>> = {
     ],
   },
   education: {
-    id: "note-nem",
+    id: "note-grades",
     tag: "CATATAN",
-    title: { id: "Soal angka-angka ganjil itu", en: "About those odd numbers" },
+    title: { id: "Soal nilai akademiknya", en: "About his grades" },
     body: [
       {
-        id: "NEM SD 28,9, NEM SMP 383,5. Dua angka beda skala yang kebetulan masih diingat sampai sekarang, bukan karena hebat, cuma karena kartunya belum sempat hilang.",
-        en: "Elementary NEM 28.9, junior high NEM 383.5. Two numbers on different scales that happen to still be remembered, not because they're impressive, just because the cards never got lost.",
+        id: "Nggak pernah jadi juara umum, tapi juga nggak pernah tinggal kelas atau remedial. Konsisten di tengah-tengah, dan buat sejauh ini itu sudah cukup.",
+        en: "Never the top of the class, but never held back or needed remedial classes either. Consistently solid in the middle, and so far that's been enough.",
       },
     ],
   },

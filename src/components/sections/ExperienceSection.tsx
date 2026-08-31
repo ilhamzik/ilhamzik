@@ -9,7 +9,7 @@ function IndexCard({ entry }: { entry: ExperienceEntry }) {
   const { t } = useLanguage();
   return (
     <div className="w-full h-full bg-[#f2e6c4] border border-ink-500/30 shadow-pinned p-3 flex flex-col justify-center text-left">
-      <p className="font-typewriter text-[10px] text-blood-600 uppercase tracking-widest">{entry.period}</p>
+      <p className="font-typewriter text-[10px] text-blood-600 uppercase tracking-widest">{t(entry.period)}</p>
       <p className="font-headline font-bold text-sm text-ink-700 mt-1 leading-snug">{t(entry.role)}</p>
       <p className="font-body text-xs text-ink-500 mt-0.5">{t(entry.organization)}</p>
     </div>
