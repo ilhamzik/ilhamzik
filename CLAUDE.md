@@ -248,6 +248,18 @@ SVG sedunia / MapContext. `MobileComingSoon.tsx` sudah dihapus.
   hatch balik ke peta desktop. **Tes di HP fisik tetap tanggung jawab user**
   (Claude nggak bisa profil hardware mobile beneran).
 
+**Verifikasi WAJIB lewat `npm run preview`, bukan cuma `npm run dev`.**
+Benang merah mobile sempat ke-ship dalam keadaan nggak kelihatan sama
+sekali di produksi walau di dev kelihatan sempurna. Sebabnya:
+`MobileRedString` baca ref ke div INDUKNYA, padahal React pasang ref
+elemen host bottom-up di layout phase, jadi `useLayoutEffect` si anak
+jalan sebelum ref induknya keisi, dapat `null`, lalu nyerah tanpa retry.
+Di dev keliatan aman doang karena StrictMode manggil effect dua kali
+(dev-only), panggilan kedua ref-nya sudah ada. Fix-nya: elemen kolom
+disimpan di state lewat callback ref (`ref={setColumnEl}`) dan dioper ke
+anak sebagai elemen, bukan ref object. **Kalau bikin komponen lain yang
+ngukur elemen induk, pakai pola yang sama, dan tes di build produksi.**
+
 Quirk kosmetik yang diketahui & sengaja dibiarkan: `Section.tsx` render
 `note` (sticky note) pakai `absolute top-4 right-4` TAPI Tailwind naruh
 `.relative` sesudah `.absolute` di stylesheet, jadi note-nya efektif

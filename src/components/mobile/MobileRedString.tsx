@@ -1,9 +1,18 @@
-import { useLayoutEffect, useState, type RefObject } from "react";
+import { useLayoutEffect, useState } from "react";
 import { PushpinIcon } from "../icons";
 
 interface Props {
-  /** The relatively-positioned column that holds the sections. */
-  columnRef: RefObject<HTMLDivElement>;
+  /**
+   * The relatively-positioned column that holds the sections. Passed as the
+   * resolved element, not a ref: this component renders *inside* that
+   * column, and React attaches a host element's ref bottom-up during the
+   * layout phase, so a child's layout effect runs before its parent's ref
+   * exists. Reading `parentRef.current` here found null and silently gave
+   * up in production (dev only appeared to work because StrictMode invokes
+   * effects twice). The column is held in state upstream instead, so this
+   * re-renders once the node is really there.
+   */
+  column: HTMLDivElement | null;
 }
 
 interface Waypoint {
@@ -34,12 +43,12 @@ interface Box {
  * articles. Three layers do the work: a taut main thread, a loose offset
  * strand, and faint skip-one cross-links.
  */
-export function MobileRedString({ columnRef }: Props) {
+export function MobileRedString({ column }: Props) {
   const [wps, setWps] = useState<Waypoint[]>([]);
   const [box, setBox] = useState<Box>({ w: 0, h: 0 });
 
   useLayoutEffect(() => {
-    const col = columnRef.current;
+    const col = column;
     if (!col) return;
 
     let raf = 0;
@@ -73,7 +82,7 @@ export function MobileRedString({ columnRef }: Props) {
       window.clearTimeout(t);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [columnRef]);
+  }, [column]);
 
   if (wps.length < 2 || !box.w || !box.h) return null;
 

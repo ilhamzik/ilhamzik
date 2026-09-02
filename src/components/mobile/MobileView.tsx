@@ -80,7 +80,10 @@ function Footer() {
 function MobileShell() {
   const { lang } = useLanguage();
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const columnRef = useRef<HTMLDivElement>(null);
+  // Held in state, not a ref: MobileRedString renders inside this column and
+  // needs to measure it, and a child's layout effect runs before its
+  // parent's ref is attached. See the note on MobileRedString's props.
+  const [columnEl, setColumnEl] = useState<HTMLDivElement | null>(null);
   const [activeId, setActiveId] = useState("");
   const [showTop, setShowTop] = useState(false);
 
@@ -124,9 +127,9 @@ function MobileShell() {
            up into full-height black spikes. Paper grain + gradient carry
            the vintage look on their own. */}
         <div className="bg-paper-gradient paper-grain pt-[92px] pb-4">
-          <div ref={columnRef} className="relative max-w-[680px] mx-auto px-1">
+          <div ref={setColumnEl} className="relative max-w-[680px] mx-auto px-1">
             {/* Drawn first so the column's content paints over it. */}
-            <MobileRedString columnRef={columnRef} />
+            <MobileRedString column={columnEl} />
 
             <div className="relative">
               <Masthead />
