@@ -153,13 +153,13 @@ export const experience: ExperienceEntry[] = [
     id: "exp-telkom",
     tag: "BERKAS-A",
     title: { id: "Praktikan, Tim CPO", en: "Intern, CPO Team" },
-    role: { id: "Praktikan, Tim CPO (Divisi SDA)", en: "Intern, CPO Team (SDA Division)" },
-    organization: { id: "Telkom Indonesia", en: "Telkom Indonesia" },
+    role: { id: "Data Analyst Intern @TelkomIndonesia", en: "Data Analyst Intern @TelkomIndonesia" },
+    organization: { id: "SDA Division", en: "SDA Division" },
     period: { id: "Jul 2026 – Sekarang", en: "Jul 2026 – Present" },
     body: [
       {
-        id: "Baru memasuki bulan kedua magang, dan sudah berkesempatan ikut serta di beberapa proyek tim ini. Detail lengkap berkas ini masih dalam proses pengumpulan dan akan menyusul.",
-        en: "Just entering the second month of this internship, and already had the chance to take part in a few of the team's projects. Full case details are still being compiled and will follow soon.",
+        id: "Baru memasuki bulan kedua magang, dan sudah ikut membangun beberapa sistem nyata: dashboard pemantauan rollout Astinet/SD-WAN untuk jaringan Indomaret, tool otomasi dashboard berbasis AI, dan dashboard live plus otomasi presentasi untuk perayaan HUT RI perusahaan. Ketiganya sudah boleh diceritakan, lihat Ruang Bukti untuk detailnya.",
+        en: "Just entering the second month of this internship, and already helped build a few real systems: a rollout-monitoring dashboard for Indomaret's Astinet/SD-WAN network, an AI-assisted dashboard automation tool, and a live dashboard plus presentation automation for the company's HUT RI celebration. All three are fair game to talk about now, see the Exhibit Room for the details.",
       },
     ],
     stamp: { id: "AKTIF", en: "ACTIVE" },
@@ -219,8 +219,47 @@ export const experience: ExperienceEntry[] = [
 
 export const projects: ProjectEntry[] = [
   {
-    id: "proj-ecommerce",
+    id: "proj-rollout-dashboard",
     tag: "EXHIBIT A",
+    title: { id: "Dashboard Pemantauan Rollout Infrastruktur Live", en: "Live Infrastructure Rollout Monitoring Dashboard" },
+    subtitle: { id: "Telkom Indonesia × Indomaret, Jul 2026 – Sekarang", en: "Telkom Indonesia × Indomaret, Jul 2026 – Present" },
+    body: [
+      {
+        id: "Ikut membangun dashboard live yang memantau progres rollout Astinet/SD-WAN ke 5.846 gerai Indomaret di seluruh Indonesia (6 regional), lengkap dengan breakdown per wilayah dan pencarian sampai detail tiap gerai. Sistemnya tersambung baca-saja ke sumber data tim tiap beberapa detik dan menulis narasi ringkasannya sendiri dari angka yang sedang tampil, ditambah kontrol akses dan pembatasan permintaan yang bikin sistemnya aman dibiarkan terbuka buat tim yang lebih luas.",
+        en: "Helped build a live dashboard tracking Astinet/SD-WAN rollout progress across 5,846 Indomaret stores nationwide (6 regions), with regional breakdowns and per-store search down to individual site status. The system syncs read-only from the team's data source every few seconds and writes its own summary narrative from whatever's currently on screen, on top of the access controls and rate-limiting that made it safe to leave open for the wider team.",
+      },
+    ],
+    techStack: ["React", "TypeScript", "Node.js", "Express", "Google Sheets API"],
+  },
+  {
+    id: "proj-dashboard-tool",
+    tag: "EXHIBIT B",
+    title: { id: "Tool Otomasi Dashboard Berbasis AI", en: "AI-Assisted Dashboard Automation Tool" },
+    subtitle: { id: "Proyek internal, Telkom Indonesia, Jul 2026 – Sekarang", en: "Internal tool, Telkom Indonesia, Jul 2026 – Present" },
+    body: [
+      {
+        id: "Ikut merancang dan membangun tool internal yang mengubah data mentah Excel/CSV/Google Sheets jadi dashboard interaktif lewat permintaan berbahasa natural. LLM cuma memilih kolom dan jenis perhitungannya, angka aslinya selalu dihitung dan diverifikasi ulang oleh kode biasa, dan permintaan yang merujuk kolom yang nggak ada di data langsung diubah jadi pertanyaan klarifikasi, bukan tebakan asal. Turut menangani sisi privasinya juga: baris data mentah nggak pernah keluar ke penyedia AI, yang dilihat model cuma nama kolom, tipe, dan bentuk nilainya.",
+        en: "Helped design and build an internal tool that turns raw Excel/CSV/Google Sheets exports into interactive dashboards from plain-language requests. An LLM only picks the columns and calculation type; the actual numbers are always computed and double-checked by ordinary code, and a request pointing at a column that doesn't exist gets turned into a clarifying question instead of a wrong answer. Also worked on the privacy side: raw data rows never go out to the AI provider, the model only ever sees column names, types, and value shapes.",
+      },
+    ],
+    techStack: ["Node.js", "Express", "LLM Integration", "Custom SVG Charting", "Data Pipeline Design"],
+  },
+  {
+    id: "proj-hutri",
+    tag: "EXHIBIT C",
+    title: { id: "Dashboard & Otomasi Presentasi Perayaan HUT RI", en: "HUT RI Celebration Dashboard & Presentation Automation" },
+    subtitle: { id: "Proyek internal, Telkom Indonesia, Agu 2026", en: "Internal project, Telkom Indonesia, Aug 2026" },
+    body: [
+      {
+        id: "Ikut membangun dashboard live (polling tiap 15 detik) untuk memantau kesiapan infrastruktur dan layanan menjelang perayaan HUT RI internal perusahaan, dibuat presisi piksel demi piksel mengikuti desain presentasi yang sudah disetujui pimpinan. Dipasangkan dengan skrip yang memantau perubahan di Google Sheets dan langsung mendorong angka terbarunya ke file presentasi, jadi materi briefing pimpinan tetap up to date tanpa perlu ada yang mengedit slide manual.",
+        en: "Helped build a live dashboard, polling every 15 seconds, to track infrastructure and service readiness ahead of the company's internal HUT RI (Indonesian Independence Day) celebration, matched pixel-for-pixel to a leadership-approved presentation design. Paired it with a script that watches the underlying Google Sheet for changes and pushes the latest numbers straight into the presentation deck, keeping leadership's briefing materials current without anyone manually editing slides.",
+      },
+    ],
+    techStack: ["Django", "Python", "Google Sheets API", "python-pptx"],
+  },
+  {
+    id: "proj-ecommerce",
+    tag: "EXHIBIT D",
     title: { id: "Analisis Penjualan & Pengiriman E-Commerce", en: "E-Commerce Sales & Delivery Performance Analysis" },
     subtitle: { id: "Proyek pribadi (sedang berjalan), Jul 2026", en: "Personal project (in progress), Jul 2026" },
     body: [
@@ -233,7 +272,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-thesis",
-    tag: "EXHIBIT B",
+    tag: "EXHIBIT E",
     title: { id: "Klasifikasi Pola Prompt GenAI (Skripsi)", en: "GenAI Prompt Pattern Classification (Thesis)" },
     subtitle: { id: "Skripsi Sarjana, Fasilkom UI, Feb–Jun 2026", en: "Undergraduate Thesis, Fasilkom UI, Feb–Jun 2026" },
     body: [
@@ -246,7 +285,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-webgraph",
-    tag: "EXHIBIT C",
+    tag: "EXHIBIT F",
     title: { id: "Analisis Jaringan Web & Deteksi Komunitas", en: "Web Graph Network Analysis and Community Detection" },
     subtitle: { id: "Proyek Kelompok Data Mining, Feb–Jun 2025", en: "Data Mining Course Group Project, Feb–Jun 2025" },
     body: [
@@ -259,7 +298,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-terrorism",
-    tag: "EXHIBIT D",
+    tag: "EXHIBIT G",
     title: { id: "Analisis Data Terorisme Global & Model ML", en: "Global Terrorism Data Analysis and ML Model" },
     subtitle: { id: "Proyek Akhir KASDD, Agu–Des 2024", en: "KASDD Course Final Project, Aug–Dec 2024" },
     body: [
@@ -390,8 +429,8 @@ export const articles: Record<string, Bilingual> = {
     en: "His work record starts backstage at a Fasilkom UI Open House booth, then moves into the data world through a local coffee shop, where his product-bundling analysis successfully cut down wasted ingredients. The story continues on a BEM election campaign team, turning stacks of survey data into dashboards that actually got used to make decisions. It now continues at a Telkom Indonesia office as an intern on the CPO team, only two months in, but already given the chance to take part in a few of the team's projects.",
   },
   projects: {
-    id: "Empat berkas ini bukti bahwa rasa penasarannya nggak pernah berhenti di satu topik saja. Mulai dari membedah data e-commerce Brasil untuk cari tahu kenapa paket telat tapi rating tetap bagus, sampai skripsi yang mengubah obrolan dengan AI jadi taksonomi ilmiah lengkap dengan uji reliabilitas statistik. Belum lagi pemetaan 4.200 node jaringan web dan pembongkaran 33 ribu catatan serangan terorisme global, semuanya demi satu tujuan sederhana: bikin data yang berantakan jadi masuk akal.",
-    en: "These four files are proof his curiosity never stays on one topic for long. From dissecting Brazilian e-commerce data to figure out why late packages still got good ratings, to a thesis that turned conversations with an AI into a scientific taxonomy complete with statistical reliability testing. Add in mapping a 4,200-node web network and cracking open 33,000 global terrorism incident records, all in service of one simple goal: making messy data make sense.",
+    id: "Tumpukan berkas ini bukti bahwa rasa penasarannya nggak pernah berhenti di satu topik saja. Dimulai dari Telkom: dashboard live yang memantau rollout Astinet/SD-WAN ke ribuan gerai Indomaret, tool otomasi dashboard berbasis AI, dan dashboard untuk perayaan HUT RI perusahaan. Lalu berlanjut ke bedah data e-commerce Brasil untuk cari tahu kenapa paket telat tapi rating tetap bagus, skripsi yang mengubah obrolan dengan AI jadi taksonomi ilmiah lengkap dengan uji reliabilitas statistik, pemetaan 4.200 node jaringan web, sampai pembongkaran 33 ribu catatan serangan terorisme global. Semuanya demi satu tujuan sederhana: bikin data yang berantakan jadi masuk akal.",
+    en: "This stack of files is proof his curiosity never stays on one topic for long. It starts at Telkom: a live dashboard tracking Astinet/SD-WAN rollout across thousands of Indomaret stores, an AI-assisted dashboard automation tool, and a dashboard built for the company's HUT RI celebration. Then it wanders into dissecting Brazilian e-commerce data to figure out why late packages still got good ratings, a thesis that turned conversations with an AI into a scientific taxonomy complete with statistical reliability testing, mapping a 4,200-node web network, and cracking open 33,000 global terrorism incident records. All in service of one simple goal: making messy data make sense.",
   },
   skills: {
     id: "Kalau ditanya senjata andalan buat bongkar-bongkar data, daftarnya cukup panjang: dari SQL dan Python untuk menggali informasi, sampai Power BI untuk bikin temuan itu enak dilihat orang lain. Tapi menurut pengakuannya sendiri, senjata yang paling sering dipakai bukan salah satu dari itu, melainkan rasa nggak enakan kalau ada data kotor yang dibiarkan lolos sebelum dianalisis.",
@@ -441,13 +480,13 @@ export const stickyNotes: Partial<Record<string, CaseFile>> = {
     title: { id: "Soal proyek di Telkom", en: "About the Telkom projects" },
     body: [
       {
-        id: "Belum bisa dibongkar di sini, anggap saja rahasia perusahaan. Detailnya menyusul begitu sudah boleh diceritakan.",
-        en: "Can't be cracked open here yet, call it a company secret. Details to follow once he's cleared to share.",
+        id: "Update: ternyata semuanya bisa dibongkar. Tiga berkas, satu partner ritel raksasa, nol drama NDA. Detail lengkap ada di Ruang Bukti.",
+        en: "Update: turns out it could all be cracked open after all. Three case files, one giant retail partner, zero NDA drama. Full details in the Exhibit Room.",
       },
     ],
     redacted: {
-      id: "Nama proyek: sedang dalam status classified. Coba lagi setelah NDA-nya kadaluarsa.",
-      en: "Project name: currently classified. Try again once the NDA expires.",
+      id: "Yang masih beneran rahasia cuma satu: berapa cangkir kopi yang habis buat ngejar semua deadline itu.",
+      en: "The only thing still genuinely classified: how many cups of coffee it took to hit all those deadlines.",
     },
   },
   interests: {
