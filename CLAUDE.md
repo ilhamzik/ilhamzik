@@ -227,8 +227,18 @@ SVG sedunia / MapContext. `MobileComingSoon.tsx` sudah dihapus.
   / `DetectiveGuide` / `PaperDecor` TIDAK dipakai di mobile.
 - Night Shift mobile = `MobileNightShiftOverlay.tsx`, flat dark gradient
   doang (nggak ada spotlight ikut kursor — touch nggak punya kursor).
-- Benang merah mobile = `StringGap` di `MobileView.tsx`: garis dashed
-  vertikal + pushpin antar section. Bukan SVG sedunia.
+- Benang merah mobile = `MobileRedString.tsx`: SATU SVG sepanjang kolom,
+  di-mount penuh dari awal (user minta seagresif desktop, benangnya harus
+  nunjuk dari section ke section, bukan potongan per-celah). Statis, cuma
+  stroke, tanpa filter/animasi, jadi murah walau tinggi ~10000px.
+  Geometrinya diukur runtime dari anchor `[data-string-node]` (`StringNode`
+  di `MobileView.tsx`, tiap anchor bawa `data-x` persen) lewat
+  `ResizeObserver`, jadi benangnya nempel terus walau LazySection mount dan
+  ngubah tinggi. **Bentuk segmennya penting**: turun lurus di gutter
+  sepanjang section, baru menyeberang ke pin berikutnya di ~110px terakhir
+  (area kosong di atas pin). Diagonal lurus antar-pin pernah dicoba dan
+  hasilnya benang motong semua paragraf, susah dibaca. Tiga lapis: benang
+  utama, untai kendor offset, dan cross-link skip-one yang samar.
 - **JANGAN pakai `torn-edge-top/bottom` di kolom mobile** — polygon
   clip-path-nya di-tune buat world desktop yang lebar-pendek; di kolom
   ~390px lebar & ~10000px tinggi giginya membesar jadi paku hitam

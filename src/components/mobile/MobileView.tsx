@@ -15,12 +15,12 @@ import { ProjectsSection } from "../sections/ProjectsSection";
 import { ContactSection } from "../sections/ContactSection";
 import { CaseFileModal } from "../evidence/CaseFileModal";
 import { StickyNote } from "../evidence/StickyNote";
-import { PushpinIcon } from "../icons";
 
 import { pressCredits, profile, stickyNotes } from "../../data/content";
 import { LazySection } from "./LazySection";
 import { MobileHud, NAV_IDS } from "./MobileHud";
 import { MobileNightShiftOverlay } from "./MobileNightShiftOverlay";
+import { MobileRedString } from "./MobileRedString";
 import { FORCE_DESKTOP_KEY } from "./forceDesktop";
 
 const INTRO = {
@@ -41,44 +41,11 @@ const SECTIONS: { Comp: ComponentType; h: number }[] = [
 ];
 
 /**
- * Vertical stand-in for the desktop red string: instead of one straight
- * dashed line, each gap is a little cat's-cradle of thread strung between
- * pins at alternating corners (`flip`), so stacked end to end they zigzag
- * down the page and the board reads busy/frantic rather than tidy. Drawn
- * per-gap with a tiny stretched SVG (non-scaling stroke) — never a
- * world-sized SVG.
+ * An always-rendered anchor the whole-column red string routes through.
+ * Doubles as the breathing room between two stacked sections.
  */
-function StringGap({ flip = false }: { flip?: boolean }) {
-  const a = flip ? 85 : 15;
-  const b = flip ? 15 : 85;
-  return (
-    <div className="relative h-20" aria-hidden>
-      <svg
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full overflow-visible"
-      >
-        <line
-          x1={a} y1="6" x2={b} y2="94"
-          stroke="#6f2117" strokeWidth="2.5" vectorEffect="non-scaling-stroke" opacity="0.92"
-        />
-        <path
-          d={`M${a} 6 Q 50 84 ${b} 94`}
-          fill="none" stroke="#8a2b1e" strokeWidth="1.3" vectorEffect="non-scaling-stroke" opacity="0.5"
-        />
-        <line
-          x1="50" y1="-6" x2={flip ? 30 : 70} y2="60"
-          stroke="#6f2117" strokeWidth="1" vectorEffect="non-scaling-stroke" opacity="0.35"
-        />
-      </svg>
-      <span className="absolute -top-2 -translate-x-1/2" style={{ left: `${a}%` }}>
-        <PushpinIcon className="h-5 w-5" />
-      </span>
-      <span className="absolute -bottom-2 -translate-x-1/2" style={{ left: `${b}%` }}>
-        <PushpinIcon className="h-5 w-5" />
-      </span>
-    </div>
-  );
+function StringNode({ x, className = "h-14" }: { x: number; className?: string }) {
+  return <div data-string-node data-x={x} className={className} aria-hidden />;
 }
 
 function Footer() {
@@ -113,6 +80,7 @@ function Footer() {
 function MobileShell() {
   const { lang } = useLanguage();
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const columnRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState("");
   const [showTop, setShowTop] = useState(false);
 
@@ -156,28 +124,36 @@ function MobileShell() {
            up into full-height black spikes. Paper grain + gradient carry
            the vintage look on their own. */}
         <div className="bg-paper-gradient paper-grain pt-[92px] pb-4">
-          <div className="max-w-[680px] mx-auto px-1">
-            <Masthead />
-            <WantedPoster />
+          <div ref={columnRef} className="relative max-w-[680px] mx-auto px-1">
+            {/* Drawn first so the column's content paints over it. */}
+            <MobileRedString columnRef={columnRef} />
 
-            {stickyNotes.home && (
-              <div className="px-4 flex justify-end -mt-1 mb-2">
-                <StickyNote caseFile={stickyNotes.home} />
-              </div>
-            )}
+            <div className="relative">
+              <Masthead />
+              <WantedPoster />
 
-            <LeadParagraph text={INTRO} />
+              <StringNode x={7} className="h-4" />
 
-            {SECTIONS.map(({ Comp, h }, i) => (
-              <Fragment key={i}>
-                <StringGap flip={i % 2 === 1} />
-                <LazySection height={h}>
-                  <Comp />
-                </LazySection>
-              </Fragment>
-            ))}
+              {stickyNotes.home && (
+                <div className="px-4 flex justify-end -mt-1 mb-2">
+                  <StickyNote caseFile={stickyNotes.home} />
+                </div>
+              )}
 
-            <Footer />
+              <LeadParagraph text={INTRO} />
+
+              {SECTIONS.map(({ Comp, h }, i) => (
+                <Fragment key={i}>
+                  <StringNode x={i % 2 === 1 ? 93 : 7} />
+                  <LazySection height={h}>
+                    <Comp />
+                  </LazySection>
+                </Fragment>
+              ))}
+
+              <StringNode x={7} className="h-6" />
+              <Footer />
+            </div>
           </div>
         </div>
       </div>
