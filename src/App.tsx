@@ -23,7 +23,8 @@ import { StickyNote } from "./components/evidence/StickyNote";
 import { pressCredits, profile, stickyNotes } from "./data/content";
 import { useLanguage } from "./context/LanguageContext";
 import { useIsMobileOrTablet } from "./hooks/useIsMobileOrTablet";
-import { MobileComingSoon } from "./components/MobileComingSoon";
+import { MobileView } from "./components/mobile/MobileView";
+import { isForceDesktop } from "./components/mobile/forceDesktop";
 
 function Footer() {
   const { t } = useLanguage();
@@ -41,8 +42,8 @@ function App() {
   const home = NODES.home;
   const isMobileOrTablet = useIsMobileOrTablet();
 
-  if (isMobileOrTablet) {
-    return <MobileComingSoon />;
+  if (isMobileOrTablet && !isForceDesktop()) {
+    return <MobileView />;
   }
 
   return (

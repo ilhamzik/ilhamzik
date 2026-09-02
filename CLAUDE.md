@@ -198,30 +198,53 @@ carikan logo, ikuti pola yang sama (biarkan pakai fallback fingerprint).
 — dipakaikan logo SQLite karena itu database engine konkret yang dipakai di
 salah satu proyek (`proj-ecommerce`), bukan klaim bahwa SQL = SQLite.
 
-## Mobile/tablet di-gate, bukan dioptimasi lebih jauh (2026-08-31)
+## Mobile/tablet: scroll view sendiri, BUKAN lagi Coming Soon gate (2026-09-02)
 
-Setelah beberapa iterasi optimasi (hapus blend-mode/blur/will-change,
-kompres gambar, virtualization section) masih belum cukup dan user nggak
-suka trade-off estetika dari salah satu percobaan (pindah tekstur kertas
-ke per-section bikin tampilannya jadi "sobekan-sobekan terpisah", bukan
-satu koran utuh) — user putuskan untuk **stop mengejar performa HP**, dan
-sebagai gantinya **mobile/tablet di-gate** ke halaman "Coming Soon" statis
-(`MobileComingSoon.tsx`), nyaranin buka via browser desktop/laptop.
+Sejarah: sempat di-gate ke `MobileComingSoon.tsx` setelah beberapa iterasi
+optimasi peta pannable di HP nggak cukup. **Sekarang HP/tablet dapat render
+tree terpisah**: `src/components/mobile/MobileView.tsx` — koran yang sama,
+dibaca scroll atas-ke-bawah, tanpa pannable world / rAF loop / RedString
+SVG sedunia / MapContext. `MobileComingSoon.tsx` sudah dihapus.
 
-Deteksi device ada di `useIsMobileOrTablet.ts` (regex user-agent + fallback
-touch-points untuk iPad modern yang UA-nya ngaku "Macintosh"). Bukan
-security-grade, cuma gate UX yang ramah — nggak masalah kalau ada
-false-positive/negative sesekali.
+- Branch di `App.tsx`: `if (isMobileOrTablet && !isForceDesktop()) return <MobileView/>`.
+- `useIsMobileOrTablet.ts` TIDAK diubah (masih regex UA + fallback touch-points).
+- **Escape hatch**: tombol "Open desktop version" di footer mobile set
+  `sessionStorage["ilhamzik:forceDesktop"]="1"` lalu reload — `App.tsx` baca
+  lewat `isForceDesktop()` (`src/components/mobile/forceDesktop.ts`).
+  Session-scoped sengaja, biar nggak permanen ngunci orang di view berat.
+- **Section components di-reuse apa adanya** (`EducationSection` dst.,
+  `Section.tsx`, `Masthead`, `WantedPoster`, `CaseFileModal`, `StickyNote`) —
+  semuanya sudah responsif (`sm:` breakpoints) dan nggak pernah nyentuh
+  `MapContext`. Jangan bikin versi mobile terpisah dari section-section ini.
+- **Murah by design**: `LazySection.tsx` bungkus tiap section dengan
+  `content-visibility:auto` + `contain-intrinsic-size` DAN gate mount-once
+  via `IntersectionObserver` (`rootMargin: 1200px`, sekali `true` nggak
+  balik `false` biar nggak scroll-jump). Off-screen section nggak pernah
+  bikin instance Framer Motion-nya sampai di-scroll mendekat.
+- HUD mobile (`MobileHud.tsx`) = satu `<header>` fixed: strip INDEX (anchor
+  chip ke `#education` dst., label dari `NODE_LABELS`) + baris meter kasus +
+  toggle EN/ID + 🔦. Kolom konten `pt-[92px]` buat clearance. Desktop `Hud.tsx`
+  / `DetectiveGuide` / `PaperDecor` TIDAK dipakai di mobile.
+- Night Shift mobile = `MobileNightShiftOverlay.tsx`, flat dark gradient
+  doang (nggak ada spotlight ikut kursor — touch nggak punya kursor).
+- Benang merah mobile = `StringGap` di `MobileView.tsx`: garis dashed
+  vertikal + pushpin antar section. Bukan SVG sedunia.
+- **JANGAN pakai `torn-edge-top/bottom` di kolom mobile** — polygon
+  clip-path-nya di-tune buat world desktop yang lebar-pendek; di kolom
+  ~390px lebar & ~10000px tinggi giginya membesar jadi paku hitam
+  setinggi layar. Grain + gradient kertas sudah cukup buat nuansa vintage.
+- Diverifikasi lewat CDP (`Emulation.setDeviceMetricsOverride` 390x844):
+  build lolos, nol console error, 6 section mount pas di-scroll, escape
+  hatch balik ke peta desktop. **Tes di HP fisik tetap tanggung jawab user**
+  (Claude nggak bisa profil hardware mobile beneran).
 
-**Kalau user minta lanjutkan dukungan mobile lagi di masa depan**: virtualization
-section (`MapNode.tsx`, buffer 220 world-px) dan fade-in animation-nya TETAP
-dipertahankan (nggak di-revert, itu nggak masalah buat user) — cuma tekstur
-kertas per-section yang di-revert balik ke satu div dunia utuh
-(`WorldCanvas.tsx`). Kalau mau coba lagi optimasi HP, mulai dari situ, TAPI
-user sudah cukup capek gonta-ganti tanpa hasil pasti (karena Claude nggak
-bisa tes di HP fisik beneran) — pertimbangkan matang-matang sebelum
-mengusulkan iterasi baru, atau minta user rekam video/profil performa
-asli dari HP-nya dulu biar nggak nebak-nebak lagi.
+Quirk kosmetik yang diketahui & sengaja dibiarkan: `Section.tsx` render
+`note` (sticky note) pakai `absolute top-4 right-4` TAPI Tailwind naruh
+`.relative` sesudah `.absolute` di stylesheet, jadi note-nya efektif
+`position: relative` dan nyangkut di kiri-atas flow section, bukan nempel
+pojok kanan. Di desktop nggak kentara (ruang lega); di kolom mobile agak
+mepet kiri. Nggak difix karena plan-nya reuse section tanpa diubah —
+kalau mau dibenerin, benerin di `Section.tsx` dan cek ulang desktop.
 
 ## Virtualization / lazy-mount section (2026-08-30, mobile perf lanjutan)
 

@@ -114,6 +114,15 @@ body {
   background: rgba(122, 31, 31, 0.35);
 }
 
+/* Horizontal chip strips (mobile INDEX nav) scroll without a visible bar */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Scrollbar styling to match the vintage theme */
 ::-webkit-scrollbar {
   width: 12px;
