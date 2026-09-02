@@ -4,16 +4,17 @@ import { useNightShift } from "../../context/NightShiftContext";
 import { NODE_LABELS, QUICK_NAV_ORDER } from "../map/mapLayout";
 
 /** Section ids that exist in the stacked column (home has no <section id>). */
-const NAV_IDS = QUICK_NAV_ORDER.filter((id) => id !== "home");
+export const NAV_IDS = QUICK_NAV_ORDER.filter((id) => id !== "home");
 
 /**
  * One compact fixed header for the mobile scroll view: an INDEX strip of
- * anchor chips on top, then a thin row with the case-completion meter and
- * the language / night-shift toggles. Kept to a single block so the page
- * only needs to clear a known height (see `pt-*` on the column in
- * MobileView).
+ * anchor chips (the one for the section currently under the header is
+ * highlighted), then a thin row with the case-completion meter and the
+ * language / night-shift toggles. Kept to a single block so the page only
+ * needs to clear a known height (see `pt-*` / `scroll-padding-top` on the
+ * scroller in MobileView).
  */
-export function MobileHud() {
+export function MobileHud({ activeId = "" }: { activeId?: string }) {
   const { lang, toggle, t } = useLanguage();
   const { openedCount, totalCount } = useCaseFile();
   const { active: nightActive, toggle: toggleNight } = useNightShift();
@@ -28,7 +29,11 @@ export function MobileHud() {
           <a
             key={id}
             href={`#${id}`}
-            className="shrink-0 font-typewriter text-[10px] uppercase tracking-wide bg-paper-100 text-ink-700 px-2 py-1 rounded-sm active:bg-blood-600 active:text-paper-50"
+            className={`shrink-0 font-typewriter text-[10px] uppercase tracking-wide px-2 py-1 rounded-sm transition-colors ${
+              activeId === id
+                ? "bg-blood-600 text-paper-50"
+                : "bg-paper-100 text-ink-700 active:bg-blood-600 active:text-paper-50"
+            }`}
           >
             {t(NODE_LABELS[id])}
           </a>

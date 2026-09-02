@@ -123,6 +123,27 @@ body {
   display: none;
 }
 
+/* Keyboard focus: a themed ring, overriding Tailwind's `focus:outline-none`
+   on evidence buttons so tabbing through the board stays visible. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid #6f2117 !important;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Respect the OS "reduce motion" setting: calm the CSS keyframe animations
+   (stamp slam, pop-in, sway, pulse) and snap scrolling instead of gliding. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Scrollbar styling to match the vintage theme */
 ::-webkit-scrollbar {
   width: 12px;
