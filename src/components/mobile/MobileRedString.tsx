@@ -88,6 +88,42 @@ export function MobileRedString({ column }: Props) {
 
   const px = (w: Waypoint) => (w.xPct / 100) * box.w;
 
+  /** Stable pseudo-random in [0,1) — the tangle must not reshuffle on every
+   *  re-measure, so it is derived from the link's own indices, not Math.random. */
+  const rand = (seed: number) => {
+    const x = Math.sin(seed * 127.1) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  const jitter = (seed: number, amount: number) => (rand(seed) - 0.5) * 2 * amount;
+
+  /**
+   * The chaos layer: every waypoint gets tied to the ones two, three, four
+   * and five sections away, with jittered endpoints and a bit of bow, so
+   * the board looks strung by someone in a hurry rather than plotted. Kept
+   * hairline and faint on purpose — these are the only strands that cross
+   * the article text.
+   */
+  const tangle: { d: string; w: number; o: number }[] = [];
+  for (let skip = 2; skip <= 5; skip++) {
+    for (let i = 0; i + skip < wps.length; i++) {
+      const a = wps[i];
+      const b = wps[i + skip];
+      const seed = i * 13 + skip * 71;
+      const ax = px(a) + jitter(seed, 16);
+      const ay = a.y + jitter(seed + 1, 12);
+      const bx = px(b) + jitter(seed + 2, 16);
+      const by = b.y + jitter(seed + 3, 12);
+      const mx = (ax + bx) / 2 + jitter(seed + 4, 70);
+      const my = (ay + by) / 2 + jitter(seed + 5, 40);
+      tangle.push({
+        d: `M${ax},${ay} Q${mx},${my} ${bx},${by}`,
+        w: 0.7 + rand(seed + 6) * 0.6,
+        // longer reaches hang back so the near ties still read first
+        o: (0.1 + rand(seed + 7) * 0.14) * (skip >= 4 ? 0.75 : 1),
+      });
+    }
+  }
+
   /**
    * Runs straight down `a`'s margin for the length of the section, then
    * swings across to `b` only in the whitespace just above that pin. A
@@ -113,22 +149,28 @@ export function MobileRedString({ column }: Props) {
         height={box.h}
         aria-hidden
       >
-        {/* faint skip-one cross links, the frantic "everything connects" layer */}
-        {wps.slice(0, -2).map((a, i) => (
-          <line
-            key={`cross-${i}`}
-            x1={px(a)} y1={a.y}
-            x2={px(wps[i + 2])} y2={wps[i + 2].y}
-            stroke="#6f2117" strokeWidth={1} opacity={0.18}
+        {/* the chaos layer */}
+        {tangle.map((l, i) => (
+          <path
+            key={`tangle-${i}`}
+            d={l.d}
+            fill="none" stroke="#6f2117" strokeWidth={l.w} opacity={l.o}
           />
         ))}
 
-        {/* loose second strand running alongside the main thread */}
+        {/* loose strands bundled alongside the main thread down the gutter */}
         {wps.slice(0, -1).map((a, i) => (
           <path
             key={`loose-${i}`}
             d={segment(a, wps[i + 1], a.xPct < 50 ? 7 : -7)}
             fill="none" stroke="#8a2b1e" strokeWidth={1.5} opacity={0.38}
+          />
+        ))}
+        {wps.slice(0, -1).map((a, i) => (
+          <path
+            key={`loose2-${i}`}
+            d={segment(a, wps[i + 1], a.xPct < 50 ? 14 : -14)}
+            fill="none" stroke="#8a2b1e" strokeWidth={1} opacity={0.22}
           />
         ))}
 

@@ -237,8 +237,15 @@ SVG sedunia / MapContext. `MobileComingSoon.tsx` sudah dihapus.
   ngubah tinggi. **Bentuk segmennya penting**: turun lurus di gutter
   sepanjang section, baru menyeberang ke pin berikutnya di ~110px terakhir
   (area kosong di atas pin). Diagonal lurus antar-pin pernah dicoba dan
-  hasilnya benang motong semua paragraf, susah dibaca. Tiga lapis: benang
-  utama, untai kendor offset, dan cross-link skip-one yang samar.
+  hasilnya benang motong semua paragraf, susah dibaca. Lapisannya: benang
+  utama tebal + 2 untai kendor offset (bundel 3 benang turun di gutter),
+  plus "chaos layer" ~18 benang rambut yang ngiket tiap waypoint ke yang
+  jaraknya 2/3/4/5 section, dengan ujung ter-jitter dan sedikit lengkung.
+  Benang rambut inilah satu-satunya yang motong teks, dan user eksplisit
+  bilang itu nggak ganggu bacaan (opacity 0.1-0.24, tebal 0.7-1.3px).
+  Jitter-nya pakai PRNG deterministik dari indeks link, **bukan
+  `Math.random()`** — kalau random beneran, tiap re-measure
+  (ResizeObserver) benangnya bakal acak ulang dan kelihatan bergetar.
 - **JANGAN pakai `torn-edge-top/bottom` di kolom mobile** — polygon
   clip-path-nya di-tune buat world desktop yang lebar-pendek; di kolom
   ~390px lebar & ~10000px tinggi giginya membesar jadi paku hitam
