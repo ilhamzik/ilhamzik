@@ -1,6 +1,7 @@
 import { type ReactNode, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useCaseFile } from "../../context/CaseFileContext";
+import { useLanguage } from "../../context/LanguageContext";
 import type { CaseFile } from "../../types";
 
 interface EvidenceItemProps {
@@ -21,6 +22,7 @@ interface EvidenceItemProps {
  */
 export function EvidenceItem({ caseFile, children, className = "", tilt, size = 120, width, height }: EvidenceItemProps) {
   const { openCase } = useCaseFile();
+  const { t } = useLanguage();
   const resolvedTilt = useMemo(() => tilt ?? Math.round((Math.random() - 0.5) * 14), [tilt]);
 
   return (
@@ -37,13 +39,13 @@ export function EvidenceItem({ caseFile, children, className = "", tilt, size = 
       whileHover={{ scale: 1.08, rotate: 0, zIndex: 30 }}
       whileTap={{ scale: 0.96 }}
       transition={{ type: "spring", stiffness: 300, damping: 18 }}
-      aria-label={caseFile.title.id}
+      aria-label={t(caseFile.title)}
     >
       <span className="absolute inset-0 drop-shadow-[0_8px_10px_rgba(10,8,5,0.45)] transition-transform">
         {children}
       </span>
       <span className="absolute -top-2 -right-2 bg-stamp-500 text-paper-50 text-[9px] font-bold px-1.5 py-0.5 rounded-sm shadow opacity-0 group-hover:opacity-100 transition-opacity tracking-wide">
-        {caseFile.tag}
+        {t(caseFile.tag)}
       </span>
     </motion.button>
   );

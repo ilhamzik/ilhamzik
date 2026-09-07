@@ -1,15 +1,24 @@
 import { useLanguage } from "../../context/LanguageContext";
 import { profile } from "../../data/content";
 import { MagnifyingGlassIcon } from "../icons";
+import { openSecretFile, useHoldTrigger } from "../evidence/secretFile";
 
 export function Masthead() {
   const { t } = useLanguage();
+  // Hidden easter-egg trigger. Ctrl+K covers keyboards; this covers phones.
+  const hold = useHoldTrigger(openSecretFile);
 
   return (
     <header className="relative px-4 sm:px-8 pt-8 sm:pt-12 pb-6 max-w-5xl mx-auto">
       <div className="flex justify-between items-center text-[10px] sm:text-xs font-typewriter tracking-widest text-ink-500/70 uppercase mb-3">
-        <span>{profile.caseNumber}</span>
-        <span>{profile.issueDate}</span>
+        <span
+          {...hold}
+          className="select-none border-b border-dotted border-ink-500/25 pb-px"
+          title=""
+        >
+          {profile.caseNumber}
+        </span>
+        <span>{t(profile.issueDate)}</span>
       </div>
 
       <div className="text-center border-y-4 border-double border-ink-700 py-4 sm:py-6">

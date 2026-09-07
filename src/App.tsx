@@ -19,6 +19,7 @@ import { ProjectsSection } from "./components/sections/ProjectsSection";
 import { SkillsSection } from "./components/sections/SkillsSection";
 import { ContactSection } from "./components/sections/ContactSection";
 import { CaseFileModal } from "./components/evidence/CaseFileModal";
+import { SecretFrame } from "./components/evidence/SecretFrame";
 import { StickyNote } from "./components/evidence/StickyNote";
 import { pressCredits, profile, stickyNotes } from "./data/content";
 import { useLanguage } from "./context/LanguageContext";
@@ -32,7 +33,7 @@ function Footer() {
     <footer className="text-center py-6 font-typewriter text-xs text-ink-500/60 tracking-widest uppercase">
       <p>* * * End of Report * * *</p>
       <p className="normal-case tracking-normal mt-1 text-[10px] opacity-70">
-        {t(pressCredits)} {profile.issueDate}.
+        {t(pressCredits)} {t(profile.issueDate)}.
       </p>
     </footer>
   );
@@ -56,8 +57,16 @@ function App() {
               <PaperDecor />
 
               <MapNode {...NODES.home}>
+                {/* Wrapper, not `absolute` on the note itself: StickyNote's
+                    base class includes `relative` and Tailwind emits
+                    `.relative` after `.absolute`, so the utility passed in
+                    via className lost and the note landed at the top-left of
+                    the node instead of the right corner. Same fix as
+                    Section.tsx. */}
                 {stickyNotes.home && (
-                  <StickyNote caseFile={stickyNotes.home} className="absolute -top-3 right-2 sm:right-10 z-10" />
+                  <div className="flex justify-end pr-2 sm:pr-10 mb-1">
+                    <StickyNote caseFile={stickyNotes.home} />
+                  </div>
                 )}
                 <Masthead />
                 <WantedPoster />
@@ -96,6 +105,7 @@ function App() {
         </NightShiftProvider>
 
         <CaseFileModal />
+            <SecretFrame />
       </CaseFileProvider>
     </LanguageProvider>
   );

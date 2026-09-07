@@ -26,7 +26,20 @@ export function Section({ id, rubric, headline, children, className = "", articl
 
   return (
     <section id={id} className={`relative py-14 sm:py-20 px-4 sm:px-8 ${className}`}>
-      {note && <StickyNote caseFile={note} className="absolute top-4 right-4 sm:right-10 z-10" />}
+      {/* The note rides in the flow at the top-right rather than being
+          absolutely positioned. Two reasons: StickyNote's own base class
+          includes `relative` and Tailwind emits `.relative` after
+          `.absolute`, so an `absolute` passed in via className silently lost
+          and the note landed at the top-left over the rubric; and even when
+          pinned to the corner it collided with the wider centred headlines
+          ("Suspect's Interests") on the narrower map nodes. In the flow it
+          reads as a post-it stuck to the top corner of the clipping and can
+          never overlap the type. */}
+      {note && (
+        <div className="mb-1 flex justify-end pr-1 sm:mb-2 sm:pr-6">
+          <StickyNote caseFile={note} />
+        </div>
+      )}
 
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-2">

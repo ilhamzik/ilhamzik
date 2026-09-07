@@ -5,6 +5,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { PolaroidPhoto } from "./PolaroidPhoto";
 import { RedactedText } from "./RedactedText";
 import { StampMark } from "../icons";
+import { capabilityCatalog } from "../../data/content";
 
 export function CaseFileModal() {
   const { activeCase, closeCase } = useCaseFile();
@@ -49,7 +50,7 @@ export function CaseFileModal() {
           >
             {/* Manila folder tab */}
             <div className="absolute -top-6 left-8 bg-[#d8bd80] px-6 py-1.5 rounded-t-md border border-b-0 border-ink-500/20 text-ink-500 font-typewriter text-xs tracking-widest">
-              {activeCase.tag}
+              {t(activeCase.tag)}
             </div>
 
             <button
@@ -96,16 +97,43 @@ export function CaseFileModal() {
                     ))}
                   </div>
 
+                  {activeCase.capabilities && activeCase.capabilities.length > 0 && (
+                    <div className="mt-5">
+                      <p className="font-typewriter text-[9px] uppercase tracking-[0.22em] text-ink-500/55 mb-1.5">
+                        {t({ id: "Teknik yang Dipakai", en: "Techniques Applied" })}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {activeCase.capabilities.map((key) => {
+                          const entry = capabilityCatalog[key];
+                          if (!entry) return null;
+                          return (
+                            <span
+                              key={key}
+                              className="text-[10px] font-typewriter px-2 py-1 border-[1.5px] border-blood-600/50 text-blood-600 rounded-sm tracking-wide"
+                            >
+                              {t(entry.label)}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   {activeCase.techStack && activeCase.techStack.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {activeCase.techStack.map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-[10px] font-typewriter px-2 py-1 bg-ink-700 text-paper-50 rounded-sm"
-                        >
-                          {tech}
-                        </span>
-                      ))}
+                    <div className="mt-4">
+                      <p className="font-typewriter text-[9px] uppercase tracking-[0.22em] text-ink-500/55 mb-1.5">
+                        {t({ id: "Perkakas", en: "Tooling" })}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {activeCase.techStack.map((tech) => (
+                          <span
+                            key={tech}
+                            className="text-[10px] font-typewriter px-2 py-1 bg-ink-700 text-paper-50 rounded-sm"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
 

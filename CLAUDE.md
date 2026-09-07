@@ -111,8 +111,12 @@ yang benar selalu masuk ke `src/assets/photos/`.
 
 ## Foto asli — status per 2026-08-30
 
-Sudah terpasang: lambang SDI PB Soedirman/SMPN 49/SMAN 39 (dipasang sebagai
-`photoSrc` kartu pendidikan, muncul di polaroid modal), foto wisuda asli
+Sudah terpasang (update 2026-09-07: + `tentang-kopi.jpg` di kartu Tentang
+Kopi, + Makara UI di medali, + siluet Agent K di easter egg): lambang SDI PB
+Soedirman/SMPN 49/SMAN 39 (dipasang sebagai
+`photoSrc` kartu pendidikan, muncul di jendela foto kartu pelajar DAN di
+polaroid modal), Makara UI (`ui.png` -> `ui-makara-engraved.png`, ter-struck
+di medali kuliah, lihat sectionnya di bawah), foto wisuda asli
 (`ilham-wisuda.jpg`, gantikan `ilham.png` di kartu kuliah), foto di kantor
 Telkom (`telkom.jpg`), foto tim kampanye BEM (`bem-campaign.jpg`), foto tim
 Open House Fasilkom (`openhouse-fasilkom.jpg`), dan crest asli Manchester
@@ -267,13 +271,16 @@ disimpan di state lewat callback ref (`ref={setColumnEl}`) dan dioper ke
 anak sebagai elemen, bukan ref object. **Kalau bikin komponen lain yang
 ngukur elemen induk, pakai pola yang sama, dan tes di build produksi.**
 
-Quirk kosmetik yang diketahui & sengaja dibiarkan: `Section.tsx` render
-`note` (sticky note) pakai `absolute top-4 right-4` TAPI Tailwind naruh
-`.relative` sesudah `.absolute` di stylesheet, jadi note-nya efektif
-`position: relative` dan nyangkut di kiri-atas flow section, bukan nempel
-pojok kanan. Di desktop nggak kentara (ruang lega); di kolom mobile agak
-mepet kiri. Nggak difix karena plan-nya reuse section tanpa diubah —
-kalau mau dibenerin, benerin di `Section.tsx` dan cek ulang desktop.
+Sticky note: **SUDAH DIFIX (2026-09-07)**, dulu `Section.tsx` render `note`
+pakai `absolute top-4 right-4` TAPI Tailwind naruh `.relative` sesudah
+`.absolute` di stylesheet, jadi utility `absolute` yang dioper lewat
+className kalah dan note-nya nyangkut di kiri-atas. Sekarang note dibungkus
+div posisi sendiri (`flex justify-end`) dan sengaja tetap di flow, bukan
+absolute, di semua breakpoint: waktu masih dipin ke pojok, note-nya nabrak
+headline yang lebar ("Suspect's Interests") di node peta yang sempit. Bug
+yang sama juga ada di note `home` di `App.tsx` dan sudah ikut difix.
+**Aturannya: jangan pernah oper `absolute` lewat `className` ke
+`StickyNote`**, bungkus pakai wrapper.
 
 ## Virtualization / lazy-mount section (2026-08-30, mobile perf lanjutan)
 
@@ -333,10 +340,257 @@ padahal isinya ada kata Indonesia) waktu ngerjain ini, langsung dibenerin:
   yang sama sudah ada di `facts`) — dibiarkan apa adanya, nggak perlu
   dibenerin kecuali suatu saat mulai dipakai di komponen.
 
+## Kartu per-section: komponen sendiri, bukan ikon rata (2026-09-07)
+
+Dulu tiap section cuma nempel satu ikon SVG rata (`StudentCardIcon`,
+`EvidenceTagIcon`) plus teks di atasnya. Sekarang tiap keluarga kartu punya
+komponen sendiri di `src/components/evidence/`, dan section-nya cuma
+mengatur layout:
+
+| Section | Komponen kartu | Isinya |
+| --- | --- | --- |
+| education | `StudentIdCard.tsx` | kartu pelajar: header warna sekolah, lambang asli di jendela foto, baris data diketik, tanda tangan, barcode (deterministik dari `entry.id`, bukan `Math.random()`), sheen laminasi |
+| education (kuliah) | `GraduationMedalIcon` di icons | medali digambar ulang: pita satu untai bernotch (biru & merah), rim milled, **Makara UI ter-struck di tengah**, banner "S.Kom" |
+| experience | `DossierCard.tsx` | kartu arsip bergaris: garis biru + margin merah, foto asli ter-mount, sudut terlipat, stempel status (AKTIF) |
+| experience (papan) | `CorkString.tsx` | benang antar pin, **diukur runtime** dari `[data-pin]` |
+| projects | `ExhibitTag.tsx` | label kraft: lubang grommet asli (SVG mask, jadi kertas di baliknya benar-benar kelihatan), eyelet logam, benang bersimpul, huruf exhibit diambil dari `project.tag` |
+| skills | `PrintCard.tsx` | kartu sidik jari: tick registrasi di 4 sudut, kotak cetakan, tangga "ridge clarity" |
+| interests | `PhotoMount.tsx` | foto ter-mount pakai 4 sudut foto hitam + caption tulisan tangan |
+| contact | inline di `ContactSection.tsx` | iklan baris ber-rule ganda + kupon tip-line dengan perforasi & stub |
+
+**Gotcha yang paling gampang kena**: `EvidenceItem` render `children` di
+dalam `<button>`, dan default UA tombol itu `text-align: center` (Tailwind
+preflight nggak reset ini). Semua komponen kartu di atas WAJIB pasang
+`text-left` sendiri, kalau nggak baris-baris teksnya mendadak nge-center.
+Ini sudah kejadian sekali di `StudentIdCard`.
+
+`CorkString` nerima elemen papan lewat **props elemen, bukan ref object**,
+persis pola `MobileRedString` (ref anak diisi React sebelum ref induk, jadi
+`useLayoutEffect` anak dapat `null`). Kalau bikin komponen pengukur lain,
+ikuti pola ini.
+
+Keputusan visual yang datang langsung dari user, jangan diubah tanpa dia minta:
+- Warna kartu pelajar ikut seragam sekolah Indonesia: SD merah (`#b02a2a`),
+  SMP biru navy (`#1f3d7a`), SMA abu (`#5c626b`).
+- Pita medali kuliah bawa biru dan merah sebagai "soul color".
+- Skill yang **nggak punya logo resmi** (Statistik & ML, Data Cleaning)
+  dikelompokkan di akhir daftar, lewat `orderedSkills` (stable sort) di
+  `SkillsSection.tsx`. Nomor `tag` (SIDIK-0X) sengaja TIDAK dirapikan ulang,
+  itu nomor berkas dari `content.ts`.
+
+Ikon yang dihapus karena sudah digantikan komponen di atas:
+`StudentCardIcon`, `EvidenceTagIcon`. `ClubBadgeIcon` tetap disimpan
+(fallback non-trademark, lihat catatan foto asli di atas).
+`FingerprintIcon` digambar ulang total: pakai elliptical arc, BUKAN cubic,
+karena apex cubic cuma nyampe ~3/4 jalan ke control point-nya jadi lengkung
+sidik jarinya numpuk di tengah kotak. Tiap ridge juga dikasih "kaki" turun
+ke dasar, kalau nggak bentuknya kayak tumpukan gapura, bukan sidik jari.
+
+`SealedEnvelope`: container-nya dulu `h-32` padahal isinya svg full-height
+PLUS dua baris caption di bawahnya, jadi captionnya kepotong. Sekarang
+`h-[176px]` dengan svg `h-[114px]`. `MailboxIcon` diwarnai ulang ke ujung
+palet yang terang karena sekarang dia duduk di header bar `bg-ink-700`.
+
+## Makara UI di medali kuliah (2026-09-07)
+
+`src/assets/photos/ui.png` (Makara resmi UI, kuning di atas kotak hitam
+**opaque**, nggak ada tRNS chunk) ternyata sudah lama nangkring di repo tapi
+belum kepakai sama sekali. Sekarang dia jadi sumber emblem yang ter-struck di
+muka medali kuliah.
+
+Yang dipakai di komponen BUKAN `ui.png` mentah, tapi turunannya
+`ui-makara-engraved.png`. Resep pembuatannya (PIL, sekali jalan, `ui.png`
+tetap disimpan sebagai sumber persis seperti `manutd-crest.svg`):
+
+1. Alpha diambil dari kecerahan piksel (`max(r,g)/252`). Ini valid karena
+   seluruh gambar cuma ramp hitam ke kuning, jadi background kekunci bersih
+   dan tepi anti-alias-nya utuh. Jangan pakai threshold, giginya jadi kasar.
+2. Tiga layer di-bake jadi satu PNG transparan: bayangan `#4a3308` offset
+   turun-kanan, highlight `#f7e9ad` offset naik-kiri, badan bronze `#a1701a`
+   di atasnya. Arah cahayanya harus **naik-kiri** supaya cocok sama radial
+   gradient disc medali (`cx 36% cy 28%`), kalau dibalik emblem-nya kelihatan
+   cekung bukan menonjol.
+3. Di-resize ke 176px. Emblem-nya render di ~49px (sudah diukur di build
+   produksi), jadi 176 itu cukup buat layar 3x dan file-nya 51KB.
+
+Highlight/bayangan sengaja **di-bake ke aset**, bukan pakai filter SVG/CSS
+runtime, karena layer ini hidup di dalam world yang terus di-transform (lihat
+catatan perf di atas).
+
+`GraduationMedalIcon` sekarang nerima prop `emblem` (+ `emblemLabel` buat
+`<title>`). Tanpa `emblem`, dia fallback ke bintang struck biasa, jadi ikonnya
+tetap kepakai buat konteks lain. Emblem-nya dioper dari `EducationSection`,
+bukan di-import di `icons/index.tsx`, biar modul ikon tetap bebas aset (pola
+yang sama kayak `SKILL_LOGOS` di `SkillsSection`).
+
+Daun laurel di muka medali **dihapus** (tinggal dua garis ranting tipis)
+waktu Makara masuk: Makara itu sendiri bentuknya sudah kipas yang ramai, dan
+wreath berdaun penuh di sekelilingnya bikin sesak di ukuran render
+sebenarnya.
+
+## Halaman spesimen dev + folder preview (2026-09-07)
+
+`gallery.html` + `src/gallery.tsx` adalah halaman **dev-only** buat lihat
+satu section sekaligus di atas background kertas, tanpa peta pannable.
+Vite cuma build `index.html`, jadi file ini TIDAK ikut ke `dist/` (sudah
+diverifikasi). Query-nya: `?s=<section>` dan `?w=<lebar>`.
+
+`?w=` itu kunci: dia yang dipakai buat **mengukur** `height` di
+`mapLayout.ts` (render section di lebar node-nya, baca `offsetHeight`).
+Dua hal yang bikin angkanya salah kalau nggak hati-hati: tunggu
+`document.fonts.ready` dulu, DAN ukur di dua lebar jendela (sempit < 640px
+dan lebar), ambil yang lebih besar. Pernah ketipu di sini: skills kebaca
+920 di satu run dan 1194 di run lain, dan penyebabnya bukan font, tapi
+breakpoint `sm:` yang ngikut lebar jendela (lihat catatan di bawah).
+
+Hasil screenshot tiap kartu (desktop + HP) ada di `card-previews/`, lihat
+`card-previews/README.md` buat cara regenerate.
+
+## Bilingual: audit menyeluruh (2026-09-07)
+
+User lapor masih ada kata Indonesia yang nongol di versi EN. Ternyata bukan
+satu-dua, tapi satu keluarga bug yang sama: **field bertipe `string` polos
+yang isinya kata, bukan kode.** Yang sudah difix:
+
+- **`CaseFile.tag` jadi `Bilingual`.** Ini yang paling kelihatan. Isinya
+  campur aduk: KARTU / BERKAS / SIDIK / BUKTI / MEDALI / CATATAN (Indonesia)
+  TAPI juga EXHIBIT A-G (Inggris), jadi salah di **dua-duanya**. Sekarang
+  ID: KARTU / BERKAS / SIDIK / BUKTI / MEDALI / CATATAN, EN: CARD / FILE /
+  PRINT / EVIDENCE / MEDAL / NOTE / EXHIBIT. Ada 9 tempat yang render tag,
+  semuanya lewat `t()` sekarang. **`ExhibitTag` mengambil huruf exhibit dengan
+  mem-split tag**, jadi dia harus split hasil `t(tag)`, bukan tag mentah.
+- `profile.issueDate` jadi `Bilingual` ("30 AGUSTUS 2026" / "30 AUGUST
+  2026"), dipakai di Masthead + dua footer.
+- `profile.location` jadi `Bilingual` walau belum dirender di mana pun,
+  biar nggak jadi ranjau berikutnya.
+- `EducationEntry.years` **dihapus**. Dia dead field (nggak dirender di mana
+  pun) DAN isinya Indonesia-only ("Lulus 2016"), persis jenis ranjau di atas.
+- `EvidenceItem` dulu `aria-label={caseFile.title.id}`, jadi nama aksesibel
+  tiap barang bukti selalu Indonesia. Sekarang `t(caseFile.title)`.
+
+**Cara audit-nya (ulangi kalau nambah konten):** jangan baca kode satu-satu,
+render lalu sapu teksnya. Walk `document.body` pakai TreeWalker, kumpulkan
+semua text node, dan regex cari kata fungsi bahasa seberang (di EN cari
+`yang|untuk|dengan|klik|nggak|kartu|berkas|sidik|bukti|agustus|...`, di ID
+cari `the|and|with|click|close|evidence|exhibit|print|card|...`). Lakukan di
+view desktop DAN mobile, dengan modal case file kebuka, dan di kedua arah
+bahasa. Sekarang hasilnya nol, kecuali dua hit yang memang disengaja user:
+"(Student Executive Board)" (nama resmi organisasinya) dan baris
+`otherSkills.soft` yang teks ID dan EN-nya identik (soft skill ditulis
+Inggris di dua-duanya). Dua ini keputusan user, jangan diubah sendiri.
+
+## ⚠️ Opacity modifier Tailwind cuma kelipatan 5
+
+`bg-ink-900/92` **tidak menghasilkan CSS apa pun** dan gagal dalam diam:
+skala opacity default Tailwind itu 0,5,10,...,95,100, jadi 92 invalid dan
+class-nya dibuang tanpa warning. Efeknya backdrop easter egg sempat
+transparan total padahal class-nya kelihatan benar. Kalau butuh nilai di
+luar kelipatan 5, pakai bracket: `bg-ink-900/[0.92]`.
+
+Cek cepat seluruh repo:
+
+    grep -rhoE '(bg|text|border|from|to|ring|fill|stroke)-[a-z0-9-]+/[0-9]+' src --include=*.tsx       | sort -u | awk -F/ '{ if ($2 % 5 != 0) print "INVALID: " $0 }'
+
+## Easter egg: berkas rahasia (2026-09-07)
+
+Dua jalan masuk, karena HP nggak punya tombol Ctrl:
+- **Ctrl+K / Cmd+K** (toggle). `preventDefault()` wajib, Ctrl+K itu shortcut
+  search browser.
+- **Tekan-dan-tahan 650ms nomor perkara di Masthead** ("NO. 007-ZIK").
+  Ini jawaban buat pertanyaan user soal trigger di HP. Nomornya dikasih
+  garis putus-putus tipis di bawah sebagai satu-satunya petunjuk.
+
+`useHoldTrigger` (`secretFile.ts`) memasang listener move/up di **window,
+bukan di elemennya**: di desktop trigger-nya ada di dalam world yang
+pointer-handler-nya mengambil pointer capture, jadi elemennya sendiri nggak
+pernah kebagian pointerup. Press dibatalkan kalau pointer geser > 12px,
+supaya nyeret peta nggak ikut membuka egg. Sudah dites: buka, toggle, Esc,
+tahan, dan seret-tidak-membuka.
+
+`SecretFrame` render di `z-[70]`, di atas night shift (30), HUD (40), dan
+CaseFileModal (50). Dia **tidak** terdaftar di `CaseFileContext`, jadi nggak
+menambah angka meter kasus. Frame-nya sengaja besar (`w-[min(86vw,340px)]
+sm:w-[430px] md:w-[500px]`) atas permintaan user, biar berasa "sesuatu yang
+besar". Copy-nya di `secretFile` di content.ts dan sengaja tidak menyebut
+siapa subjeknya.
+
+### Resep silhouette (dan kenapa fotonya TIDAK ada di repo)
+
+User kirim foto asli seorang perempuan berhijab buat dijadikan siluet.
+Keputusannya berubah dua kali, jadi ini versi finalnya: **siluet asli yang
+tajam, hitam-putih, tanpa detail dalam sama sekali.** (Iterasi pertama
+di-blur berat dan kepalanya digambar ulang generik; user bilang itu kelewat
+blur dan mengizinkan bentuk aslinya, "as long as the colors vanished".)
+
+Resep di `make-silhouette.py` (skrip ada di scratchpad session):
+
+1. Background dikunci pakai **flood fill dari tepi**, bukan threshold biasa.
+   Threshold biasa bikin bolong di kacamata dan highlight wajah, karena
+   kulit yang kena cahaya itu terang. Yang background cuma piksel terang
+   yang **tersambung ke tepi frame**.
+2. Seed fill-nya cuma dari sisi **atas + kiri + kanan, JANGAN dari bawah**.
+   Subjeknya kepotong di tepi bawah foto, dan seed dari sana bikin fill
+   merambat naik lewat kulit tangan yang terang lalu melubangi tangannya.
+3. Cuma di-despeckle (median 3) plus blur 0.9 buat anti-alias tepi. Tidak
+   ada blur berat: bentuknya harus tajam.
+4. Diisi warna **netral** (abu sangat gelap ke hitam, tanpa tint hangat) +
+   rim light pucat di tepi kiri-atas. Hasilnya: bentuk solid, nol informasi
+   di dalamnya, nol warna.
+5. Plate di belakangnya juga dinetralkan ke glow abu (`#9c9a95` ke
+   `#0a0a09`) supaya keseluruhan plate kebaca sebagai foto hitam-putih.
+   Frame-nya tetap emas dan stempel CLASSIFIED tetap merah, karena itu
+   frame dan tinta, bukan bagian dari fotonya.
+
+Isi siluet **harus lebih gelap dari glow plate di belakangnya**. Percobaan
+sebelumnya isinya lebih terang dari background dan siluetnya hilang total.
+
+Judulnya **"Agent K"** (permintaan user), pas sama trigger Ctrl+**K**, dengan
+"Subjek Belum Teridentifikasi" jadi subtitle.
+
+**Foto sumbernya sengaja TIDAK ada di repo** dan `.gitignore` memblokir
+`src/assets/photos/*-source.*`. Repo ini publik dan yang di-ship cuma siluet
+turunannya. Kalau perlu regenerate, minta user kirim ulang filenya dari luar
+repo. Yang ikut ke repo cuma `easter-egg-silhouette.png`.
+
+## ⚠️ User pernah lagi naruh aset di `dist/` (2026-09-07)
+
+Kejadian kedua: `tentang-kopi.jpg` dan `eastereggsource.jpg` ditaruh di
+`dist/assets/`. `dist/` itu output build DAN sudah masuk `.gitignore`, jadi
+file di sana bakal hilang begitu `npm run build` jalan. Keduanya langsung
+diselamatkan ke scratchpad dulu sebelum build apa pun, sesuai aturan di
+bagian atas file ini, lalu dipindah ke `src/assets/photos/`. Kalau user
+nyebut path di dalam `dist/` lagi, **copy dulu, tanya belakangan.**
+
+`tentang-kopi.jpg` sekalian dikompres dari 205KB ke 54KB (604x640): foto itu
+cuma dipakai sebagai thumbnail 54px di kartu dan 160px di modal.
+
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.
 - `TOTAL_CASES` di `CaseFileContext.tsx` dihitung otomatis dari panjang array content (education+experience+projects+skills+interests+stickyNotes) — kalau nambah/kurang entri, angka meter ikut otomatis, tidak perlu update manual.
-- `WORLD_HEIGHT` di mapLayout.ts sudah dinaikkan ke 3750 setelah ContactSection tumbuh (classified ad + amplop). Kalau nambah konten baru ke section manapun terutama yang paling bawah, cek dulu apakah perlu naikkan `WORLD_WIDTH`/`WORLD_HEIGHT` lagi supaya tidak kepotong torn-edge.
+- `WORLD_HEIGHT` di mapLayout.ts = 3780. Semua `height` node sudah
+  **diukur**, bukan ditebak (lihat section halaman spesimen di atas). Kalau
+  nambah konten ke section manapun, ukur ulang dan cek
+  `WORLD_WIDTH`/`WORLD_HEIGHT`.
+- **`sm:` itu keyed ke viewport, bukan ke lebar node.** Ini jebakan paling
+  halus di peta desktop: lebar node itu world px dan nggak pernah reflow,
+  tapi utility `sm:` di section ngikut lebar *jendela browser*. Di jendela
+  < 640px tiap section turun ke padding lebih kecil + headline lebih kecil,
+  hasilnya section jadi **lebih tinggi DAN content box-nya lebih lebar**
+  (experience: 1098 di jendela lebar vs 1278 di jendela sempit). Jadi tiap
+  `height` harus diukur di dua lebar jendela dan diambil yang lebih besar,
+  dan posisi node harus punya clearance buat kasus sempit itu. Kasus ini
+  nyata: escape hatch "Open desktop version" dari HP, dan jendela desktop
+  yang disempitkan.
+- `projects` dan `skills` dipindah dari y 1750 (sekarang `skills` di
+  x 1990 y 1970, `projects` di x 90 y 2240) karena rubric tiap section
+  diakhiri hairline rule selebar kolom, dan di posisi lama rule itu kegambar
+  melintasi pojok bawah papan gabus experience (kekonfirmasi 150px dan
+  80px). Node yang cuma *bersentuhan* pun tetap bakal nyoret tetangganya
+  gara-gara rule ini. Clearance sekarang 54px (vertikal, vs projects) dan
+  44px (horizontal, vs skills) **di kasus jendela sempit**. Sesudah
+  menggeser apa pun di `NODES`, verifikasi ulang dengan membandingkan
+  bounding rect `.max-w-5xl` tiap section secara pairwise, di jendela lebar
+  DAN sempit. Caranya ada di `card-previews/README.md`.
 
 ## Yang masih ditunggu dari user
 

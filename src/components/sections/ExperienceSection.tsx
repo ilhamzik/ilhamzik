@@ -1,22 +1,24 @@
+import { useState } from "react";
 import { Section } from "../layout/Section";
 import { EvidenceItem } from "../evidence/EvidenceItem";
+import { DossierCard } from "../evidence/DossierCard";
+import { CorkString } from "../evidence/CorkString";
 import { PushpinIcon } from "../icons";
 import { articles, experience, stickyNotes } from "../../data/content";
-import { useLanguage } from "../../context/LanguageContext";
-import type { ExperienceEntry } from "../../types";
 
-function IndexCard({ entry }: { entry: ExperienceEntry }) {
-  const { t } = useLanguage();
-  return (
-    <div className="w-full h-full bg-[#f2e6c4] border border-ink-500/30 shadow-pinned p-3 flex flex-col justify-center text-left">
-      <p className="font-typewriter text-[10px] text-blood-600 uppercase tracking-widest">{t(entry.period)}</p>
-      <p className="font-headline font-bold text-sm text-ink-700 mt-1 leading-snug">{t(entry.role)}</p>
-      <p className="font-body text-xs text-ink-500 mt-0.5">{t(entry.organization)}</p>
-    </div>
-  );
-}
+/** Pin colours cycle so the board doesn't look mass-produced. */
+const PIN_COLORS = ["#7a1f1f", "#2a4d3a", "#8f6c39", "#1f3a5c"];
+/** Hand-placed feel: per-card tilt and vertical drop, in reading order. */
+const PLACEMENT = [
+  { tilt: -3, drop: 0 },
+  { tilt: 2.5, drop: 30 },
+  { tilt: 2, drop: 8 },
+  { tilt: -2.5, drop: 38 },
+];
 
 export function ExperienceSection() {
+  const [boardEl, setBoardEl] = useState<HTMLDivElement | null>(null);
+
   return (
     <Section
       id="experience"
@@ -26,36 +28,43 @@ export function ExperienceSection() {
       note={stickyNotes.experience}
     >
       <div
-        className="relative rounded-md p-8 sm:p-12"
+        ref={setBoardEl}
+        className="relative rounded-md px-4 py-8 sm:px-10 sm:py-12 border-[6px] border-[#4a3218]"
         style={{
-          background:
-            "radial-gradient(circle at 20% 20%, #7a5f3f 0%, #6b502a 60%, #5a4322 100%)",
-          boxShadow: "inset 0 0 40px rgba(0,0,0,0.5)",
+          background: "radial-gradient(circle at 20% 15%, #7d6242 0%, #6b502a 55%, #533f1f 100%)",
+          boxShadow:
+            "inset 0 0 46px rgba(0,0,0,0.55), inset 0 2px 0 rgba(255,255,255,0.08), 0 10px 24px -12px rgba(0,0,0,0.6)",
         }}
       >
-        {/* decorative red string connecting the cards */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-          <line
-            x1="12%"
-            y1="30%"
-            x2="88%"
-            y2="65%"
-            stroke="#a12e2e"
-            strokeWidth="2"
-            strokeDasharray="1 0"
-            opacity="0.8"
-          />
-        </svg>
+        {/* cork speckle: cheap and static, two dot layers instead of a filter */}
+        <span
+          className="absolute inset-0 pointer-events-none rounded-sm opacity-[0.22]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 50%, rgba(40,26,10,0.9) 0.9px, transparent 1.1px), radial-gradient(circle at 50% 50%, rgba(240,220,180,0.5) 0.7px, transparent 0.9px)",
+            backgroundSize: "13px 11px, 19px 17px",
+            backgroundPosition: "0 0, 6px 5px",
+          }}
+        />
 
-        <div className="relative flex flex-wrap justify-center gap-x-16 gap-y-10">
-          {experience.map((entry, i) => (
-            <div key={entry.id} className="relative" style={{ marginTop: i % 2 === 1 ? "2.5rem" : 0 }}>
-              <PushpinIcon className="w-6 h-6 absolute -top-3 left-1/2 -translate-x-1/2 z-10" />
-              <EvidenceItem caseFile={entry} width={190} height={110} tilt={i % 2 === 0 ? -3 : 2}>
-                <IndexCard entry={entry} />
-              </EvidenceItem>
-            </div>
-          ))}
+        <CorkString board={boardEl} />
+
+        <div className="relative grid grid-cols-1 sm:grid-cols-2 justify-items-center gap-x-6 gap-y-8">
+          {experience.map((entry, i) => {
+            const place = PLACEMENT[i % PLACEMENT.length];
+            return (
+              <div key={entry.id} className="relative" style={{ marginTop: place.drop }}>
+                <PushpinIcon
+                  data-pin=""
+                  className="w-7 h-7 absolute -top-3.5 left-1/2 -translate-x-1/2 z-20"
+                  color={PIN_COLORS[i % PIN_COLORS.length]}
+                />
+                <EvidenceItem caseFile={entry} width={226} height={120} tilt={place.tilt}>
+                  <DossierCard entry={entry} />
+                </EvidenceItem>
+              </div>
+            );
+          })}
         </div>
       </div>
     </Section>

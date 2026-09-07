@@ -14,6 +14,7 @@ import { SkillsSection } from "../sections/SkillsSection";
 import { ProjectsSection } from "../sections/ProjectsSection";
 import { ContactSection } from "../sections/ContactSection";
 import { CaseFileModal } from "../evidence/CaseFileModal";
+import { SecretFrame } from "../evidence/SecretFrame";
 import { StickyNote } from "../evidence/StickyNote";
 
 import { pressCredits, profile, stickyNotes } from "../../data/content";
@@ -64,7 +65,7 @@ function Footer() {
     <footer className="text-center py-8 font-typewriter text-xs text-ink-500/60 tracking-widest uppercase">
       <p>* * * End of Report * * *</p>
       <p className="normal-case tracking-normal mt-1 text-[10px] opacity-70">
-        {t(pressCredits)} {profile.issueDate}.
+        {t(pressCredits)} {t(profile.issueDate)}.
       </p>
       <button
         type="button"
@@ -164,6 +165,7 @@ function MobileShell() {
       <MobileHud activeId={activeId} />
       <MobileNightShiftOverlay />
       <CaseFileModal />
+      <SecretFrame />
 
       {showTop && (
         <button

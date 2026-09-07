@@ -19,7 +19,7 @@ export function SealedEnvelope({ href, label, sealedLabel, hint }: SealedEnvelop
   const [opened, setOpened] = useState(false);
 
   return (
-    <div className="relative w-48 h-32">
+    <div className="relative w-48 h-[176px]">
       <AnimatePresence initial={false} mode="wait">
         {!opened ? (
           <motion.button
@@ -31,7 +31,7 @@ export function SealedEnvelope({ href, label, sealedLabel, hint }: SealedEnvelop
             transition={{ duration: 0.25 }}
             aria-label={t(hint)}
           >
-            <svg viewBox="0 0 200 130" className="w-full h-full drop-shadow-[0_6px_10px_rgba(10,8,5,0.4)]">
+            <svg viewBox="0 0 200 130" className="w-full h-[114px] drop-shadow-[0_6px_10px_rgba(10,8,5,0.4)]">
               <rect x="4" y="4" width="192" height="122" fill="#e3d3a8" stroke="#2a241d" strokeWidth="2" />
               <motion.path
                 d="M4 4 L100 68 L196 4 Z"

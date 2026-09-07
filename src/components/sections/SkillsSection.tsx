@@ -1,6 +1,6 @@
 import { Section } from "../layout/Section";
 import { EvidenceItem } from "../evidence/EvidenceItem";
-import { FingerprintIcon } from "../icons";
+import { PrintCard } from "../evidence/PrintCard";
 import { articles, otherSkills, skills } from "../../data/content";
 import { useLanguage } from "../../context/LanguageContext";
 
@@ -26,6 +26,16 @@ const SKILL_LOGOS: Record<string, string> = {
   "skill-git": gitLogo,
 };
 
+/**
+ * Branded tools first, then the two general categories that have no official
+ * mark, so the fingerprint-swirl cards sit together at the end of the row
+ * instead of being scattered between logos (user's call). `sort` is stable,
+ * so each group keeps its content.ts order.
+ */
+const orderedSkills = [...skills].sort(
+  (a, b) => (SKILL_LOGOS[a.id] ? 0 : 1) - (SKILL_LOGOS[b.id] ? 0 : 1)
+);
+
 export function SkillsSection() {
   const { t } = useLanguage();
 
@@ -36,40 +46,17 @@ export function SkillsSection() {
       headline={{ id: "Berkas Sidik Jari: Keahlian", en: "Fingerprint Files: Skills" }}
       article={articles.skills}
     >
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 sm:gap-8">
-        {skills.map((skill) => {
-          const logo = SKILL_LOGOS[skill.id];
-          const clarity = skill.proficiency / 5;
-          return (
-            <div key={skill.id} className="flex flex-col items-center gap-2">
-              <EvidenceItem
-                caseFile={skill}
-                tilt={0}
-                size={84}
-                className="bg-paper-100 rounded-full p-3 shadow-pinned"
-              >
-                {logo ? (
-                  <img
-                    src={logo}
-                    alt={skill.title.id}
-                    className="w-full h-full object-contain"
-                    style={{ opacity: 0.35 + clarity * 0.65 }}
-                  />
-                ) : (
-                  <FingerprintIcon className="w-full h-full" clarity={clarity} />
-                )}
-              </EvidenceItem>
-              <span className="font-typewriter text-[11px] text-ink-700 text-center leading-tight">
-                {t(skill.title)}
-              </span>
-              {!logo && (
-                <span className="font-hand text-[11px] text-ink-500/60 -mt-1">
-                  {t({ id: "kejelasan sidik jari", en: "print clarity" })}
-                </span>
-              )}
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-5 gap-y-7 sm:gap-x-8 justify-items-center">
+        {orderedSkills.map((skill) => (
+          <div key={skill.id} className="flex flex-col items-center">
+            <EvidenceItem caseFile={skill} tilt={0} width={106} height={124}>
+              <PrintCard skill={skill} logo={SKILL_LOGOS[skill.id]} />
+            </EvidenceItem>
+            <span className="font-typewriter text-[11px] text-ink-700 text-center leading-tight mt-2.5 max-w-[112px]">
+              {t(skill.title)}
+            </span>
+          </div>
+        ))}
       </div>
 
       <div className="max-w-lg mx-auto mt-10 border-t border-dashed border-ink-500/30 pt-4 text-center">

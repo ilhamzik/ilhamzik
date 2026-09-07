@@ -4,3 +4,9 @@ dist-ssr
 *.local
 .DS_Store
 preview/
+
+# Source photos for derived art (silhouettes etc.) must never be committed:
+# this repo is public, and shipping the original defeats the point of
+# anonymising it. Keep originals outside the repo. See the easter-egg
+# silhouette recipe in CLAUDE.md.
+src/assets/photos/*-source.*

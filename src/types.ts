@@ -15,8 +15,11 @@ export interface CaseFact {
 /** Generic shape for anything that opens a "case file" popup when clicked. */
 export interface CaseFile {
   id: string;
-  /** Short tag shown on the evidence sticker, e.g. "EXHIBIT A" or "P-01". */
-  tag: string;
+  /** Short tag shown on the evidence sticker, e.g. "EXHIBIT A" / "BUKTI A".
+   *  Bilingual because these are words, not codes: the Indonesian set reads
+   *  KARTU / BERKAS / SIDIK / BUKTI and the English set CARD / FILE / PRINT /
+   *  EXHIBIT. Render it through `t()`, never raw. */
+  tag: Bilingual;
   title: Bilingual;
   subtitle?: Bilingual;
   /** Main narrative body, can contain multiple paragraphs. */
@@ -33,12 +36,14 @@ export interface CaseFile {
   techStack?: string[];
   /** Optional line rendered behind a redacted black bar, revealed on hover/tap. */
   redacted?: Bilingual;
+  /** Keys into `capabilityCatalog` in content.ts: the analyst techniques this
+   *  file evidences. Rendered as chips by the modal and the exhibit cards. */
+  capabilities?: string[];
 }
 
 export interface EducationEntry extends CaseFile {
   level: "sd" | "smp" | "sma" | "kuliah";
   institution: Bilingual;
-  years: string;
 }
 
 export interface ExperienceEntry extends CaseFile {
@@ -49,6 +54,8 @@ export interface ExperienceEntry extends CaseFile {
 
 export interface ProjectEntry extends CaseFile {
   techStack: string[];
+  /** Required here: every exhibit states which analyst techniques it shows. */
+  capabilities: string[];
 }
 
 export interface SkillEntry extends CaseFile {

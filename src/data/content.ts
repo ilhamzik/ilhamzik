@@ -14,6 +14,7 @@ import sman39Logo from "../assets/photos/sman39-logo.png";
 import telkomPhoto from "../assets/photos/telkom.jpg";
 import bemCampaignPhoto from "../assets/photos/bem-campaign.jpg";
 import openhouseFasilkomPhoto from "../assets/photos/openhouse-fasilkom.jpg";
+import tentangKopiPhoto from "../assets/photos/tentang-kopi.jpg";
 import wayneRooneyPhoto from "../assets/photos/wayne-rooney.jpg";
 import lizIvePhoto from "../assets/photos/liz-ive.jpg";
 import mamaPhoto from "../assets/photos/mama.jpg";
@@ -36,9 +37,9 @@ export const profile = {
     id: "Kasus ini masih dalam penyelidikan aktif sejak Agustus 2024.",
     en: "This case has been under active investigation since August 2024.",
   } as Bilingual,
-  location: "Jakarta Timur, Indonesia",
+  location: { id: "Jakarta Timur, Indonesia", en: "East Jakarta, Indonesia" } as Bilingual,
   caseNumber: "NO. 007-ZIK",
-  issueDate: "30 AGUSTUS 2026",
+  issueDate: { id: "30 AGUSTUS 2026", en: "30 AUGUST 2026" } as Bilingual,
   resumeHref: "/CV-Muhammad-Ilham-Zikri.pdf",
 };
 
@@ -61,10 +62,9 @@ export const education: EducationEntry[] = [
   {
     id: "edu-sd",
     level: "sd",
-    tag: "KARTU-01",
+    tag: { id: "KARTU-01", en: "CARD-01" },
     title: { id: "Sekolah Dasar", en: "Elementary School" },
     institution: { id: "SDI PB Soedirman, Cijantung", en: "SDI PB Soedirman, Cijantung" },
-    years: "Lulus 2016",
     subtitle: { id: "Kartu Pelajar", en: "Student Card" },
     body: [
       {
@@ -83,10 +83,9 @@ export const education: EducationEntry[] = [
   {
     id: "edu-smp",
     level: "smp",
-    tag: "KARTU-02",
+    tag: { id: "KARTU-02", en: "CARD-02" },
     title: { id: "Sekolah Menengah Pertama", en: "Junior High School" },
     institution: { id: "SMPN 49 Jakarta", en: "SMPN 49 Jakarta" },
-    years: "Lulus 2019",
     subtitle: { id: "Kartu Pelajar", en: "Student Card" },
     body: [
       {
@@ -101,10 +100,9 @@ export const education: EducationEntry[] = [
   {
     id: "edu-sma",
     level: "sma",
-    tag: "KARTU-03",
+    tag: { id: "KARTU-03", en: "CARD-03" },
     title: { id: "Sekolah Menengah Atas", en: "Senior High School" },
     institution: { id: "SMAN 39 Jakarta", en: "SMAN 39 Jakarta" },
-    years: "Lulus 2022",
     subtitle: { id: "Kartu Pelajar", en: "Student Card" },
     body: [
       {
@@ -119,13 +117,12 @@ export const education: EducationEntry[] = [
   {
     id: "edu-kuliah",
     level: "kuliah",
-    tag: "MEDALI-01",
+    tag: { id: "MEDALI-01", en: "MEDAL-01" },
     title: { id: "Pendidikan Tinggi", en: "Higher Education" },
     institution: {
       id: "Universitas Indonesia, S1 Ilmu Komputer, Fasilkom UI",
       en: "University of Indonesia, B.S. Computer Science, Faculty of Computer Science",
     },
-    years: "2022–2026",
     subtitle: { id: "Medali Wisuda", en: "Graduation Medal" },
     body: [
       {
@@ -151,7 +148,7 @@ export const education: EducationEntry[] = [
 export const experience: ExperienceEntry[] = [
   {
     id: "exp-telkom",
-    tag: "BERKAS-A",
+    tag: { id: "BERKAS-A", en: "FILE-A" },
     title: { id: "Praktikan, Tim CPO", en: "Intern, CPO Team" },
     role: { id: "Data Analyst Intern @TelkomIndonesia", en: "Data Analyst Intern @TelkomIndonesia" },
     organization: { id: "SDA Division", en: "SDA Division" },
@@ -168,7 +165,7 @@ export const experience: ExperienceEntry[] = [
   },
   {
     id: "exp-bem-campaign",
-    tag: "BERKAS-B",
+    tag: { id: "BERKAS-B", en: "FILE-B" },
     title: { id: "Data Analyst", en: "Data Analyst" },
     role: { id: "Data Analyst", en: "Data Analyst" },
     organization: {
@@ -187,7 +184,7 @@ export const experience: ExperienceEntry[] = [
   },
   {
     id: "exp-tentang-kopi",
-    tag: "BERKAS-C",
+    tag: { id: "BERKAS-C", en: "FILE-C" },
     title: { id: "Data Scientist Freelance", en: "Freelance Data Scientist" },
     role: { id: "Data Scientist Freelance", en: "Freelance Data Scientist" },
     organization: { id: "Tentang Kopi", en: "Tentang Kopi" },
@@ -198,10 +195,12 @@ export const experience: ExperienceEntry[] = [
         en: "Conducted product bundling analysis using association rule mining (support, confidence, lift) to find high-performing combinations, successfully developing bundles that helped Tentang Kopi minimize ingredient waste from expiration.",
       },
     ],
+    photoSrc: tentangKopiPhoto,
+    photoCaption: { id: "Dari masa freelance Tentang Kopi.", en: "From the Tentang Kopi freelance days." },
   },
   {
     id: "exp-openhouse",
-    tag: "BERKAS-D",
+    tag: { id: "BERKAS-D", en: "FILE-D" },
     title: { id: "VPIC & Staf Public Relations", en: "VPIC & Public Relations Staff" },
     role: { id: "VPIC & Staf Public Relations", en: "VPIC & Public Relations Staff" },
     organization: { id: "Open House & BEM Fasilkom UI", en: "Open House & BEM Fasilkom UI" },
@@ -217,10 +216,62 @@ export const experience: ExperienceEntry[] = [
   },
 ];
 
+/**
+ * Analyst / BI competencies demonstrated by the project work.
+ *
+ * Defined once here and referenced by key from each project, so a technique
+ * used on two exhibits is worded identically on both and the Exhibit Room's
+ * summary panel can group them without a second list that drifts out of sync.
+ *
+ * Every entry is something the project bodies above already describe: this is
+ * a re-labelling of evidence on file, not a claim of skills the case files
+ * don't back up. If a new project needs a technique that isn't listed, add it
+ * here first (with its area) rather than inline.
+ */
+export const capabilityAreas = {
+  prep: { id: "Penyiapan & Kualitas Data", en: "Data Preparation & Quality" },
+  sql: { id: "SQL & Analitik", en: "SQL & Analytics" },
+  bi: { id: "BI & Visualisasi", en: "BI & Visualization" },
+  automation: { id: "Otomasi & Pipeline", en: "Automation & Pipelines" },
+  modeling: { id: "Statistik & Pemodelan", en: "Statistics & Modeling" },
+} as const satisfies Record<string, Bilingual>;
+
+export type CapabilityArea = keyof typeof capabilityAreas;
+
+export const capabilityCatalog: Record<string, { label: Bilingual; area: CapabilityArea }> = {
+  "data-quality-audit": { label: { id: "Audit Kualitas Data", en: "Data Quality Audit" }, area: "prep" },
+  "data-profiling": { label: { id: "Profiling Data", en: "Data Profiling" }, area: "prep" },
+  "root-cause": { label: { id: "Analisis Akar Masalah", en: "Root Cause Analysis" }, area: "prep" },
+
+  "sql-window": { label: { id: "Window Function SQL", en: "SQL Window Functions" }, area: "sql" },
+  "growth-analysis": { label: { id: "Analisis Pertumbuhan", en: "Growth Analysis" }, area: "sql" },
+
+  "dashboard-design": { label: { id: "Desain Dashboard", en: "Dashboard Design" }, area: "bi" },
+  "kpi-monitoring": { label: { id: "Pemantauan KPI", en: "KPI Monitoring" }, area: "bi" },
+  drilldown: { label: { id: "Analisis Drill-down", en: "Drill-down Analysis" }, area: "bi" },
+  "exec-reporting": { label: { id: "Pelaporan Eksekutif", en: "Executive Reporting" }, area: "bi" },
+  "self-service-bi": { label: { id: "BI Mandiri", en: "Self-Service BI" }, area: "bi" },
+
+  "live-pipeline": { label: { id: "Pipeline Data Live", en: "Live Data Pipeline" }, area: "automation" },
+  "reporting-automation": { label: { id: "Otomasi Pelaporan", en: "Reporting Automation" }, area: "automation" },
+  "metric-validation": { label: { id: "Validasi Metrik", en: "Metric Validation" }, area: "automation" },
+  "data-governance": { label: { id: "Tata Kelola Data", en: "Data Governance" }, area: "automation" },
+
+  "predictive-modeling": { label: { id: "Pemodelan Prediktif", en: "Predictive Modeling" }, area: "modeling" },
+  segmentation: { label: { id: "Segmentasi", en: "Segmentation" }, area: "modeling" },
+  "model-evaluation": { label: { id: "Evaluasi Model", en: "Model Evaluation" }, area: "modeling" },
+  "text-classification": { label: { id: "Klasifikasi Teks", en: "Text Classification" }, area: "modeling" },
+  "taxonomy-design": { label: { id: "Desain Taksonomi", en: "Taxonomy Design" }, area: "modeling" },
+  "reliability-validation": { label: { id: "Validasi Reliabilitas", en: "Reliability Validation" }, area: "modeling" },
+  "network-analysis": { label: { id: "Analisis Jaringan", en: "Network Analysis" }, area: "modeling" },
+  "community-detection": { label: { id: "Deteksi Komunitas", en: "Community Detection" }, area: "modeling" },
+  "anomaly-detection": { label: { id: "Deteksi Anomali", en: "Anomaly Detection" }, area: "modeling" },
+};
+
 export const projects: ProjectEntry[] = [
   {
     id: "proj-rollout-dashboard",
-    tag: "EXHIBIT A",
+    tag: { id: "BUKTI A", en: "EXHIBIT A" },
     title: { id: "Dashboard Pemantauan Rollout Infrastruktur Live", en: "Live Infrastructure Rollout Monitoring Dashboard" },
     subtitle: { id: "Telkom Indonesia × Indomaret, Jul 2026 – Sekarang", en: "Telkom Indonesia × Indomaret, Jul 2026 – Present" },
     body: [
@@ -230,10 +281,11 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["React", "TypeScript", "Node.js", "Express", "Google Sheets API"],
+    capabilities: ["dashboard-design", "kpi-monitoring", "drilldown", "live-pipeline", "data-governance"],
   },
   {
     id: "proj-dashboard-tool",
-    tag: "EXHIBIT B",
+    tag: { id: "BUKTI B", en: "EXHIBIT B" },
     title: { id: "Tool Otomasi Dashboard Berbasis AI", en: "AI-Assisted Dashboard Automation Tool" },
     subtitle: { id: "Proyek internal, Telkom Indonesia, Jul 2026 – Sekarang", en: "Internal tool, Telkom Indonesia, Jul 2026 – Present" },
     body: [
@@ -243,10 +295,11 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["Node.js", "Express", "LLM Integration", "Custom SVG Charting", "Data Pipeline Design"],
+    capabilities: ["self-service-bi", "data-profiling", "metric-validation", "data-governance"],
   },
   {
     id: "proj-hutri",
-    tag: "EXHIBIT C",
+    tag: { id: "BUKTI C", en: "EXHIBIT C" },
     title: { id: "Dashboard & Otomasi Presentasi Perayaan HUT RI", en: "HUT RI Celebration Dashboard & Presentation Automation" },
     subtitle: { id: "Proyek internal, Telkom Indonesia, Agu 2026", en: "Internal project, Telkom Indonesia, Aug 2026" },
     body: [
@@ -256,10 +309,11 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["Django", "Python", "Google Sheets API", "python-pptx"],
+    capabilities: ["exec-reporting", "reporting-automation", "dashboard-design"],
   },
   {
     id: "proj-ecommerce",
-    tag: "EXHIBIT D",
+    tag: { id: "BUKTI D", en: "EXHIBIT D" },
     title: { id: "Analisis Penjualan & Pengiriman E-Commerce", en: "E-Commerce Sales & Delivery Performance Analysis" },
     subtitle: { id: "Proyek pribadi (sedang berjalan), Jul 2026", en: "Personal project (in progress), Jul 2026" },
     body: [
@@ -269,10 +323,11 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["SQL (SQLite)", "Python", "Power BI"],
+    capabilities: ["data-quality-audit", "sql-window", "growth-analysis", "root-cause"],
   },
   {
     id: "proj-thesis",
-    tag: "EXHIBIT E",
+    tag: { id: "BUKTI E", en: "EXHIBIT E" },
     title: { id: "Klasifikasi Pola Prompt GenAI (Skripsi)", en: "GenAI Prompt Pattern Classification (Thesis)" },
     subtitle: { id: "Skripsi Sarjana, Fasilkom UI, Feb–Jun 2026", en: "Undergraduate Thesis, Fasilkom UI, Feb–Jun 2026" },
     body: [
@@ -282,10 +337,11 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["Python", "Pandas", "Scikit-Learn", "Krippendorff's Alpha"],
+    capabilities: ["taxonomy-design", "reliability-validation", "text-classification"],
   },
   {
     id: "proj-webgraph",
-    tag: "EXHIBIT F",
+    tag: { id: "BUKTI F", en: "EXHIBIT F" },
     title: { id: "Analisis Jaringan Web & Deteksi Komunitas", en: "Web Graph Network Analysis and Community Detection" },
     subtitle: { id: "Proyek Kelompok Data Mining, Feb–Jun 2025", en: "Data Mining Course Group Project, Feb–Jun 2025" },
     body: [
@@ -295,10 +351,11 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["Python", "NetworkX", "Scikit-Learn"],
+    capabilities: ["network-analysis", "community-detection", "anomaly-detection"],
   },
   {
     id: "proj-terrorism",
-    tag: "EXHIBIT G",
+    tag: { id: "BUKTI G", en: "EXHIBIT G" },
     title: { id: "Analisis Data Terorisme Global & Model ML", en: "Global Terrorism Data Analysis and ML Model" },
     subtitle: { id: "Proyek Akhir KASDD, Agu–Des 2024", en: "KASDD Course Final Project, Aug–Dec 2024" },
     body: [
@@ -308,18 +365,19 @@ export const projects: ProjectEntry[] = [
       },
     ],
     techStack: ["Python", "Pandas", "Scikit-Learn", "Matplotlib"],
+    capabilities: ["predictive-modeling", "segmentation", "model-evaluation"],
   },
 ];
 
 export const skills: SkillEntry[] = [
-  { id: "skill-sql", tag: "SIDIK-01", title: { id: "SQL", en: "SQL" }, body: [{ id: "Dipakai untuk audit data, CTE, dan window function di berbagai proyek analitik.", en: "Used for data audits, CTEs, and window functions across analytics projects." }], proficiency: 4 },
-  { id: "skill-python", tag: "SIDIK-02", title: { id: "Python", en: "Python" }, body: [{ id: "Bahasa utama untuk data cleaning, machine learning, dan riset.", en: "Primary language for data cleaning, machine learning, and research." }], proficiency: 4 },
-  { id: "skill-ml", tag: "SIDIK-03", title: { id: "Statistik & Machine Learning", en: "Statistics & Machine Learning" }, body: [{ id: "Klasifikasi, regresi, clustering, hingga validasi reliabilitas statistik.", en: "Classification, regression, clustering, through to statistical reliability validation." }], proficiency: 4 },
-  { id: "skill-scikit", tag: "SIDIK-04", title: { id: "Scikit-Learn", en: "Scikit-Learn" }, body: [{ id: "Dipakai membangun model klasifikasi/regresi di beberapa proyek.", en: "Used to build classification/regression models across several projects." }], proficiency: 4 },
-  { id: "skill-powerbi", tag: "SIDIK-05", title: { id: "Power BI", en: "Power BI" }, body: [{ id: "Dashboard interaktif untuk visualisasi temuan analitik.", en: "Interactive dashboards for visualizing analytical findings." }], proficiency: 3 },
-  { id: "skill-excel", tag: "SIDIK-06", title: { id: "Excel", en: "Excel" }, body: [{ id: "Analisis dan pelaporan data cepat.", en: "Fast data analysis and reporting." }], proficiency: 4 },
-  { id: "skill-cleaning", tag: "SIDIK-07", title: { id: "Data Cleaning", en: "Data Cleaning" }, body: [{ id: "Audit kualitas data & investigasi akar masalah sebelum analisis.", en: "Data quality audits & root-cause investigation before analysis." }], proficiency: 4 },
-  { id: "skill-git", tag: "SIDIK-08", title: { id: "Git", en: "Git" }, body: [{ id: "Version control untuk kerja kode maupun kolaborasi.", en: "Version control for code work and collaboration." }], proficiency: 3 },
+  { id: "skill-sql", tag: { id: "SIDIK-01", en: "PRINT-01" }, title: { id: "SQL", en: "SQL" }, body: [{ id: "Dipakai untuk audit data, CTE, dan window function di berbagai proyek analitik.", en: "Used for data audits, CTEs, and window functions across analytics projects." }], proficiency: 4 },
+  { id: "skill-python", tag: { id: "SIDIK-02", en: "PRINT-02" }, title: { id: "Python", en: "Python" }, body: [{ id: "Bahasa utama untuk data cleaning, machine learning, dan riset.", en: "Primary language for data cleaning, machine learning, and research." }], proficiency: 4 },
+  { id: "skill-ml", tag: { id: "SIDIK-03", en: "PRINT-03" }, title: { id: "Statistik & Machine Learning", en: "Statistics & Machine Learning" }, body: [{ id: "Klasifikasi, regresi, clustering, hingga validasi reliabilitas statistik.", en: "Classification, regression, clustering, through to statistical reliability validation." }], proficiency: 4 },
+  { id: "skill-scikit", tag: { id: "SIDIK-04", en: "PRINT-04" }, title: { id: "Scikit-Learn", en: "Scikit-Learn" }, body: [{ id: "Dipakai membangun model klasifikasi/regresi di beberapa proyek.", en: "Used to build classification/regression models across several projects." }], proficiency: 4 },
+  { id: "skill-powerbi", tag: { id: "SIDIK-05", en: "PRINT-05" }, title: { id: "Power BI", en: "Power BI" }, body: [{ id: "Dashboard interaktif untuk visualisasi temuan analitik.", en: "Interactive dashboards for visualizing analytical findings." }], proficiency: 3 },
+  { id: "skill-excel", tag: { id: "SIDIK-06", en: "PRINT-06" }, title: { id: "Excel", en: "Excel" }, body: [{ id: "Analisis dan pelaporan data cepat.", en: "Fast data analysis and reporting." }], proficiency: 4 },
+  { id: "skill-cleaning", tag: { id: "SIDIK-07", en: "PRINT-07" }, title: { id: "Data Cleaning", en: "Data Cleaning" }, body: [{ id: "Audit kualitas data & investigasi akar masalah sebelum analisis.", en: "Data quality audits & root-cause investigation before analysis." }], proficiency: 4 },
+  { id: "skill-git", tag: { id: "SIDIK-08", en: "PRINT-08" }, title: { id: "Git", en: "Git" }, body: [{ id: "Version control untuk kerja kode maupun kolaborasi.", en: "Version control for code work and collaboration." }], proficiency: 3 },
 ];
 
 export const otherSkills = {
@@ -337,7 +395,7 @@ export const interests: InterestEntry[] = [
   {
     id: "int-manutd",
     icon: "manutd",
-    tag: "BUKTI-01",
+    tag: { id: "BUKTI-01", en: "EVIDENCE-01" },
     title: { id: "Manchester United", en: "Manchester United" },
     subtitle: { id: "Lencana Klub", en: "Club Badge" },
     body: [
@@ -357,7 +415,7 @@ export const interests: InterestEntry[] = [
   {
     id: "int-liz",
     icon: "custom",
-    tag: "BUKTI-02",
+    tag: { id: "BUKTI-02", en: "EVIDENCE-02" },
     title: { id: "Liz (IVE)", en: "Liz (IVE)" },
     subtitle: { id: "Bias K-pop", en: "K-pop Bias" },
     body: [
@@ -373,7 +431,7 @@ export const interests: InterestEntry[] = [
   {
     id: "int-motto",
     icon: "custom",
-    tag: "BUKTI-03",
+    tag: { id: "BUKTI-03", en: "EVIDENCE-03" },
     title: { id: "Motto Hidup", en: "Life Motto" },
     subtitle: { id: "Kutipan Pribadi", en: "Personal Quote" },
     body: [
@@ -406,6 +464,38 @@ export const contact = {
   } as Bilingual,
   envelopeLabel: { id: "Amplop Tersegel", en: "Sealed Envelope" } as Bilingual,
   envelopeHint: { id: "klik untuk membuka →", en: "click to open →" } as Bilingual,
+};
+
+/**
+ * Hidden easter egg: an empty, deliberately mysterious frame. Two ways in,
+ * since a phone has no Ctrl key:
+ *   - keyboard: Ctrl+K (or Cmd+K)
+ *   - touch: press and hold the case number in the masthead
+ *
+ * The copy says nothing about who the subject is, on purpose. Reword freely,
+ * it is not referenced anywhere else.
+ */
+export const secretFile = {
+  tag: { id: "BERKAS X", en: "FILE X" },
+  rubric: { id: "Arsip Tertutup", en: "Sealed Archive" } as Bilingual,
+  title: { id: "Agent K", en: "Agent K" } as Bilingual,
+  subtitle: { id: "Subjek Belum Teridentifikasi", en: "Subject Unidentified" } as Bilingual,
+  caption: { id: "Cuma siluet yang masuk berkas. Sejauh ini.", en: "Only a silhouette made it into the file. So far." } as Bilingual,
+  body: [
+    {
+      id: "Satu-satunya berkas di arsip ini yang isinya cuma bayangan. Bukan hilang, bukan disensor, cuma memang belum waktunya dibuka.",
+      en: "The one file in this archive with nothing in it but a shadow. Not lost, not censored, just not time to open it yet.",
+    },
+    {
+      id: "Status: masih dalam penyelidikan. Nol petunjuk, nol saksi, nol tenggat waktu.",
+      en: "Status: still under investigation. No leads, no witnesses, no deadline.",
+    },
+  ] as Bilingual[],
+  stamp: { id: "RAHASIA", en: "CLASSIFIED" } as Bilingual,
+  dismiss: {
+    id: "Esc, atau klik di luar, buat nutup berkasnya lagi",
+    en: "Esc, or click outside, to close the file again",
+  } as Bilingual,
 };
 
 export const pressCredits = {
@@ -454,7 +544,7 @@ export const articles: Record<string, Bilingual> = {
 export const stickyNotes: Partial<Record<string, CaseFile>> = {
   home: {
     id: "note-alias",
-    tag: "CATATAN",
+    tag: { id: "CATATAN", en: "NOTE" },
     title: { id: "Soal nama “ilhamzik”", en: "About the name “ilhamzik”" },
     body: [
       {
@@ -465,7 +555,7 @@ export const stickyNotes: Partial<Record<string, CaseFile>> = {
   },
   education: {
     id: "note-grades",
-    tag: "CATATAN",
+    tag: { id: "CATATAN", en: "NOTE" },
     title: { id: "Soal nilai akademiknya", en: "About his grades" },
     body: [
       {
@@ -476,7 +566,7 @@ export const stickyNotes: Partial<Record<string, CaseFile>> = {
   },
   experience: {
     id: "note-telkom-secret",
-    tag: "CATATAN",
+    tag: { id: "CATATAN", en: "NOTE" },
     title: { id: "Soal proyek di Telkom", en: "About the Telkom projects" },
     body: [
       {
@@ -491,7 +581,7 @@ export const stickyNotes: Partial<Record<string, CaseFile>> = {
   },
   interests: {
     id: "note-conclusion",
-    tag: "CATATAN",
+    tag: { id: "CATATAN", en: "NOTE" },
     title: { id: "Kesimpulan sementara investigasi", en: "Preliminary investigation conclusion" },
     body: [
       {
