@@ -43,6 +43,11 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
   const pendingScale = useRef<number | null>(null);
   const rafId = useRef<number | null>(null);
 
+  const [isTouring, setIsTouring] = useState(false);
+  /** Bumped to abort an in-flight tour: every await checks it and bails. */
+  const tourToken = useRef(0);
+  const tourRaf = useRef<number | null>(null);
+
   const clampScale = useCallback((s: number) => Math.min(maxScale, Math.max(minScale, s)), [maxScale, minScale]);
 
   const clamp = useCallback(
@@ -84,6 +89,14 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
 
   const liveOffset = useCallback(() => pendingOffset.current ?? offset, [offset]);
   const liveScale = useCallback(() => pendingScale.current ?? scale, [scale]);
+
+  // Refs mirroring the committed state, so the tour can read the current
+  // transform without listing offset/scale as deps (which would rebuild the
+  // glide callback on every animation frame).
+  const offsetRef = useRef(offset);
+  const scaleRef = useRef(scale);
+  offsetRef.current = offset;
+  scaleRef.current = scale;
 
   useEffect(() => {
     return () => {
@@ -129,6 +142,89 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     [clamp, getDefaultScale]
   );
 
+  /**
+   * Glide the viewport to a world point instead of snapping to it. Used only
+   * by the guided tour; every other navigation is deliberately instant.
+   *
+   * Resolves when the glide finishes, or immediately if the tour it belongs
+   * to has been cancelled in the meantime.
+   */
+  const glideTo = useCallback(
+    (cx: number, cy: number, targetScale: number, ms: number, token: number) =>
+      new Promise<void>((resolve) => {
+        const vp = viewportRef.current;
+        if (!vp) return resolve();
+        const from = { ...(pendingOffset.current ?? offsetRef.current) };
+        const fromScale = pendingScale.current ?? scaleRef.current;
+        const to = clamp(
+          { x: vp.clientWidth / 2 - cx * targetScale, y: vp.clientHeight / 2 - cy * targetScale },
+          targetScale
+        );
+        const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+        if (reduce || ms <= 0) {
+          setScale(targetScale);
+          setOffset(to);
+          return resolve();
+        }
+        const start = performance.now();
+        // easeInOutCubic: settles rather than stopping dead on arrival
+        const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+        const step = (now: number) => {
+          if (tourToken.current !== token) return resolve();
+          const k = ease(Math.min(1, (now - start) / ms));
+          setScale(fromScale + (targetScale - fromScale) * k);
+          setOffset({ x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k });
+          if (k < 1) {
+            tourRaf.current = requestAnimationFrame(step);
+          } else {
+            tourRaf.current = null;
+            resolve();
+          }
+        };
+        tourRaf.current = requestAnimationFrame(step);
+      }),
+    [clamp]
+  );
+
+  const stopTour = useCallback(() => {
+    tourToken.current += 1;
+    if (tourRaf.current != null) {
+      cancelAnimationFrame(tourRaf.current);
+      tourRaf.current = null;
+    }
+    setIsTouring(false);
+  }, []);
+
+  /**
+   * Walk the given world points in order, pausing on each. This is the
+   * "follow the red string" affordance: a first-time visitor who does not
+   * realise the page is a draggable map gets the whole case laid out for
+   * them without having to find anything.
+   */
+  const startTour = useCallback(
+    async (stops: { x: number; y: number }[], dwellMs = 2600) => {
+      tourToken.current += 1;
+      const token = tourToken.current;
+      setIsTouring(true);
+      setHasInteracted(true);
+      const targetScale = getDefaultScale();
+      for (let i = 0; i < stops.length; i++) {
+        if (tourToken.current !== token) return;
+        await glideTo(stops[i].x, stops[i].y, targetScale, i === 0 ? 900 : 1500, token);
+        if (tourToken.current !== token) return;
+        await new Promise((r) => setTimeout(r, dwellMs));
+      }
+      if (tourToken.current === token) setIsTouring(false);
+    },
+    [getDefaultScale, glideTo]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (tourRaf.current != null) cancelAnimationFrame(tourRaf.current);
+    };
+  }, []);
+
   const onPointerDown = useCallback(
     (e: ReactPointerEvent<HTMLDivElement>) => {
       // Don't hijack presses that start on an interactive element (evidence
@@ -140,6 +236,9 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
         const target = e.target as HTMLElement;
         if (target.closest("button, a, input, textarea, select, [role='button']")) return;
       }
+      // Taking hold of the map ends the guided tour: it should never fight
+      // the person for control of the viewport.
+      stopTour();
 
       // Some browser/input combinations can reject capture (e.g. a pointer
       // session the browser doesn't consider "active") — don't let that
@@ -161,7 +260,7 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
         setHasInteracted(true);
       }
     },
-    [liveOffset]
+    [liveOffset, stopTour]
   );
 
   const onPointerMove = useCallback(
@@ -217,6 +316,7 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     (e: ReactWheelEvent<HTMLDivElement>) => {
       e.preventDefault();
       setHasInteracted(true);
+      stopTour();
       const o0 = liveOffset();
       if (e.ctrlKey || e.metaKey) {
         // trackpad pinch (or ctrl+wheel) — zoom around the cursor position
@@ -232,7 +332,7 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
       }
       scheduleTransform(clamp({ x: o0.x - e.deltaX, y: o0.y - e.deltaY }));
     },
-    [clamp, clampScale, liveOffset, liveScale, scheduleTransform]
+    [clamp, clampScale, liveOffset, liveScale, scheduleTransform, stopTour]
   );
 
   return {
@@ -244,6 +344,9 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     recenterOn,
     alignTopOn,
     getDefaultScale,
+    isTouring,
+    startTour,
+    stopTour,
     handlers: {
       onPointerDown,
       onPointerMove,

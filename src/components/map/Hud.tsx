@@ -3,7 +3,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { useMap } from "../../context/MapContext";
 import { useCaseFile } from "../../context/CaseFileContext";
 import { useNightShift } from "../../context/NightShiftContext";
-import { NODES, NODE_LABELS, QUICK_NAV_ORDER } from "./mapLayout";
+import { NODES, NODE_LABELS, QUICK_NAV_ORDER, STRING_PATH } from "./mapLayout";
 import { StampMark } from "../icons";
 import { DetectiveGuide } from "./DetectiveGuide";
 
@@ -15,7 +15,7 @@ import { DetectiveGuide } from "./DetectiveGuide";
  */
 export function Hud() {
   const { lang, toggle, t } = useLanguage();
-  const { recenterOn, alignTopOn, hasInteracted } = useMap();
+  const { recenterOn, alignTopOn, hasInteracted, isTouring, startTour, stopTour } = useMap();
   const { openedCount, totalCount, justCompleted, dismissCompletion } = useCaseFile();
   const { active: nightActive, toggle: toggleNight } = useNightShift();
   const home = NODES.home;
@@ -71,6 +71,37 @@ export function Hud() {
             />
           </div>
         </div>
+      </div>
+
+      {/* "Follow the red string": glides the viewport along STRING_PATH so a
+          first-time visitor who has not realised the page is a draggable map
+          still gets the whole case, in order, without hunting. */}
+      <div className="fixed bottom-[52px] left-4 z-40">
+        <button
+          type="button"
+          onClick={() => {
+            if (isTouring) {
+              stopTour();
+              return;
+            }
+            startTour(
+              STRING_PATH.map((id) => {
+                const n = NODES[id];
+                // aim a little above centre: section headings sit up top
+                return { x: n.x + n.width / 2, y: n.y + Math.min(n.height, 900) / 2 };
+              })
+            );
+          }}
+          className={`font-typewriter text-[10px] uppercase tracking-[0.14em] px-3 py-2 rounded-sm shadow-pinned transition-colors ${
+            isTouring
+              ? "bg-ink-700 text-paper-50 hover:bg-ink-500"
+              : "bg-blood-600 text-paper-50 hover:bg-blood-500"
+          }`}
+        >
+          {isTouring
+            ? t({ id: "■ Hentikan tur", en: "■ Stop the tour" })
+            : t({ id: "▶ Ikuti benang merahnya", en: "▶ Follow the red string" })}
+        </button>
       </div>
 
       <div className="fixed bottom-4 left-4 z-40 flex flex-wrap gap-1.5 max-w-[210px] sm:max-w-[260px]">

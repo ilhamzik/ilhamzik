@@ -564,6 +564,119 @@ nyebut path di dalam `dist/` lagi, **copy dulu, tanya belakangan.**
 `tentang-kopi.jpg` sekalian dikompres dari 205KB ke 54KB (604x640): foto itu
 cuma dipakai sebagai thumbnail 54px di kartu dan 160px di modal.
 
+## Jalur cepat buat recruiter (2026-09-07, iterasi keenam)
+
+Kritik yang mendasari semua perubahan di bawah: situs ini dioptimalkan buat
+bikin orang terkesan, belum buat bikin orang merekrut. Peta pannable-nya seru,
+tapi orang yang nyaring kandidat cuma punya sekitar satu menit dan sebelumnya
+nggak ada jalan buat dapat substansinya tanpa menjelajah dulu.
+
+**`CaseSummary.tsx` + `caseSummary` di content.ts.** Lembar ringkasan: 5 baris
+data diketik, 3 baris bukti yang masing-masing membawa angka, dan dua tombol
+(unduh CV, kirim petunjuk). Semua isinya **restatement** dari fakta yang sudah
+ada di content.ts, jadi kalau fakta aslinya berubah, lembar ini harus ikut
+diedit manual. Di desktop dia di dalam node `home` (dioper `onContact` yang
+mem-pan peta ke node kontak); di mobile sengaja **tanpa** `onContact`, karena
+section kontak masih lazy-mounted jadi nggak ada yang bisa di-scroll-ke, dan
+fallback `mailto` justru aksi yang lebih tepat di HP.
+
+**Konsekuensinya: node `home` jadi jauh lebih tinggi** (konten ~1490px lawan
+950px sebelumnya), dan lembar itu langsung menimpa section experience. Semua
+node di bawah home digeser **+680px sekaligus** (experience, skills, projects,
+contact, termasuk pin-nya), `WORLD_HEIGHT` naik ke 4470. `education` dan
+`interests` **tidak** digeser: mereka mengapit home dan sudah bebas secara
+horizontal. Diverifikasi nol overlap di jendela lebar dan sempit.
+
+**Kalau nambah apa pun ke `home` lagi, cek ulang home lawan experience.**
+Skrip pemeriksanya nggak bisa nemu home lewat `getElementById` (node home
+nggak punya `id`), jadi dia dijangkau lewat `document.querySelector("h1")`
+lalu `.closest("div[style]")`. Cara lengkapnya ada di
+`card-previews/README.md`.
+
+## Stat tile angka headline (2026-09-07)
+
+`CaseFile.metrics` dirender sebagai baris stat tile di **atas** narasi, biar
+angkanya mendarat sebelum prosanya. Tiga aturan yang gampang salah:
+
+- **`value` itu `Bilingual`, bukan string.** Pemisah ribuan dan desimal beda:
+  "5.846"/"0,85" di Indonesia, "5,846"/"0.85" di Inggris.
+- **Angkanya pakai `font-typewriter`, BUKAN `font-headline`.** Playfair itu
+  display face; angka besar di atasnya kebaca sebagai dekorasi, bukan data.
+  Typewriter itu "working face" sistem ini, yang dipakai semua nilai terketik
+  lain di kartu-kartunya.
+- **Jangan `tabular-nums`.** Digit selebar `0` bikin angka besar yang berdiri
+  sendiri kelihatan longgar. Tabular cuma buat kolom angka yang harus rata
+  vertikal (baris tabel, tick axis).
+
+Ini bukan chart dan jangan dijadikan chart: segenggam angka yang berdiri
+sendiri memang kerjaan stat tile. Nggak ada palet kategorikal di sini
+(semuanya tinta di atas kertas), jadi nggak ada yang perlu divalidasi.
+
+**Cuma masukkan angka yang sudah didukung body text-nya.** `proj-ecommerce`
+sengaja tanpa metrics karena body-nya nggak menyebut satu angka konkret pun.
+
+## Keterangan saksi: aturan kejujurannya (2026-09-07)
+
+`CaseFile.witness` dipakai `exp-tentang-kopi`. User cerita pemiliknya
+menyampaikan **lisan** bahwa bahan baku terbuang berkurang, tanpa angka. Jadi
+yang ditulis persis itu, dan field `source`-nya menyebut terang-terangan bahwa
+itu keterangan lisan dan **tidak ada persentase yang diklaim**.
+
+**Jangan pernah mengarang angka buat mengisi lubang ini.** Menyebut provenance
+apa adanya justru bikin sisa berkasnya lebih kredibel. Aturan yang sama buat
+saksi berikutnya: `source` wajib bilang siapa yang ngomong dan sekuat apa
+buktinya. Jangan bikin kutipan verbatim dari sebuah parafrase.
+
+## Slot bukti lebar + bar redaksi (2026-09-07)
+
+`CaseFile.exhibit` buat screenshot dashboard: dirender selebar modal, terpisah
+dari `photoSrc` (polaroid kotak 160px, buat foto orang dan tempat; dashboard di
+situ nggak kebaca). `exhibit.redact` menerima daftar kotak persen `{x,y,w,h}`
+yang digambar sebagai bar hitam di atas gambarnya, jadi screenshot data
+internal masih mungkin ditampilkan. **Belum ada satu pun yang terisi: nunggu
+screenshot dari user.**
+
+`PolaroidPhoto` juga nggak lagi jatuh ke placeholder siluet orang. Dulu tiap
+berkas proyek dan skill kebuka dengan siluet orang asing plus tulisan "PHOTO
+PENDING"; sekarang kolom fotonya cuma muncul kalau `photoSrc` beneran ada
+(stempelnya tetap dirender sendiri kalau fotonya nggak ada).
+
+## Tur berpandu "Ikuti benang merahnya" (2026-09-07)
+
+Tombol di HUD kiri-bawah menggeser viewport menyusuri `STRING_PATH` dari
+section ke section, buat pengunjung pertama yang belum sadar halaman ini peta
+yang bisa diseret.
+
+Implementasinya di `usePannableCanvas`: `glideTo()` meng-animasi offset/scale
+pakai rAF + easeInOutCubic, dan `startTour()` menjalankannya berurutan.
+Semua navigasi lain **tetap instan**; cuma tur ini yang di-animasi.
+
+- Pembatalannya pakai **token yang di-increment** (`tourToken`), bukan flag
+  boolean: tiap `await` mengecek tokennya dan langsung keluar kalau berubah.
+- `stopTour()` dipanggil dari `onPointerDown` dan `onWheel`. Tur tidak boleh
+  berebut kendali viewport dengan orangnya.
+- `prefers-reduced-motion` bikin dia langsung lompat, nggak meluncur.
+- `offsetRef`/`scaleRef` mem-mirror state, supaya `glideTo` bisa baca
+  transform terkini tanpa mendaftarkan offset/scale sebagai dependency (yang
+  bakal membangun ulang callback-nya tiap frame).
+
+## Preview sosial (2026-09-07)
+
+`public/og-image.jpg` (1200x630, 94KB) itu **screenshot situsnya sendiri**:
+masthead plus poster WANTED lengkap. Cara regenerate: buka situsnya di viewport
+1200x630, sembunyikan semua `.fixed` (HUD) DAN sticky note-nya (yang itu di
+flow, bukan fixed, jadi nggak kena selector `.fixed`), set transform world ke
+`translate(-905px, -150px) scale(1)`, screenshot, simpan JPEG q86.
+
+`index.html` sekarang punya og:*/twitter:* lengkap plus JSON-LD `Person`
+(recruiter mencari nama lengkap, bukan alias, jadi `<title>` juga sudah memuat
+"Muhammad Ilham Zikri").
+
+Catatan penting: **`og:image` masih path relatif.** Sebagian besar crawler
+me-resolve itu relatif ke URL halaman, tapi LinkedIn minta absolut. Begitu
+domainnya fix, ganti `og:image`/`twitter:image` ke URL absolut dan tambah
+`og:url`. Komentarnya sudah ditaruh di `index.html` tepat di atas tag-tagnya.
+
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.
 - `TOTAL_CASES` di `CaseFileContext.tsx` dihitung otomatis dari panjang array content (education+experience+projects+skills+interests+stickyNotes) — kalau nambah/kurang entri, angka meter ikut otomatis, tidak perlu update manual.
@@ -594,8 +707,18 @@ cuma dipakai sebagai thumbnail 54px di kartu dan 160px di modal.
 
 ## Yang masih ditunggu dari user
 
-Satu-satunya yang masih sengaja kosong di `content.ts`:
-- Detail proyek-proyek di Telkom Indonesia (baru boleh ditambahkan belakangan, atas permintaan user sendiri — jangan tanyakan lagi sampai dia yang mengangkat topik ini).
+Detail proyek Telkom **sudah terisi** (per 2026-09-07). Yang masih ditunggu:
+
+- **Screenshot dashboard** buat `CaseFile.exhibit`. Slot dan bar redaksinya
+  sudah jadi dan cuma nunggu gambar. Yang paling gampang duluan: proyek Olist
+  (`proj-ecommerce`) yang punya sendiri, nol isu kerahasiaan.
+- **URL repo** buat proyek pribadi (`proj-ecommerce`, `proj-webgraph`,
+  `proj-terrorism`, `proj-thesis`). Field `link` di `CaseFile` sudah ada dan
+  sudah dirender modal, tapi belum satu pun proyek yang mengisinya. **Jangan
+  mengarang URL**: link mati lebih buruk daripada nggak ada link.
+- **2 sampai 3 keterangan saksi lagi** (supervisor Telkom, tim BEM). Baru ada
+  satu, dari pemilik Tentang Kopi. Lihat aturan kejujurannya di atas.
+- **Domain final**, buat mengabsolutkan `og:image`.
 
 Semua yang lain (nama sekolah SD/SMP/SMA, cerita masa sekolah, 2 minat tambahan di luar Man United) sudah lengkap per 2026-08-30.
 

@@ -17,13 +17,18 @@ export interface MapNodeConfig {
 // measured empirically (not estimated). Keep ~60px margin on every edge so
 // panning all the way out doesn't reveal a lopsided void on one side.
 //
+// The home node carries the Case Summary sheet, which made it far taller
+// (~1490px of content against the 950 it used to hold), so everything below
+// it was shifted down 680px in one go. `education` and `interests` flank home
+// and are horizontally clear of it, so they did not move.
+//
 // `projects` and `skills` sit below the experience corkboard rather than
 // beside its lower half: their section rubrics end in a full-width hairline
 // rule, and at the old y they painted that rule straight across the board's
 // bottom corners. Verify with the pairwise rect check (see README) after
 // moving anything here.
 export const WORLD_WIDTH = 2950;
-export const WORLD_HEIGHT = 3780;
+export const WORLD_HEIGHT = 4470;
 
 /**
  * Hand-placed coordinates for every section on the big pannable "map".
@@ -40,13 +45,13 @@ export const WORLD_HEIGHT = 3780;
  * under it. Re-measure whenever a card size or a section grid changes.
  */
 export const NODES: Record<string, MapNodeConfig> = {
-  home: { x: 950, y: 40, width: 1100, height: 950, pin: { x: 1500, y: 480 } },
+  home: { x: 950, y: 40, width: 1100, height: 1660, pin: { x: 1500, y: 480 } },
   education: { x: 60, y: 300, width: 640, height: 1260, pin: { x: 380, y: 500 } },
   interests: { x: 2250, y: 300, width: 640, height: 940, pin: { x: 2570, y: 480 } },
-  experience: { x: 900, y: 1020, width: 1100, height: 1380, pin: { x: 1450, y: 1230 } },
-  skills: { x: 1990, y: 1970, width: 900, height: 1290, pin: { x: 2440, y: 2170 } },
-  projects: { x: 90, y: 2240, width: 1000, height: 1030, pin: { x: 590, y: 2440 } },
-  contact: { x: 1150, y: 2550, width: 600, height: 1240, pin: { x: 1450, y: 2680 } },
+  experience: { x: 900, y: 1700, width: 1100, height: 1380, pin: { x: 1450, y: 1910 } },
+  skills: { x: 1990, y: 2650, width: 900, height: 1290, pin: { x: 2440, y: 2850 } },
+  projects: { x: 90, y: 2920, width: 1000, height: 1030, pin: { x: 590, y: 3120 } },
+  contact: { x: 1150, y: 3230, width: 600, height: 1240, pin: { x: 1450, y: 3360 } },
 };
 
 /** Traversal order for the red string connecting sections across the map. */

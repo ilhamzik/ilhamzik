@@ -195,6 +195,16 @@ export const experience: ExperienceEntry[] = [
         en: "Conducted product bundling analysis using association rule mining (support, confidence, lift) to find high-performing combinations, successfully developing bundles that helped Tentang Kopi minimize ingredient waste from expiration.",
       },
     ],
+    witness: {
+      statement: {
+        id: "Pemiliknya menyampaikan langsung bahwa bahan baku yang terbuang karena kedaluwarsa jadi berkurang setelah bundel-bundel itu mulai dijalankan.",
+        en: "The owner said directly that ingredient waste from expiry went down after those bundles started running.",
+      },
+      source: {
+        id: "Disampaikan lisan oleh pemilik Tentang Kopi. Tidak ada angka resmi yang dicatat, jadi tidak ada persentase yang diklaim di sini.",
+        en: "Related verbally by the Tentang Kopi owner. No formal figure was recorded, so no percentage is claimed here.",
+      },
+    },
     photoSrc: tentangKopiPhoto,
     photoCaption: { id: "Dari masa freelance Tentang Kopi.", en: "From the Tentang Kopi freelance days." },
   },
@@ -282,6 +292,10 @@ export const projects: ProjectEntry[] = [
     ],
     techStack: ["React", "TypeScript", "Node.js", "Express", "Google Sheets API"],
     capabilities: ["dashboard-design", "kpi-monitoring", "drilldown", "live-pipeline", "data-governance"],
+    metrics: [
+      { value: { id: "5.846", en: "5,846" }, label: { id: "Gerai dipantau", en: "Stores tracked" } },
+      { value: { id: "6", en: "6" }, label: { id: "Regional tercakup", en: "Regions covered" } },
+    ],
   },
   {
     id: "proj-dashboard-tool",
@@ -296,6 +310,10 @@ export const projects: ProjectEntry[] = [
     ],
     techStack: ["Node.js", "Express", "LLM Integration", "Custom SVG Charting", "Data Pipeline Design"],
     capabilities: ["self-service-bi", "data-profiling", "metric-validation", "data-governance"],
+    metrics: [
+      { value: { id: "0", en: "0" }, label: { id: "Baris data mentah dikirim ke penyedia AI", en: "Raw data rows sent to the AI provider" } },
+      { value: { id: "3", en: "3" }, label: { id: "Format sumber didukung", en: "Source formats supported" } },
+    ],
   },
   {
     id: "proj-hutri",
@@ -310,6 +328,10 @@ export const projects: ProjectEntry[] = [
     ],
     techStack: ["Django", "Python", "Google Sheets API", "python-pptx"],
     capabilities: ["exec-reporting", "reporting-automation", "dashboard-design"],
+    metrics: [
+      { value: { id: "15 dtk", en: "15s" }, label: { id: "Interval polling dashboard", en: "Dashboard polling interval" } },
+      { value: { id: "0", en: "0" }, label: { id: "Slide yang perlu diedit manual", en: "Slides needing manual edits" } },
+    ],
   },
   {
     id: "proj-ecommerce",
@@ -338,6 +360,10 @@ export const projects: ProjectEntry[] = [
     ],
     techStack: ["Python", "Pandas", "Scikit-Learn", "Krippendorff's Alpha"],
     capabilities: ["taxonomy-design", "reliability-validation", "text-classification"],
+    metrics: [
+      { value: { id: "5", en: "5" }, label: { id: "Kelas taksonomi disusun", en: "Taxonomy classes derived" } },
+      { value: { id: "0,85", en: "0.85" }, label: { id: "Krippendorff's Alpha", en: "Krippendorff's Alpha" } },
+    ],
   },
   {
     id: "proj-webgraph",
@@ -352,6 +378,10 @@ export const projects: ProjectEntry[] = [
     ],
     techStack: ["Python", "NetworkX", "Scikit-Learn"],
     capabilities: ["network-analysis", "community-detection", "anomaly-detection"],
+    metrics: [
+      { value: { id: "4.200", en: "4,200" }, label: { id: "Node graf dianalisis", en: "Graph nodes analysed" } },
+      { value: { id: "3", en: "3" }, label: { id: "Algoritma deteksi komunitas", en: "Community detection algorithms" } },
+    ],
   },
   {
     id: "proj-terrorism",
@@ -366,6 +396,10 @@ export const projects: ProjectEntry[] = [
     ],
     techStack: ["Python", "Pandas", "Scikit-Learn", "Matplotlib"],
     capabilities: ["predictive-modeling", "segmentation", "model-evaluation"],
+    metrics: [
+      { value: { id: "33.140", en: "33,140" }, label: { id: "Catatan serangan diproses", en: "Incident records processed" } },
+      { value: { id: "2", en: "2" }, label: { id: "Jenis model dibangun", en: "Model types built" } },
+    ],
   },
 ];
 
@@ -444,6 +478,69 @@ export const interests: InterestEntry[] = [
     photoCaption: { id: "Sama mama, dari dulu.", en: "With mom, since way back." },
   },
 ];
+
+/**
+ * The fast path. The map is fun to explore, but somebody screening candidates
+ * gets through in about a minute, and until now there was no way to get the
+ * substance without hunting for it. Everything here restates facts that exist
+ * elsewhere in this file; edit it whenever those change.
+ */
+export const caseSummary = {
+  rubric: { id: "Ringkasan Perkara", en: "Case Summary" } as Bilingual,
+  hint: {
+    id: "Buat yang nggak punya waktu menyusuri seluruh papan.",
+    en: "For anyone without time to work the whole board.",
+  } as Bilingual,
+  rows: [
+    {
+      label: { id: "Subjek", en: "Subject" } as Bilingual,
+      value: { id: "Muhammad Ilham Zikri, Jakarta Timur", en: "Muhammad Ilham Zikri, East Jakarta" } as Bilingual,
+    },
+    {
+      label: { id: "Dicari sebagai", en: "Wanted as" } as Bilingual,
+      value: { id: "Data Analyst / Business Intelligence Analyst", en: "Data Analyst / Business Intelligence Analyst" } as Bilingual,
+    },
+    {
+      label: { id: "Posisi sekarang", en: "Current post" } as Bilingual,
+      value: {
+        id: "Data Analyst Intern, Tim CPO, Telkom Indonesia (Jul 2026 – Sekarang)",
+        en: "Data Analyst Intern, CPO Team, Telkom Indonesia (Jul 2026 – Present)",
+      } as Bilingual,
+    },
+    {
+      label: { id: "Pendidikan", en: "Education" } as Bilingual,
+      value: {
+        id: "S1 Ilmu Komputer, Fasilkom Universitas Indonesia, lulus 2026",
+        en: "B.S. Computer Science, Faculty of Computer Science, University of Indonesia, 2026",
+      } as Bilingual,
+    },
+    {
+      label: { id: "Perkakas utama", en: "Core toolkit" } as Bilingual,
+      value: {
+        id: "SQL, Python, Power BI, Excel, Scikit-Learn, Git",
+        en: "SQL, Python, Power BI, Excel, Scikit-Learn, Git",
+      } as Bilingual,
+    },
+  ],
+  /** Three lines that each carry a number the case files substantiate. */
+  evidence: [
+    {
+      id: "Dashboard live memantau rollout Astinet/SD-WAN ke 5.846 gerai Indomaret di 6 regional.",
+      en: "Live dashboard tracking Astinet/SD-WAN rollout across 5,846 Indomaret stores in 6 regions.",
+    },
+    {
+      id: "Tool yang mengubah Excel/CSV/Sheets jadi dashboard lewat bahasa natural, tanpa satu baris data mentah pun keluar ke penyedia AI.",
+      en: "A tool turning Excel/CSV/Sheets into dashboards from plain language, with zero raw data rows leaving for the AI provider.",
+    },
+    {
+      id: "Skripsi: taksonomi 5 kelas pola prompt GenAI, divalidasi Krippendorff's Alpha 0,85, lalu dimodelkan jadi klasifikasi teks multi-kelas.",
+      en: "Thesis: a 5-class GenAI prompt taxonomy validated at Krippendorff's Alpha 0.85, then modelled as multi-class text classification.",
+    },
+  ] as Bilingual[],
+  evidenceLabel: { id: "Bukti Pilihan", en: "Selected Evidence" } as Bilingual,
+  cta: { id: "Unduh berkas lengkap (CV)", en: "Download the full file (CV)" } as Bilingual,
+  contactCta: { id: "Kirim petunjuk", en: "Send a tip" } as Bilingual,
+};
 
 export const contact = {
   heading: { id: "Kirim Petunjuk", en: "Send a Tip" } as Bilingual,

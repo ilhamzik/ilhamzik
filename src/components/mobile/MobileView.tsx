@@ -6,6 +6,7 @@ import { NightShiftProvider } from "../../context/NightShiftContext";
 
 import { Masthead } from "../layout/Masthead";
 import { LeadParagraph } from "../layout/LeadParagraph";
+import { CaseSummary } from "../layout/CaseSummary";
 import { WantedPoster } from "../sections/WantedPoster";
 import { EducationSection } from "../sections/EducationSection";
 import { InterestsSection } from "../sections/InterestsSection";
@@ -145,6 +146,13 @@ function MobileShell() {
               )}
 
               <LeadParagraph text={INTRO} />
+
+              {/* No onContact here on purpose: the contact section is lazily
+                  mounted, so there is nothing to scroll to yet. The fallback
+                  mailto is the better action on a phone anyway. */}
+              <div className="px-3">
+                <CaseSummary />
+              </div>
 
               {SECTIONS.map(({ Comp, h }, i) => (
                 <Fragment key={i}>

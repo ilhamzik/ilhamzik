@@ -64,14 +64,26 @@ export function CaseFileModal() {
 
             <div className="p-6 sm:p-10 pt-10">
               <div className="flex flex-col sm:flex-row gap-6">
-                <div className="relative shrink-0 self-center sm:self-start">
-                  <PolaroidPhoto src={activeCase.photoSrc} caption={activeCase.photoCaption} rotate={-3} />
-                  {activeCase.stamp && (
-                    <div className="absolute -bottom-3 -right-6 w-32 opacity-90 animate-stampIn pointer-events-none rotate-[-10deg] z-10">
+                {/* The polaroid only appears when there is an actual
+                    photograph. It used to fall back to a person-shaped
+                    placeholder, which meant every project and skill file
+                    opened with a stranger's silhouette and "PHOTO PENDING". */}
+                {activeCase.photoSrc ? (
+                  <div className="relative shrink-0 self-center sm:self-start">
+                    <PolaroidPhoto src={activeCase.photoSrc} caption={activeCase.photoCaption} rotate={-3} />
+                    {activeCase.stamp && (
+                      <div className="absolute -bottom-3 -right-6 w-32 opacity-90 animate-stampIn pointer-events-none rotate-[-10deg] z-10">
+                        <StampMark text={t(activeCase.stamp)} />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  activeCase.stamp && (
+                    <div className="shrink-0 self-center sm:self-start w-28 opacity-90 animate-stampIn pointer-events-none -rotate-[8deg]">
                       <StampMark text={t(activeCase.stamp)} />
                     </div>
-                  )}
-                </div>
+                  )
+                )}
 
                 <div className="min-w-0">
                   <h3 className="font-headline text-2xl sm:text-3xl text-ink-700 font-bold leading-tight">
@@ -81,6 +93,30 @@ export function CaseFileModal() {
                     <p className="font-typewriter text-sm text-blood-600 mt-1 tracking-wide uppercase">
                       {t(activeCase.subtitle)}
                     </p>
+                  )}
+
+                  {/* Headline numbers as a row of stat tiles. Deliberately not
+                      a chart: a handful of standalone figures is what a tile
+                      is for. Values use the typewriter face (the system's
+                      working face for typed data) rather than the display
+                      serif, and proportional figures rather than tabular-nums,
+                      which makes standalone numbers look loose. */}
+                  {activeCase.metrics && activeCase.metrics.length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 gap-2.5">
+                      {activeCase.metrics.map((metric, i) => (
+                        <div
+                          key={i}
+                          className="border border-ink-500/25 bg-paper-50/50 px-3 py-2.5 rounded-sm"
+                        >
+                          <p className="font-typewriter text-2xl sm:text-[28px] leading-none text-ink-700">
+                            {t(metric.value)}
+                          </p>
+                          <p className="font-typewriter text-[8.5px] uppercase tracking-[0.14em] text-ink-500/60 mt-1.5 leading-snug">
+                            {t(metric.label)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   )}
 
                   <div className="mt-4 space-y-3">
@@ -96,6 +132,40 @@ export function CaseFileModal() {
                       </motion.p>
                     ))}
                   </div>
+
+                  {activeCase.exhibit && (
+                    <figure className="mt-5">
+                      <div
+                        className="relative overflow-hidden border border-ink-500/40 bg-ink-900/5"
+                        style={{ boxShadow: "0 6px 16px -8px rgba(20,14,8,0.5)" }}
+                      >
+                        <img
+                          src={activeCase.exhibit.src}
+                          alt={activeCase.exhibit.caption ? t(activeCase.exhibit.caption) : ""}
+                          loading="lazy"
+                          decoding="async"
+                          className="block w-full"
+                        />
+                        {activeCase.exhibit.redact?.map((bar, i) => (
+                          <span
+                            key={i}
+                            className="absolute bg-ink-900"
+                            style={{
+                              left: `${bar.x}%`,
+                              top: `${bar.y}%`,
+                              width: `${bar.w}%`,
+                              height: `${bar.h}%`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      {activeCase.exhibit.caption && (
+                        <figcaption className="font-hand text-[13px] text-ink-500/75 mt-1.5 text-center">
+                          {t(activeCase.exhibit.caption)}
+                        </figcaption>
+                      )}
+                    </figure>
+                  )}
 
                   {activeCase.capabilities && activeCase.capabilities.length > 0 && (
                     <div className="mt-5">
@@ -134,6 +204,20 @@ export function CaseFileModal() {
                           </span>
                         ))}
                       </div>
+                    </div>
+                  )}
+
+                  {activeCase.witness && (
+                    <div className="mt-5 border-l-[3px] border-blood-600/50 pl-3.5">
+                      <p className="font-typewriter text-[9px] uppercase tracking-[0.22em] text-blood-600/80">
+                        {t({ id: "Keterangan Saksi", en: "Witness Statement" })}
+                      </p>
+                      <p className="font-body text-[14px] italic leading-relaxed text-ink-700 mt-1.5">
+                        {t(activeCase.witness.statement)}
+                      </p>
+                      <p className="font-typewriter text-[10px] leading-snug text-ink-500/60 mt-2">
+                        {t(activeCase.witness.source)}
+                      </p>
                     </div>
                   )}
 
