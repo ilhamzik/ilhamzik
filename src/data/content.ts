@@ -152,7 +152,7 @@ export const experience: ExperienceEntry[] = [
     title: { id: "Praktikan, Tim CPO", en: "Intern, CPO Team" },
     role: { id: "Data Analyst Intern @TelkomIndonesia", en: "Data Analyst Intern @TelkomIndonesia" },
     organization: { id: "SDA Division", en: "SDA Division" },
-    period: { id: "Jul 2026 – Sekarang", en: "Jul 2026 – Present" },
+    period: { id: "Agu 2026 – Sekarang", en: "Aug 2026 – Present" },
     body: [
       {
         id: "Baru memasuki bulan kedua magang, dan sudah ikut membangun beberapa sistem nyata: dashboard pemantauan rollout Astinet/SD-WAN untuk jaringan Indomaret, tool otomasi dashboard berbasis AI, dan dashboard live plus otomasi presentasi untuk perayaan HUT RI perusahaan. Ketiganya sudah boleh diceritakan, lihat Ruang Bukti untuk detailnya.",
@@ -283,7 +283,7 @@ export const projects: ProjectEntry[] = [
     id: "proj-rollout-dashboard",
     tag: { id: "BUKTI A", en: "EXHIBIT A" },
     title: { id: "Dashboard Pemantauan Rollout Infrastruktur Live", en: "Live Infrastructure Rollout Monitoring Dashboard" },
-    subtitle: { id: "Telkom Indonesia × Indomaret, Jul 2026 – Sekarang", en: "Telkom Indonesia × Indomaret, Jul 2026 – Present" },
+    subtitle: { id: "Telkom Indonesia × Indomaret, Agu 2026 – Sekarang", en: "Telkom Indonesia × Indomaret, Aug 2026 – Present" },
     body: [
       {
         id: "Ikut membangun dashboard live yang memantau progres rollout Astinet/SD-WAN ke 5.846 gerai Indomaret di seluruh Indonesia (6 regional), lengkap dengan breakdown per wilayah dan pencarian sampai detail tiap gerai. Sistemnya tersambung baca-saja ke sumber data tim tiap beberapa detik dan menulis narasi ringkasannya sendiri dari angka yang sedang tampil, ditambah kontrol akses dan pembatasan permintaan yang bikin sistemnya aman dibiarkan terbuka buat tim yang lebih luas.",
@@ -301,7 +301,7 @@ export const projects: ProjectEntry[] = [
     id: "proj-dashboard-tool",
     tag: { id: "BUKTI B", en: "EXHIBIT B" },
     title: { id: "Tool Otomasi Dashboard Berbasis AI", en: "AI-Assisted Dashboard Automation Tool" },
-    subtitle: { id: "Proyek internal, Telkom Indonesia, Jul 2026 – Sekarang", en: "Internal tool, Telkom Indonesia, Jul 2026 – Present" },
+    subtitle: { id: "Proyek internal, Telkom Indonesia, Agu 2026 – Sekarang", en: "Internal tool, Telkom Indonesia, Aug 2026 – Present" },
     body: [
       {
         id: "Ikut merancang dan membangun tool internal yang mengubah data mentah Excel/CSV/Google Sheets jadi dashboard interaktif lewat permintaan berbahasa natural. LLM cuma memilih kolom dan jenis perhitungannya, angka aslinya selalu dihitung dan diverifikasi ulang oleh kode biasa, dan permintaan yang merujuk kolom yang nggak ada di data langsung diubah jadi pertanyaan klarifikasi, bukan tebakan asal. Turut menangani sisi privasinya juga: baris data mentah nggak pernah keluar ke penyedia AI, yang dilihat model cuma nama kolom, tipe, dan bentuk nilainya.",
@@ -503,8 +503,8 @@ export const caseSummary = {
     {
       label: { id: "Posisi sekarang", en: "Current post" } as Bilingual,
       value: {
-        id: "Data Analyst Intern, Tim CPO, Telkom Indonesia (Jul 2026 – Sekarang)",
-        en: "Data Analyst Intern, CPO Team, Telkom Indonesia (Jul 2026 – Present)",
+        id: "Data Analyst Intern, Tim CPO, Telkom Indonesia (Agu 2026 – Sekarang)",
+        en: "Data Analyst Intern, CPO Team, Telkom Indonesia (Aug 2026 – Present)",
       } as Bilingual,
     },
     {
@@ -538,8 +538,6 @@ export const caseSummary = {
     },
   ] as Bilingual[],
   evidenceLabel: { id: "Bukti Pilihan", en: "Selected Evidence" } as Bilingual,
-  cta: { id: "Unduh berkas lengkap (CV)", en: "Download the full file (CV)" } as Bilingual,
-  contactCta: { id: "Kirim petunjuk", en: "Send a tip" } as Bilingual,
 };
 
 export const contact = {
@@ -612,8 +610,8 @@ export const articles: Record<string, Bilingual> = {
     en: "Since his days at SDI PB Soedirman Cijantung, this East Jakarta kid has been confusing his teachers: feet on the football field, occasionally also entering math competitions, and both ran side by side all the way through SMPN 49 Jakarta. Everything changed when the pandemic hit right at the start of SMAN 39 Jakarta: the field shut down, leaving only Mobile Legends, Valorant, and late-night Netflix marathons. Luckily his trajectory straightened out again once he entered the Faculty of Computer Science, University of Indonesia, and four years later, walked out with a computer science degree and grades he'd describe as nothing special.",
   },
   experience: {
-    id: "Rekam jejak kerjanya dimulai dari balik layar booth Open House Fasilkom UI, lalu masuk ke dunia data lewat sebuah kedai kopi lokal, tempat analisis bundling produknya sukses menekan bahan baku terbuang. Aksinya berlanjut di tim kampanye pemilihan BEM, mengubah tumpukan data survei jadi dashboard yang benar-benar dipakai untuk ambil keputusan. Ceritanya kini berlanjut di kantor Telkom Indonesia sebagai praktikan di Tim CPO, baru dua bulan, tapi sudah berkesempatan ikut serta di beberapa proyek tim.",
-    en: "His work record starts backstage at a Fasilkom UI Open House booth, then moves into the data world through a local coffee shop, where his product-bundling analysis successfully cut down wasted ingredients. The story continues on a BEM election campaign team, turning stacks of survey data into dashboards that actually got used to make decisions. It now continues at a Telkom Indonesia office as an intern on the CPO team, only two months in, but already given the chance to take part in a few of the team's projects.",
+    id: "Rekam jejak kerjanya dimulai dari balik layar booth Open House Fasilkom UI, lalu masuk ke dunia data lewat sebuah kedai kopi lokal, tempat analisis bundling produknya sukses menekan bahan baku terbuang. Aksinya berlanjut di tim kampanye pemilihan BEM, mengubah tumpukan data survei jadi dashboard yang benar-benar dipakai untuk ambil keputusan. Ceritanya kini berlanjut di kantor Telkom Indonesia sebagai praktikan di Tim CPO, baru sebulan, tapi sudah berkesempatan ikut serta di beberapa proyek tim.",
+    en: "His work record starts backstage at a Fasilkom UI Open House booth, then moves into the data world through a local coffee shop, where his product-bundling analysis successfully cut down wasted ingredients. The story continues on a BEM election campaign team, turning stacks of survey data into dashboards that actually got used to make decisions. It now continues at a Telkom Indonesia office as an intern on the CPO team, barely a month in, but already given the chance to take part in a few of the team's projects.",
   },
   projects: {
     id: "Tumpukan berkas ini bukti bahwa rasa penasarannya nggak pernah berhenti di satu topik saja. Dimulai dari Telkom: dashboard live yang memantau rollout Astinet/SD-WAN ke ribuan gerai Indomaret, tool otomasi dashboard berbasis AI, dan dashboard untuk perayaan HUT RI perusahaan. Lalu berlanjut ke bedah data e-commerce Brasil untuk cari tahu kenapa paket telat tapi rating tetap bagus, skripsi yang mengubah obrolan dengan AI jadi taksonomi ilmiah lengkap dengan uji reliabilitas statistik, pemetaan 4.200 node jaringan web, sampai pembongkaran 33 ribu catatan serangan terorisme global. Semuanya demi satu tujuan sederhana: bikin data yang berantakan jadi masuk akal.",

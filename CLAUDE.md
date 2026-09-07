@@ -352,7 +352,7 @@ mengatur layout:
 | education | `StudentIdCard.tsx` | kartu pelajar: header warna sekolah, lambang asli di jendela foto, baris data diketik, tanda tangan, barcode (deterministik dari `entry.id`, bukan `Math.random()`), sheen laminasi |
 | education (kuliah) | `GraduationMedalIcon` di icons | medali digambar ulang: pita satu untai bernotch (biru & merah), rim milled, **Makara UI ter-struck di tengah**, banner "S.Kom" |
 | experience | `DossierCard.tsx` | kartu arsip bergaris: garis biru + margin merah, foto asli ter-mount, sudut terlipat, stempel status (AKTIF) |
-| experience (papan) | `CorkString.tsx` | benang antar pin, **diukur runtime** dari `[data-pin]` |
+| experience (papan) | `CorkString.tsx` | benang antar pin, **diukur runtime** dari `[data-pin]`, lihat bagiannya sendiri di bawah |
 | projects | `ExhibitTag.tsx` | label kraft: lubang grommet asli (SVG mask, jadi kertas di baliknya benar-benar kelihatan), eyelet logam, benang bersimpul, huruf exhibit diambil dari `project.tag` |
 | skills | `PrintCard.tsx` | kartu sidik jari: tick registrasi di 4 sudut, kotak cetakan, tangga "ridge clarity" |
 | interests | `PhotoMount.tsx` | foto ter-mount pakai 4 sudut foto hitam + caption tulisan tangan |
@@ -676,6 +676,130 @@ Catatan penting: **`og:image` masih path relatif.** Sebagian besar crawler
 me-resolve itu relatif ke URL halaman, tapi LinkedIn minta absolut. Begitu
 domainnya fix, ganti `og:image`/`twitter:image` ke URL absolut dan tambah
 `og:url`. Komentarnya sudah ditaruh di `index.html` tepat di atas tag-tagnya.
+
+## Benang merah papan kasus: `CorkString` (2026-09-07, iterasi ketujuh)
+
+Ini komponen yang paling banyak dibolak-balik atas permintaan user. Baca ini
+dulu sebelum menyentuh geometrinya, biar nggak mengulang jalan yang sudah
+ditolak.
+
+### Bug aslinya bukan geometrinya, tapi z-index
+
+Dulu SVG-nya dirender **di belakang** kartu (paint order: SVG sebelum grid,
+dua-duanya `z-auto`). Jadi tiap kaki benang ketelan kartu tempat dia mulai,
+dan yang kelihatan cuma potongan tengahnya yang nyembul di celah antar kartu:
+busur ngawang yang nggak nyambung ke pin mana pun. User baca ini sebagai
+"benangnya gak teratur", padahal benangnya memang pin-ke-pin dari awal.
+Sekarang SVG-nya `z-10`, di atas kartu (`z-auto`) dan di bawah kepala pin
+(`z-20`). **Jangan hilangkan `z-10` itu.**
+
+### ⚠️ `getBoundingClientRect` itu koordinat SESUDAH transform
+
+Ini bug kedua dan lebih halus. `measure()` mengukur pin lewat
+`getBoundingClientRect`, tapi SVG-nya digambar dalam piksel layout. Ada dua
+transform berskala yang hidup di app ini:
+
+1. **Mobile**: `LazySection` membungkus tiap section dengan `.animate-popIn`,
+   yang jalan `scale(0.85) -> scale(1)` selama 0.35s. CorkString mengukur pas
+   animasinya masih jalan.
+2. **Desktop**: seluruh world peta di-`scale()` (`getDefaultScale()`), jadi di
+   jendela sempit skalanya bisa 0.84.
+
+Efeknya: benangnya kegambar di 0.847x dan **nyangkut di situ selamanya**,
+karena `ResizeObserver` **tidak** bereaksi ke perubahan transform (dia
+mengobservasi kotak layout, bukan ukuran visual). Fixnya: bagi selisihnya
+dengan skala ancestor, `k = board.offsetWidth ? rect.width / board.offsetWidth : 1`.
+`clientWidth`/`clientHeight` sendiri sudah bebas transform, itu sebabnya
+`box` benar sementara pin salah, dan itu petunjuk yang menuntun ke sini.
+
+**Aturan umum: komponen apa pun di repo ini yang mengukur elemen induk pakai
+`getBoundingClientRect` sedang mengukur lewat transform peta.** Bagi dengan
+skalanya, atau ukur lewat rantai `offsetLeft`/`offsetTop` yang bebas transform.
+`MobileRedString` juga mengukur induk, cek ke sana kalau ada gejala serupa.
+
+### Jalan yang SUDAH DITOLAK user, jangan diulang
+
+- **Routing ortogonal lewat kanal kosong papan** (naik dari pin, lewat gutter,
+  turun ke pin berikutnya, sudut dibulatkan). Secara teknis ini yang paling
+  aman: nol persinggahan dengan kartu di semua layout, terukur. Tapi user
+  bilang *"benang merah yang membentuk kotak dan terlalu menjalur gitu kayak
+  aneh"* — kebaca sebagai pipa/kabel, kotak yang digambar di sekitar berkas,
+  bukan tali yang mengikatnya. **Jangan kembali ke sini.**
+- **Jaring silang padat** (tiap pasangan pin diikat 1-3 utas, 12+ utas):
+  *"jangan terlalu semrawut gini juga masseee"*.
+- **Benang keluar papan**: sempat diminta (*"kalo bisa sih ada benang yang
+  connect ke luar board"*), lalu dibatalkan (*"gausah ada yang keluar board
+  deh gapapa"*). SVG-nya sudah balik ke `inset-0`, nggak melebar lagi.
+
+### Bentuk yang dipakai sekarang
+
+Satu utas tali menyusuri berkas urut waktu, lewat di ATAS kartu, tanpa jaring
+silang dan tanpa ujung keluar papan. Yang bikin kebaca organik:
+
+- **Disampel, bukan dirumuskan.** Tiap bentang di-sampel `STEPS = 16` titik
+  lalu dihaluskan Catmull-Rom ke cubic. Kurva tunggal (quadratic) cuma bisa
+  bikin parabola simetris, dan papan penuh parabola identik kelihatan
+  dicetak pabrik.
+- **Gravitasi + skew.** Profil sag nol di kedua pin, di-skew acak-deterministik
+  ke salah satu ujung, jadi nggak ada dua bentang yang menggantung sama.
+- **Riak tegak lurus** dua suku sinus (~1px), di-fade ke nol di kedua pin biar
+  benangnya tetap ketemu pinnya.
+- **Serat bulat**: badan gelap `#7e1b1b` 2.5px + highlight tipis `#c9503c`
+  0.9px yang di-offset `translate(-0.3 -0.7)`, plus bayangan jatuh
+  `translate(1.6 2.8)`. Highlight-nya yang bikin talinya kebaca bulat dan
+  kena cahaya, bukan garis vektor pipih.
+- **PRNG deterministik** (`rnd(seed)`, mulberry32) dari indeks bentang,
+  **bukan `Math.random()`**: geometrinya dihitung ulang tiap `ResizeObserver`
+  jalan, kalau random beneran benangnya bergetar tiap papan reflow. Aturan
+  yang sama seperti `MobileRedString`.
+- **Kasus 1 kolom** (HP, dan jendela desktop < 640px): semua pin satu garis
+  vertikal, jadi bentang tegang bakal turun lurus membelah judul tiap kartu.
+  Karena itu tiap bentang dikasih `bulge` lateral bergantian kiri-kanan
+  (`len * 0.42`), hasilnya talinya berkelok dan memotong kartu secara
+  diagonal, judulnya tetap kebaca.
+
+### Cara verifikasinya (jangan pakai mata saja)
+
+Skrip di scratchpad session, tapi resepnya: ambil `path[data-main]`, lalu
+
+1. `getPointAtLength` sepanjang path, cek nggak ada titik yang keluar
+   `viewBox`;
+2. tiap subpath (`d.split("M ")`) harus mulai DAN berakhir tepat di posisi pin
+   (jarak 0, karena ujungnya nggak di-jitter lagi);
+3. regex `NaN|Infinity|undefined` di semua atribut `d`.
+
+Jalankan di **tiga layout**: jendela lebar (2 kolom), jendela < 640px
+(1 kolom), dan view HP asli. Dan **di build produksi**, di peta desktop yang
+world-nya di-scale (buka `/`, klik chip quicknav "Experience", ukur di
+viewport ~760px biar skalanya 0.844) — itu justru kasus yang dulu rusak dan
+nggak ketangkap di halaman gallery, karena gallery nggak punya transform.
+
+⚠️ **`Page.captureScreenshot` dengan `captureBeyondViewport: true` + `clip`
+pernah dua kali mengembalikan frame BASI** yang nggak cocok sama DOM saat itu,
+dan itu sempat bikin ngejar bug yang nggak ada. Kalau screenshot dan hasil
+`Runtime.evaluate` bertentangan, curigai screenshot-nya dulu: ambil ulang
+tanpa `captureBeyondViewport` (viewport dibikin cukup tinggi saja).
+
+## Lembar ringkasan: tanpa tombol (2026-09-07)
+
+`CaseSummary` sekarang **tidak punya call to action** sama sekali (permintaan
+user: *"tombol download file dan send a tip di summary gausah ada gapapa"*).
+Tinggal 5 baris data diketik + 3 baris bukti berangka. Amplop CV dan kupon tip
+line tetap ada di section kontak, jadi nggak ada yang hilang, cuma nggak
+diulang. Ikutan yang sudah dibersihkan: prop `onContact` dihapus, wrapper
+`SummaryWithNav` di `App.tsx` dihapus (sekarang `<CaseSummary />` langsung),
+dan field `caseSummary.cta` + `caseSummary.contactCta` dibuang dari
+content.ts biar nggak jadi field mati.
+
+## HUD kiri-bawah: satu kolom, jangan dua blok fixed (2026-09-07)
+
+Tombol tur dulu `fixed bottom-[52px] left-4` sementara chip quicknav
+`fixed bottom-4 left-4`. Quicknav isinya 7 chip yang **wrap jadi 2-3 baris**
+tergantung bahasa dan lebar viewport, jadi tingginya bisa lewat 52px dan
+tombol turnya ketiban. Sekarang dua-duanya di dalam SATU
+`fixed bottom-4 left-4 flex flex-col items-start gap-2`, jadi layoutnya nggak
+bisa lagi nabrak dirinya sendiri. **Jangan pin elemen baru di kiri-bawah pakai
+offset tetap**, masukkan ke kolom itu.
 
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.

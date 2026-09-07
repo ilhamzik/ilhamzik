@@ -24,16 +24,9 @@ import { SecretFrame } from "./components/evidence/SecretFrame";
 import { StickyNote } from "./components/evidence/StickyNote";
 import { pressCredits, profile, stickyNotes } from "./data/content";
 import { useLanguage } from "./context/LanguageContext";
-import { useMap } from "./context/MapContext";
 import { useIsMobileOrTablet } from "./hooks/useIsMobileOrTablet";
 import { MobileView } from "./components/mobile/MobileView";
 import { isForceDesktop } from "./components/mobile/forceDesktop";
-
-function SummaryWithNav() {
-  const { recenterOn } = useMap();
-  const node = NODES.contact;
-  return <CaseSummary onContact={() => recenterOn(node.x + node.width / 2, node.y + 300)} />;
-}
 
 function Footer() {
   const { t } = useLanguage();
@@ -84,7 +77,7 @@ function App() {
                     en: "An investigation is still underway behind this name. Every section of this paper holds a piece of evidence. Drag the map to explore, and follow the red string if you're curious where the story leads next.",
                   }}
                 />
-                <SummaryWithNav />
+                <CaseSummary />
               </MapNode>
 
               <MapNode {...NODES.education}>

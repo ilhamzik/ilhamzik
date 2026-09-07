@@ -1,17 +1,20 @@
-import { caseSummary, contact, profile } from "../../data/content";
+import { caseSummary } from "../../data/content";
 import { useLanguage } from "../../context/LanguageContext";
 
 /**
- * The one-minute version, set as an official summary sheet: typed rows, three
- * pieces of evidence that each carry a number, and the two things a visitor
- * might actually want to do (take the CV, make contact).
+ * The one-minute version, set as an official summary sheet: typed rows and
+ * three pieces of evidence that each carry a number.
+ *
+ * No call to action of its own by design. The CV envelope and the tip line
+ * both live in the contact section, and repeating them here made the sheet
+ * read as a pitch rather than as a case record.
  *
  * This exists because the rest of the site is an exploration. That is the
  * point of it, but it means somebody screening candidates could look for a
  * minute and leave with nothing concrete. Everything here is a restatement of
  * facts held elsewhere in content.ts.
  */
-export function CaseSummary({ onContact }: { onContact?: () => void }) {
+export function CaseSummary() {
   const { t } = useLanguage();
 
   return (
@@ -59,32 +62,6 @@ export function CaseSummary({ onContact }: { onContact?: () => void }) {
           </ul>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
-          <a
-            href={profile.resumeHref}
-            target="_blank"
-            rel="noreferrer"
-            className="font-typewriter text-[11px] uppercase tracking-[0.14em] bg-blood-600 text-paper-50 px-4 py-2 rounded-sm shadow-pinned hover:bg-blood-500 transition-colors"
-          >
-            {t(caseSummary.cta)}
-          </a>
-          {onContact ? (
-            <button
-              type="button"
-              onClick={onContact}
-              className="font-typewriter text-[11px] uppercase tracking-[0.14em] border-[1.5px] border-ink-700/45 text-ink-700/85 px-4 py-2 rounded-sm hover:bg-ink-700 hover:text-paper-50 hover:border-ink-700 transition-colors"
-            >
-              {t(caseSummary.contactCta)}
-            </button>
-          ) : (
-            <a
-              href={`mailto:${contact.email}`}
-              className="font-typewriter text-[11px] uppercase tracking-[0.14em] border-[1.5px] border-ink-700/45 text-ink-700/85 px-4 py-2 rounded-sm hover:bg-ink-700 hover:text-paper-50 hover:border-ink-700 transition-colors"
-            >
-              {t(caseSummary.contactCta)}
-            </a>
-          )}
-        </div>
       </div>
     </section>
   );

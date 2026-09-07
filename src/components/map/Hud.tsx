@@ -73,10 +73,15 @@ export function Hud() {
         </div>
       </div>
 
-      {/* "Follow the red string": glides the viewport along STRING_PATH so a
-          first-time visitor who has not realised the page is a draggable map
-          still gets the whole case, in order, without hunting. */}
-      <div className="fixed bottom-[52px] left-4 z-40">
+      {/* Bottom-left cluster. The tour button and the quick-nav pins share one
+          flex column on purpose: the pins wrap to two or three rows depending
+          on language and viewport, so anything pinned above them at a fixed
+          offset gets buried. Stacking them means the layout can never collide
+          with itself. */}
+      <div className="fixed bottom-4 left-4 z-40 flex flex-col items-start gap-2">
+        {/* "Follow the red string": glides the viewport along STRING_PATH so a
+            first-time visitor who has not realised the page is a draggable map
+            still gets the whole case, in order, without hunting. */}
         <button
           type="button"
           onClick={() => {
@@ -102,24 +107,24 @@ export function Hud() {
             ? t({ id: "■ Hentikan tur", en: "■ Stop the tour" })
             : t({ id: "▶ Ikuti benang merahnya", en: "▶ Follow the red string" })}
         </button>
-      </div>
 
-      <div className="fixed bottom-4 left-4 z-40 flex flex-wrap gap-1.5 max-w-[210px] sm:max-w-[260px]">
-        {QUICK_NAV_ORDER.map((id) => {
-          const n = NODES[id];
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() =>
-                id === "home" ? alignTopOn(n.x + n.width / 2, n.y) : recenterOn(n.pin.x, n.pin.y)
-              }
-              className="quicknav-btn text-[10px] font-typewriter uppercase tracking-wide bg-paper-100 text-ink-700 px-2 py-1 rounded-sm shadow-pinned hover:bg-blood-600 hover:text-paper-50 transition-colors"
-            >
-              {t(NODE_LABELS[id])}
-            </button>
-          );
-        })}
+        <div className="flex flex-wrap gap-1.5 max-w-[210px] sm:max-w-[260px]">
+          {QUICK_NAV_ORDER.map((id) => {
+            const n = NODES[id];
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() =>
+                  id === "home" ? alignTopOn(n.x + n.width / 2, n.y) : recenterOn(n.pin.x, n.pin.y)
+                }
+                className="quicknav-btn text-[10px] font-typewriter uppercase tracking-wide bg-paper-100 text-ink-700 px-2 py-1 rounded-sm shadow-pinned hover:bg-blood-600 hover:text-paper-50 transition-colors"
+              >
+                {t(NODE_LABELS[id])}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {!hasInteracted && (
