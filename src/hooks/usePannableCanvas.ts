@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
-  type WheelEvent as ReactWheelEvent,
 } from "react";
 
 interface Point {
@@ -312,8 +311,8 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     [liveOffset]
   );
 
-  const onWheel = useCallback(
-    (e: ReactWheelEvent<HTMLDivElement>) => {
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
       e.preventDefault();
       setHasInteracted(true);
       stopTour();
@@ -335,6 +334,17 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     [clamp, clampScale, liveOffset, liveScale, scheduleTransform, stopTour]
   );
 
+  // React registers `wheel` at the root as a *passive* listener, so
+  // preventDefault() inside an onWheel prop silently does nothing and
+  // ctrl+wheel zooms the whole browser page instead of the map. Attach it to
+  // the viewport ourselves, explicitly non-passive.
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    vp.addEventListener("wheel", handleWheel, { passive: false });
+    return () => vp.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
+
   return {
     viewportRef,
     offset,
@@ -353,7 +363,6 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
       onPointerUp: endDrag,
       onPointerCancel: endDrag,
       onPointerLeave: endDrag,
-      onWheel,
     },
   };
 }

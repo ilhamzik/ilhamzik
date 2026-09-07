@@ -791,6 +791,24 @@ diulang. Ikutan yang sudah dibersihkan: prop `onContact` dihapus, wrapper
 dan field `caseSummary.cta` + `caseSummary.contactCta` dibuang dari
 content.ts biar nggak jadi field mati.
 
+## ⚠️ `onWheel` React itu passive, `preventDefault()`-nya diam-diam gagal
+
+React memasang listener `wheel` di root sebagai **passive**, jadi
+`e.preventDefault()` di dalam prop `onWheel` tidak melakukan apa-apa dan cuma
+memuntahkan warning "Unable to preventDefault inside passive event listener
+invocation" ke console. Akibatnya nyata: ctrl+wheel di atas peta bikin
+**browser nge-zoom seluruh halaman**, bukan petanya.
+
+`usePannableCanvas` sekarang memasang listener wheel-nya sendiri ke
+`viewportRef` lewat `addEventListener("wheel", handler, { passive: false })`
+di dalam `useEffect`, dan `onWheel` sudah dikeluarkan dari objek `handlers`.
+Cek cepatnya: dispatch `new WheelEvent("wheel", {ctrlKey:true, cancelable:true})`
+ke viewport, lalu baca `ev.defaultPrevented` (harus `true`) dan pastikan
+`scale` di transform world berubah.
+
+**Kalau nambah handler pointer/wheel baru yang perlu `preventDefault`, jangan
+lewat prop React**, pasang sendiri non-passive dengan pola yang sama.
+
 ## HUD kiri-bawah: satu kolom, jangan dua blok fixed (2026-09-07)
 
 Tombol tur dulu `fixed bottom-[52px] left-4` sementara chip quicknav
