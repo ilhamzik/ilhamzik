@@ -50,12 +50,12 @@ export function ContactSection() {
 
           {/* the address, typed onto a ruled form line */}
           <div className="mt-5">
-            <p className="font-typewriter text-[8px] uppercase tracking-[0.24em] text-ink-500/55 mb-1">
+            <p className="font-typewriter text-[8px] uppercase tracking-[0.24em] text-ink-500/55 mb-1 text-center">
               {t({ id: "Surat Elektronik", en: "Electronic Mail" })}
             </p>
             <a
               href={`mailto:${contact.email}`}
-              className="group block border-b border-dashed border-ink-500/45 pb-1.5 hover:border-blood-600 transition-colors"
+              className="group block border-b border-dashed border-ink-500/45 pb-1.5 text-center hover:border-blood-600 transition-colors"
             >
               <span className="font-typewriter text-[13px] sm:text-[15px] text-blood-600 group-hover:text-blood-500 break-all">
                 {contact.email}
@@ -65,10 +65,10 @@ export function ContactSection() {
 
           {/* known aliases, stamped on */}
           <div className="mt-5">
-            <p className="font-typewriter text-[8px] uppercase tracking-[0.24em] text-ink-500/55 mb-2">
+            <p className="font-typewriter text-[8px] uppercase tracking-[0.24em] text-ink-500/55 mb-2 text-center">
               {t({ id: "Alias Terpantau", en: "Known Aliases" })}
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap justify-center gap-2">
               {contact.links.map((link) => (
                 <a
                   key={link.label}
