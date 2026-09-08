@@ -334,6 +334,35 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     [clamp, clampScale, liveOffset, liveScale, scheduleTransform, stopTour]
   );
 
+  /** Nudge the viewport by a screen-space delta. Exists so the keyboard can
+   *  pan: the map was mouse-and-touch only, which left it unreachable for
+   *  anyone driving the page from the keyboard. */
+  const panBy = useCallback(
+    (dx: number, dy: number) => {
+      setHasInteracted(true);
+      stopTour();
+      const o = liveOffset();
+      scheduleTransform(clamp({ x: o.x - dx, y: o.y - dy }));
+    },
+    [clamp, liveOffset, scheduleTransform, stopTour]
+  );
+
+  /** Zoom a step around the centre of the viewport. */
+  const zoomBy = useCallback(
+    (factor: number) => {
+      stopTour();
+      const vp = viewportRef.current;
+      const cx = (vp?.clientWidth ?? 0) / 2;
+      const cy = (vp?.clientHeight ?? 0) / 2;
+      const s0 = liveScale();
+      const s1 = clampScale(s0 * factor);
+      const o0 = liveOffset();
+      const world = { x: (cx - o0.x) / s0, y: (cy - o0.y) / s0 };
+      scheduleTransform(clamp({ x: cx - world.x * s1, y: cy - world.y * s1 }, s1), s1);
+    },
+    [clamp, clampScale, liveOffset, liveScale, scheduleTransform, stopTour]
+  );
+
   // React registers `wheel` at the root as a *passive* listener, so
   // preventDefault() inside an onWheel prop silently does nothing and
   // ctrl+wheel zooms the whole browser page instead of the map. Attach it to
@@ -357,6 +386,8 @@ export function usePannableCanvas({ worldWidth, worldHeight, minScale = 0.4, max
     isTouring,
     startTour,
     stopTour,
+    panBy,
+    zoomBy,
     handlers: {
       onPointerDown,
       onPointerMove,

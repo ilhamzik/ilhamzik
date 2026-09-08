@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useCallback, useLayoutEffect, useRef, type ReactNode } from "react";
 import { useMap } from "../../context/MapContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { WORLD_HEIGHT, WORLD_WIDTH } from "./mapLayout";
 
 interface WorldCanvasProps {
@@ -13,8 +14,36 @@ interface WorldCanvasProps {
  * normal scrolling page.
  */
 export function WorldCanvas({ children, initialCenter }: WorldCanvasProps) {
-  const { viewportRef, offset, scale, isDragging, handlers, alignTopOn } = useMap();
+  const { viewportRef, offset, scale, isDragging, handlers, alignTopOn, panBy, zoomBy } = useMap();
+  const { t } = useLanguage();
   const didInit = useRef(false);
+
+  /**
+   * Arrow keys pan, +/- zoom, Home returns.
+   *
+   * The map was pointer-only, so anyone driving the page from a keyboard
+   * could reach the sections through the quick-nav pins but could never
+   * actually move around the board. Only fires when the viewport itself holds
+   * focus, so it never steals arrow keys from a focused button or a modal.
+   */
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.target !== e.currentTarget) return;
+      const step = e.shiftKey ? 480 : 160;
+      switch (e.key) {
+        case "ArrowLeft": panBy(-step, 0); break;
+        case "ArrowRight": panBy(step, 0); break;
+        case "ArrowUp": panBy(0, -step); break;
+        case "ArrowDown": panBy(0, step); break;
+        case "+": case "=": zoomBy(1.15); break;
+        case "-": case "_": zoomBy(1 / 1.15); break;
+        case "Home": alignTopOn(initialCenter.x, initialCenter.y); break;
+        default: return;
+      }
+      e.preventDefault();
+    },
+    [alignTopOn, initialCenter.x, initialCenter.y, panBy, zoomBy]
+  );
 
   useLayoutEffect(() => {
     if (didInit.current) return;
@@ -26,7 +55,14 @@ export function WorldCanvas({ children, initialCenter }: WorldCanvasProps) {
   return (
     <div
       ref={viewportRef}
-      className={`relative w-screen h-screen overflow-hidden bg-ink-900 touch-none select-none ${
+      tabIndex={0}
+      role="application"
+      aria-label={t({
+        id: "Peta berkas kasus. Seret untuk menjelajah, atau pakai tombol panah, plus dan minus untuk zoom, Home untuk kembali ke awal.",
+        en: "Case file map. Drag to explore, or use the arrow keys, plus and minus to zoom, and Home to return to the start.",
+      })}
+      onKeyDown={onKeyDown}
+      className={`relative w-screen h-screen overflow-hidden bg-ink-900 touch-none select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blood-600 ${
         isDragging ? "cursor-grabbing" : "cursor-grab"
       }`}
       {...handlers}

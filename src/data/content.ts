@@ -558,7 +558,10 @@ export const contact = {
     en: "WANTED: data project collaborators. Requirements: not afraid of deadlines or dirty data.",
   } as Bilingual,
   envelopeLabel: { id: "Amplop Tersegel", en: "Sealed Envelope" } as Bilingual,
-  envelopeHint: { id: "klik untuk membuka →", en: "click to open →" } as Bilingual,
+  envelopeHint: {
+    id: "berkas lengkap (CV) di dalam, klik →",
+    en: "the full file (CV) is inside, click →",
+  } as Bilingual,
 };
 
 /**

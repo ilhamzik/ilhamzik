@@ -29,7 +29,9 @@ export function SealedEnvelope({ href, label, sealedLabel, hint }: SealedEnvelop
             className="absolute inset-0"
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.25 }}
-            aria-label={t(hint)}
+            // Name the destination, not the gesture: "click to open" told
+            // nobody that a CV was inside.
+            aria-label={`${t(sealedLabel)}: ${t(label)}`}
           >
             <svg viewBox="0 0 200 130" className="w-full h-[114px] drop-shadow-[0_6px_10px_rgba(10,8,5,0.4)]">
               <rect x="4" y="4" width="192" height="122" fill="#e3d3a8" stroke="#2a241d" strokeWidth="2" />

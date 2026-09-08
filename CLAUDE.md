@@ -73,7 +73,7 @@ angka biasa, bukan gaya prosa. Pertahankan aturan ini untuk narasi baru.
 - ✅ Teks redaksi hover/klik-to-reveal (`RedactedText.tsx`, dipakai di sticky note rahasia Telkom)
 - ✅ Amplop tersegel dengan animasi buka (`SealedEnvelope.tsx`, dipakai untuk unduh CV)
 - ✅ Kursor kaca pembesar custom (bukan `zoom-in` browser bawaan lagi — SVG inline di `.magnifier-cursor`, index.css)
-- ✅ Meter "Case Completion" (`X/27`, pojok kanan atas via `CaseFileContext`) + overlay "KASUS DITUTUP" saat 100%
+- ✅ Meter "Case Completion" (`X/30` per 2026-09-08, dihitung otomatis, pojok kanan atas via `CaseFileContext`) + overlay "KASUS DITUTUP" saat 100%
 - ✅ Maskot detektif kecil dengan speech-bubble hint kontekstual (`DetectiveGuide.tsx`, hint berubah sesuai progress)
 - ✅ Noda kopi fisik di beberapa titik kosong map (`PaperDecor.tsx`) + tepi sobek di seluruh world (`torn-edge-top/bottom` pada World Canvas)
 - ⬜ Tiket bioskop/boarding pass sobek — BELUM, perlu momen personal spesifik dari user dulu (jangan dikarang tanpa fakta).
@@ -950,6 +950,81 @@ tombol turnya ketiban. Sekarang dua-duanya di dalam SATU
 `fixed bottom-4 left-4 flex flex-col items-start gap-2`, jadi layoutnya nggak
 bisa lagi nabrak dirinya sendiri. **Jangan pin elemen baru di kiri-bawah pakai
 offset tetap**, masukkan ke kolom itu.
+
+## Ronde perbaikan mandiri (2026-09-08)
+
+User minta: *"perbaiki yang bisa diperbaiki, improve yang bisa diimprove"*,
+dengan pola review keadaan sekarang, brainstorm, cari referensi, implement,
+ulangi. Titik pulangnya ada di tag git **`before-polish-2026-09-08`**
+(`git reset --hard before-polish-2026-09-08`), dan tiap temuan di-commit
+sendiri-sendiri supaya bisa dibuang satu-satu pakai `git revert`.
+
+**Cara review-nya: audit build yang jalan, jangan baca kode.** Dari lima
+dugaan awal, **dua ternyata sudah beres** (favicon.svg memang resolve, 404
+`/favicon.ico` itu cuma probe otomatis browser; `prefers-reduced-motion`
+sudah dimatikan global di index.css) dan satu lagi (`display=swap` di URL
+Google Fonts) juga sudah ada. Kalau tidak diukur, tiga dari enam "perbaikan"
+itu cuma jadi churn.
+
+### Yang ditemukan dan diperbaiki
+
+1. **Fokus tidak pernah masuk ke dialog.** Membuka berkas kasus meninggalkan
+   fokus di evidence item **di balik** backdrop, jadi Tab menyusuri halaman di
+   bawah modal tanpa kelihatan. `useDialogFocus` (dipakai tiga dialog:
+   CaseFileModal, SummaryModal, SecretFrame) memindahkan fokus masuk,
+   membungkus Tab di kedua ujung, dan memulangkan fokus ke pemicunya saat
+   ditutup.
+2. **`<html lang>` tidak ikut tombol bahasa.** Teksnya berganti ke Indonesia
+   sementara dokumennya tetap mengaku Inggris, jadi screen reader melafalkan
+   Indonesia dengan aturan Inggris.
+3. **`EvidenceItem` mematikan cincin fokus tanpa pengganti** (`focus:outline-none`
+   tanpa `focus-visible`), jadi pengguna keyboard tidak bisa melihat dia ada
+   di barang bukti yang mana.
+4. **Halaman kosong kalau JS mati** → ada blok `noscript` sekarang.
+5. **Peta tidak bisa digeser pakai keyboard.** Sekarang viewport-nya
+   `tabIndex=0` dengan `role="application"`, panah menggeser, +/- zoom, Home
+   kembali. **Hanya aktif kalau viewport-nya sendiri yang fokus**
+   (`e.target !== e.currentTarget` langsung return), jadi tidak pernah
+   merampas panah dari tombol atau modal.
+6. **`#root` kosong sampai bundle datang.** Sekarang ada masthead statis di
+   HTML awal yang dibersihkan sendiri oleh `createRoot` saat mount. FCP turun
+   dari 168ms ke 24-36ms karena datang dari HTML, bukan menunggu React.
+   Sengaja cuma identitas, tanpa teks artikel palsu.
+7. **CV tersembunyi tanpa petunjuk.** Amplop tertutup cuma bertuliskan
+   "Sealed Envelope / click to open" dan itu juga satu-satunya yang didengar
+   screen reader. Padahal ini aksi terpenting di halaman. Sekarang
+   `aria-label`-nya menyebut tujuannya ("Sealed Envelope: Download Case File
+   (CV)") dan `envelopeHint` menyebut isinya secara terlihat.
+
+### ⚠️ `Math.random()` di render = dekorasi yang berubah sendiri
+
+Ini bug paling kelihatan dan paling lama lolos. `MapNode` melepas-mount node
+yang jauh dari viewport dan mem-mount-nya lagi saat kembali, jadi apa pun yang
+memanggil `Math.random()` waktu render **datang kembali dengan nilai beda**:
+
+- Kartu barang bukti mengubah kemiringannya tiap kali dilewati (terukur: satu
+  kartu dari -4° jadi +3° setelah geser ke contact dan balik).
+- Sticky note **berganti warna**, dan ini lebih parah karena warnanya bahkan
+  tidak di-memoize, jadi berubah di **setiap re-render**. Note Telkom yang sama
+  muncul kuning, pink, dan biru di screenshot-screenshot sesi ini.
+
+Sekarang dua-duanya di-seed dari `caseFile.id` lewat `src/lib/seeded.ts`
+(FNV-1a + mulberry32), aturan yang sudah dipakai `CorkString` dan
+`MobileRedString` buat geometrinya. **Jangan pernah pakai `Math.random()` buat
+apa pun yang tampak di layar di repo ini.** Satu-satunya pengecualian yang
+sengaja: pemilihan hint di `DetectiveGuide`, karena itu variasi teks, bukan
+geometri.
+
+Sekalian dihapus: keyframe `sway` (tidak dipakai elemen mana pun) dan custom
+property `--tilt` yang cuma ada supaya keyframe itu bisa membacanya.
+
+### ⚠️ `npx tsc --noEmit` BUKAN gerbang yang sama dengan `npm run build`
+
+`npm run build` menjalankan `tsc -b` atas project references, dengan config
+berbeda. Sebuah error iterasi (`NodeListOf` tanpa `downlevelIteration`) lolos
+dari `npx tsc --noEmit` tapi menggagalkan build, dan karena build gagal,
+verifikasi berikutnya sempat diuji terhadap **bundle lama** dan kelihatan
+seolah patch-nya tidak berefek. Selalu gerbangi dengan `npm run build`.
 
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.
