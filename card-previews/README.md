@@ -13,7 +13,7 @@ result can be reviewed without running the site. Two shots per card:
 | `06-contact-*` | Boxed newspaper classified + the tear-off tip-line coupon |
 | `07-whole-map-desktop` | The entire pannable desktop world, zoomed out, for checking node placement |
 | `08-easter-egg-*` | The hidden "Agent K" frame. Ctrl+K (or Cmd+K) on a keyboard; press and hold the masthead's case number on a phone |
-| `09-case-summary-*` | The one-minute brief on the front page: typed rows, three numbered pieces of evidence, and the CV / contact actions |
+| `09-case-summary-*` | The one-minute brief, now a popup: press the WANTED poster to open it. Typed rows plus three numbered pieces of evidence, no buttons of its own |
 | `10-witness-statement-desktop` | A case file showing the stat-tile row and the witness statement block, with its provenance stated |
 
 `-desktop` is shot through the dev-only specimen page (`gallery.html`), which

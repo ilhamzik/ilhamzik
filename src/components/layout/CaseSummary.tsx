@@ -20,7 +20,7 @@ export function CaseSummary() {
   return (
     <section
       aria-label={t(caseSummary.rubric)}
-      className="relative mx-auto mt-8 max-w-3xl border-y-[3px] border-ink-700/70 px-1 py-[3px]"
+      className="relative mx-auto max-w-3xl border-y-[3px] border-ink-700/70 px-1 py-[3px]"
     >
       <div className="border-y border-ink-700/25 bg-paper-50/40 px-5 py-5 sm:px-8 sm:py-6">
         <header className="text-center">

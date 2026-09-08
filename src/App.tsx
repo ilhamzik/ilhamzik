@@ -11,7 +11,6 @@ import { NightShiftOverlay } from "./components/map/NightShiftOverlay";
 import { NODES } from "./components/map/mapLayout";
 import { Masthead } from "./components/layout/Masthead";
 import { LeadParagraph } from "./components/layout/LeadParagraph";
-import { CaseSummary } from "./components/layout/CaseSummary";
 import { WantedPoster } from "./components/sections/WantedPoster";
 import { InterestsSection } from "./components/sections/InterestsSection";
 import { EducationSection } from "./components/sections/EducationSection";
@@ -77,7 +76,6 @@ function App() {
                     en: "An investigation is still underway behind this name. Every section of this paper holds a piece of evidence. Drag the map to explore, and follow the red string if you're curious where the story leads next.",
                   }}
                 />
-                <CaseSummary />
               </MapNode>
 
               <MapNode {...NODES.education}>

@@ -572,26 +572,106 @@ tapi orang yang nyaring kandidat cuma punya sekitar satu menit dan sebelumnya
 nggak ada jalan buat dapat substansinya tanpa menjelajah dulu.
 
 **`CaseSummary.tsx` + `caseSummary` di content.ts.** Lembar ringkasan: 5 baris
-data diketik, 3 baris bukti yang masing-masing membawa angka, dan dua tombol
-(unduh CV, kirim petunjuk). Semua isinya **restatement** dari fakta yang sudah
-ada di content.ts, jadi kalau fakta aslinya berubah, lembar ini harus ikut
-diedit manual. Di desktop dia di dalam node `home` (dioper `onContact` yang
-mem-pan peta ke node kontak); di mobile sengaja **tanpa** `onContact`, karena
-section kontak masih lazy-mounted jadi nggak ada yang bisa di-scroll-ke, dan
-fallback `mailto` justru aksi yang lebih tepat di HP.
+data diketik dan 3 baris bukti yang masing-masing membawa angka. Semua isinya
+**restatement** dari fakta yang sudah ada di content.ts, jadi kalau fakta
+aslinya berubah, lembar ini harus ikut diedit manual.
 
-**Konsekuensinya: node `home` jadi jauh lebih tinggi** (konten ~1490px lawan
-950px sebelumnya), dan lembar itu langsung menimpa section experience. Semua
-node di bawah home digeser **+680px sekaligus** (experience, skills, projects,
-contact, termasuk pin-nya), `WORLD_HEIGHT` naik ke 4470. `education` dan
-`interests` **tidak** digeser: mereka mengapit home dan sudah bebas secara
-horizontal. Diverifikasi nol overlap di jendela lebar dan sempit.
+**Sekarang dia popup, bukan bagian alur halaman** (lihat bagian "Ringkasan
+jadi popup" di bawah). Sejarahnya: dulu dia duduk di dalam node `home` persis
+di bawah poster, dan itu bikin node `home` sekitar 500px lebih tinggi dari
+tetangganya sampai semua node di bawahnya harus digeser +680px. Hasilnya
+bagian atas dan bawah peta kebaca seperti dua tempat yang terpisah jauh.
 
-**Kalau nambah apa pun ke `home` lagi, cek ulang home lawan experience.**
-Skrip pemeriksanya nggak bisa nemu home lewat `getElementById` (node home
-nggak punya `id`), jadi dia dijangkau lewat `document.querySelector("h1")`
-lalu `.closest("div[style]")`. Cara lengkapnya ada di
-`card-previews/README.md`.
+## Ringkasan jadi popup dari poster WANTED (2026-09-08)
+
+User: *"kayanya emang kalo ditambah summary disitu sih jadi ga proporsional
+bgt ya, seolah bagian 'atas' dan bagian 'bawah' terpisah jauh sekali. gimana
+kalo summarynya jadi pop up aja?"* Jadi seluruh poster WANTED sekarang tombol
+yang membuka `SummaryModal`, dan lembar ringkasannya keluar dari alur halaman
+(desktop maupun mobile).
+
+**Geseran +680px itu sudah dibalik.** `experience`, `skills`, `projects`,
+`contact` (beserta pin-nya) kembali ke koordinat lama, `WORLD_HEIGHT` balik ke
+3780. Node `home` sekarang **diukur 984px** (jendela lebar maupun sempit sama),
+di-`height` 1010 supaya longgar. Nol overlap di jendela 3120px dan 620px
+dengan tujuh node ter-mount.
+
+### ⚠️ `position: fixed` di dalam world peta itu TIDAK fixed ke viewport
+
+Bug pertama versi popup ini, dan pelajarannya berlaku umum. World peta
+di-`transform`, dan elemen ber-transform jadi **containing block** untuk
+turunan `position: fixed`. Jadi overlay `fixed inset-0` yang dirender dari
+dalam sebuah section mengambil ukuran **world** (terukur 2950x3780) bukan
+viewport, dan panelnya mendarat di y=1590, jauh di luar layar. Di mobile
+kelihatan normal karena di sana nggak ada ancestor ber-transform, jadi ini
+gampang lolos kalau cuma dites di HP.
+
+`SummaryModal` sekarang dirender lewat `createPortal(..., document.body)`.
+**Overlay fixed lain yang dipasang dari dalam section wajib pakai pola yang
+sama.** `CaseFileModal` dan `SecretFrame` aman karena dirender di root App,
+di luar world.
+
+Cek cepatnya: buka popup-nya lalu bandingkan `getBoundingClientRect()` overlay
+dengan `innerWidth`/`innerHeight`. Harus 0,0,vw,vh.
+
+### Poster jadi tombol: konsekuensinya drag nggak bisa mulai dari situ
+
+`onPointerDown` di `usePannableCanvas` sengaja `return` untuk press yang
+dimulai di `button, a, input, textarea, select, [role='button']` (kalau nggak,
+pointer capture menelan klik anak-anaknya). Karena posternya sekarang tombol
+selebar ~768px, **peta nggak bisa diseret mulai dari atas poster**. Ini
+konsisten dengan semua evidence item lain di situs ini (press = buka berkas,
+geser dari kertas di antaranya) dan kursor kaca pembesarnya jadi penandanya.
+Kalau suatu saat ini jadi masalah, jangan hapus guard-nya, tambahkan opt-in
+per-elemen.
+
+Satu baris petunjuk tulisan tangan ditaruh di dalam garis poster ("Buka
+berkasnya untuk ringkasan perkara →") sebagai satu-satunya penanda.
+`SummaryModal` **tidak** terdaftar di `CaseFileContext`, jadi nggak menambah
+angka meter kasus, sama seperti `SecretFrame`.
+
+## ⚠️ Jangan pasang `whileHover` yang men-scale elemen besar di dalam world
+
+Poster sempat dikasih `whileHover={{ rotate, scale }}`. User lapor
+*"ketika geser-geser jadi agak stuttering"*. Sebabnya: waktu peta diseret,
+kursor menyapu poster, framer-motion memicu hover, dan spring men-scale panel
+768x400 ber-`shadow-case` di dalam world yang sedang di-transform, tiap frame.
+Sudah dihapus; hover-nya sekarang cuma perubahan warna CSS di baris petunjuk
+(`group-hover`). Evidence item kecil (226x120) nggak masalah, yang besar
+masalah.
+
+## Ukuran aset foto: kecilkan ke sisi terpanjang 400px (2026-09-08)
+
+Waktu peta dirapatkan lagi, papan kasus jadi bertetangga langsung dengan hero,
+jadi ikut ter-mount di tampilan pertama. Sekalian ketahuan foto-fotonya
+kelewat besar buat ukuran render sebenarnya:
+
+- `openhouse-fasilkom.jpg` 1600x1200 (410KB) dirender **51x48** → 31x
+- `telkom.jpg` 1050x1400 (232KB) dirender 52x48 → 20x
+- `sdit-soedirman-logo.png` 589x590 (225KB) dirender 18x18 → 34x
+
+Total bitmap ter-decode di tampilan pertama ~20MB buat thumbnail sebesar
+puluhan piksel. Semua aset yang dipakai sekarang **maksimal 400px sisi
+terpanjang** (1814KB → sekitar 250KB, decoded 20MB → 7.7MB, `dist` jadi 1.1M).
+Efek terukurnya di pan: dari 4 frame > 24ms (terburuk 33ms) jadi **nol**.
+
+**Kenapa 400 dan bukan lebih kecil**: foto yang sama dipakai dua kali, sebagai
+thumbnail ~50px di kartu DAN sebagai polaroid 160px di modal berkas. 400 itu
+2.5x dari 160, pas buat layar high-DPI. Render terbesar di seluruh situs
+adalah mugshot 189px.
+
+Dua PNG (`manutd-crest.png`, `sdit-soedirman-logo.png`) malah **membengkak**
+kalau cuma di-resize, jadi dua-duanya dikuantisasi ke palet (128 dan 64 warna,
+`Image.FASTOCTREE`): 115KB → 17KB dan 225KB → 10KB. Kualitasnya **diukur**,
+bukan ditebak: RMS error terhadap aslinya 3.1/255 dan 3.0/255 (~1.2%), jadi
+nggak kelihatan di render 150px. Kalau mengganti aset ini lagi, ukur ulang
+errornya, jangan cuma lihat ukuran file.
+
+**Sengaja TIDAK disentuh**: `ui-makara-engraved.png` (176px, angkanya dipilih
+sadar buat render 49px di layar 3x), `ui.png` (sumber emblem itu),
+`easter-egg-silhouette.png` (dirender full-bleed di frame sampai 500px), dan
+`manutd-crest.svg` (2.5MB, sumber non-raster yang disimpan sengaja). Aset asli
+sebelum dikecilkan tetap ada di history git kalau suatu saat perlu.
 
 ## Stat tile angka headline (2026-09-07)
 
@@ -822,7 +902,8 @@ offset tetap**, masukkan ke kolom itu.
 ## Catatan teknis penting lain
 - `CaseFile` (types.ts) sekarang punya `techStack?` dan `redacted?` opsional di level base, dipakai `CaseFileModal.tsx` untuk render pill tech-stack dan `RedactedText`.
 - `TOTAL_CASES` di `CaseFileContext.tsx` dihitung otomatis dari panjang array content (education+experience+projects+skills+interests+stickyNotes) — kalau nambah/kurang entri, angka meter ikut otomatis, tidak perlu update manual.
-- `WORLD_HEIGHT` di mapLayout.ts = 3780. Semua `height` node sudah
+- `WORLD_HEIGHT` di mapLayout.ts = 3780 (pernah 4470 waktu lembar ringkasan
+  masih di dalam node `home`, sudah dibalik). Semua `height` node sudah
   **diukur**, bukan ditebak (lihat section halaman spesimen di atas). Kalau
   nambah konten ke section manapun, ukur ulang dan cek
   `WORLD_WIDTH`/`WORLD_HEIGHT`.
