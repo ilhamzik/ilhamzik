@@ -202,6 +202,58 @@ carikan logo, ikuti pola yang sama (biarkan pakai fallback fingerprint).
 — dipakaikan logo SQLite karena itu database engine konkret yang dipakai di
 salah satu proyek (`proj-ecommerce`), bukan klaim bahwa SQL = SQLite.
 
+## Papan miniatur di kolom HP: `BoardMap` (2026-09-08)
+
+Situs desktop ini satu world yang bisa diseret, dan itu SELURUH idenya.
+Pengunjung HP dapat kolom bertumpuk, yang kebaca enak tapi nggak pernah
+memberi tahu mereka bahwa yang sedang mereka scroll itu sebuah papan. Karena
+mayoritas orang yang datang dari sebuah link itu pakai HP, gagasan inti situs
+ini justru menjangkau bagian audiens yang paling kecil.
+
+`src/components/mobile/BoardMap.tsx` menggambar seluruh papan dari atas, di
+satu layar, memakai **koordinat yang sama** (`NODES`, `STRING_PATH`) yang
+dipakai peta desktop. Tiap berkas adalah target sentuh yang melompat ke
+sectionnya. Murah secara konstruksi: beberapa div plus satu SVG, nol gambar,
+nol animasi. Panelnya `aspect-ratio` = `WORLD_WIDTH / WORLD_HEIGHT` jadi
+proporsinya jujur, dan benangnya pakai `vectorEffect="non-scaling-stroke"`
+supaya tetap setipis rambut walau viewBox-nya diperkecil 10x.
+
+Terukur: panel 320x417, label 8px dengan kontras **12.34:1** (lolos WCAG AA
+buat teks kecil), target sentuh terkecil 65px (anjuran 44px), tumpang-tindih
+kartu terburuk 5% (home lawan experience, kebaca sebagai kertas bertumpuk).
+
+**Kalau menggeser node di `NODES`, papan ini ikut berubah sendiri.** Nggak ada
+koordinat yang diduplikasi. Yang perlu dicek ulang cuma dua: label masih muat
+di kartu yang mengecil, dan tumpang-tindih antar kartu masih wajar.
+
+## ⚠️ Anchor ke section di kolom HP: targetnya BERGERAK
+
+Dua bug berturut-turut di sini, dua-duanya bikin navigasi HP nggak jalan.
+
+**Pertama, targetnya nggak ada.** Chip INDEX dulu menunjuk `#<section-id>`,
+tapi section baru dapat `id`-nya begitu `LazySection` mem-mount-nya, dan dari
+posisi paling atas **nggak ada satu pun yang ter-mount** (hero-nya lebih
+tinggi dari `rootMargin` 1200px). Terukur: nol dari enam target ada, nol yang
+menggerakkan halaman. Sekarang tiap section punya anchor permanen
+`nav-<id>` yang dirender di atasnya, terlepas dari status mount, dan itu yang
+ditunjuk chip maupun `BoardMap`. Sengaja beda dari `id` section aslinya biar
+nggak pernah bentrok waktu section-nya mount.
+
+**Kedua, targetnya bergeser sambil dituju.** Lompatan anchor biasa mendarat
+kependekan: section di atas target mount satu-satu selama perjalanan, tiap
+satu menukar perkiraan tinggi dengan tinggi sebenarnya, jadi kolomnya
+memanjang dan targetnya turun. Tap "Contact" dari atas mendarat **2700px
+kependekan**, di tengah section projects, dan contact-nya sendiri belum
+ter-mount. `jumpTo.ts` menyelesaikannya dengan mengejar: geser, tunggu
+berhenti, kalau targetnya pindah geser lagi (maksimal 5 putaran, yang pertama
+`smooth` sisanya `auto` biar nggak ada animasi kedua).
+
+Verifikasinya: 6 section x 2 titik masuk (chip HUD dan kartu BoardMap) = 12
+lompatan, semuanya harus mendarat dengan judul section **tepat 104px** dari
+atas viewport (`HEADER_CLEARANCE`) dan section-nya ter-mount.
+
+**Jangan ganti balik ke `<a href="#section">` polos.**
+
 ## Mobile/tablet: scroll view sendiri, BUKAN lagi Coming Soon gate (2026-09-02)
 
 Sejarah: sempat di-gate ke `MobileComingSoon.tsx` setelah beberapa iterasi

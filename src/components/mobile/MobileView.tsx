@@ -22,6 +22,7 @@ import { LazySection } from "./LazySection";
 import { MobileHud, NAV_IDS } from "./MobileHud";
 import { MobileNightShiftOverlay } from "./MobileNightShiftOverlay";
 import { MobileRedString } from "./MobileRedString";
+import { BoardMap } from "./BoardMap";
 import { FORCE_DESKTOP_KEY } from "./forceDesktop";
 
 const INTRO = {
@@ -147,6 +148,7 @@ function MobileShell() {
             <MobileRedString column={columnEl} />
 
             <div className="relative">
+              <div id="top" aria-hidden />
               <Masthead />
               <WantedPoster />
 
@@ -159,6 +161,8 @@ function MobileShell() {
               )}
 
               <LeadParagraph text={INTRO} />
+
+              <BoardMap />
 
               {SECTIONS.map(({ Comp, h, id }, i) => (
                 <Fragment key={id}>
