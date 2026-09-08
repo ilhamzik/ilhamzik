@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Bilingual, Lang } from "../types";
 
 interface LanguageContextValue {
@@ -11,6 +11,14 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>("en");
+
+  // Keep the document language in step with the copy. Without this the page
+  // stays `lang="en"` while showing Indonesian, so a screen reader applies
+  // English pronunciation to it and search engines file it under the wrong
+  // language. `index.html` ships `lang="en"` because that is the default.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const value = useMemo<LanguageContextValue>(
     () => ({

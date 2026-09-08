@@ -6,10 +6,12 @@ import { PolaroidPhoto } from "./PolaroidPhoto";
 import { RedactedText } from "./RedactedText";
 import { StampMark } from "../icons";
 import { capabilityCatalog } from "../../data/content";
+import { useDialogFocus } from "../../hooks/useDialogFocus";
 
 export function CaseFileModal() {
   const { activeCase, closeCase } = useCaseFile();
   const { t } = useLanguage();
+  const dialogRef = useDialogFocus(!!activeCase);
 
   useEffect(() => {
     if (!activeCase) return;
@@ -40,6 +42,7 @@ export function CaseFileModal() {
           />
 
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             className="relative z-10 w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#f2e6c4] shadow-case rounded-sm border border-ink-500/20"

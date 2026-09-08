@@ -29,7 +29,7 @@ export function EvidenceItem({ caseFile, children, className = "", tilt, size = 
     <motion.button
       type="button"
       onClick={() => openCase(caseFile)}
-      className={`group relative magnifier-cursor focus:outline-none ${className}`}
+      className={`group relative magnifier-cursor focus:outline-none focus-visible:ring-2 focus-visible:ring-blood-600 focus-visible:ring-offset-2 focus-visible:ring-offset-paper-100 rounded-sm ${className}`}
       style={{
         width: width ?? size,
         height: height ?? size,

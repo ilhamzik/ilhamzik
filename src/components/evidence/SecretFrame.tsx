@@ -4,6 +4,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { secretFile } from "../../data/content";
 import { SECRET_EVENT } from "./secretFile";
 import silhouette from "../../assets/photos/easter-egg-silhouette.png";
+import { useDialogFocus } from "../../hooks/useDialogFocus";
 
 /**
  * The hidden easter egg: an ornate frame holding nothing but a silhouette and
@@ -14,6 +15,7 @@ import silhouette from "../../assets/photos/easter-egg-silhouette.png";
 export function SecretFrame() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const dialogRef = useDialogFocus(open);
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -55,6 +57,7 @@ export function SecretFrame() {
           />
 
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={t(secretFile.title)}

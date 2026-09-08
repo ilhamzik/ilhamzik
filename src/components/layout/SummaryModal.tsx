@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { caseSummary, profile } from "../../data/content";
 import { CaseSummary } from "./CaseSummary";
+import { useDialogFocus } from "../../hooks/useDialogFocus";
 
 /**
  * The case summary, as the wanted poster's own case file.
@@ -28,6 +29,7 @@ import { CaseSummary } from "./CaseSummary";
  */
 export function SummaryModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useLanguage();
+  const dialogRef = useDialogFocus(open);
 
   useEffect(() => {
     if (!open) return;
@@ -58,6 +60,7 @@ export function SummaryModal({ open, onClose }: { open: boolean; onClose: () => 
           />
 
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={t(caseSummary.rubric)}
