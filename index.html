@@ -115,7 +115,57 @@
         </p>
       </div>
     </noscript>
-    <div id="root"></div>
+    <!--
+      First paint before the bundle arrives. React's createRoot clears the
+      container on mount, so this needs no teardown. Deliberately just the
+      masthead identity: no fake content, nothing that could be mistaken for
+      the real thing if the bundle never lands.
+    -->
+    <div id="root">
+      <div
+        style="
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.65rem;
+          padding: 0 1.5rem;
+          font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+          color: #2a241d;
+          text-align: center;
+        "
+      >
+        <p
+          style="
+            margin: 0;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.34em;
+            text-transform: uppercase;
+            color: #8f1f1f;
+          "
+        >
+          Case File No. 007-ZIK
+        </p>
+        <p style="margin: 0; font-size: clamp(1.9rem, 8vw, 3.2rem); font-weight: 900; letter-spacing: 0.02em">
+          ilhamzik
+        </p>
+        <span style="display: block; width: 3.5rem; height: 1px; background: rgba(42, 36, 29, 0.35)"></span>
+        <p
+          style="
+            margin: 0;
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            font-size: 0.66rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(42, 36, 29, 0.55);
+          "
+        >
+          Opening the file
+        </p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
