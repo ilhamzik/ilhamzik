@@ -29,7 +29,7 @@ export interface MapNodeConfig {
 // bottom corners. Verify with the pairwise rect check (see README) after
 // moving anything here.
 export const WORLD_WIDTH = 2950;
-export const WORLD_HEIGHT = 3780;
+export const WORLD_HEIGHT = 3840;
 
 /**
  * Hand-placed coordinates for every section on the big pannable "map".
@@ -51,8 +51,8 @@ export const NODES: Record<string, MapNodeConfig> = {
   interests: { x: 2250, y: 300, width: 640, height: 940, pin: { x: 2570, y: 480 } },
   experience: { x: 900, y: 1020, width: 1100, height: 1380, pin: { x: 1450, y: 1230 } },
   skills: { x: 1990, y: 1970, width: 900, height: 1290, pin: { x: 2440, y: 2170 } },
-  projects: { x: 90, y: 2240, width: 1000, height: 1030, pin: { x: 590, y: 2440 } },
-  contact: { x: 1150, y: 2550, width: 600, height: 1240, pin: { x: 1450, y: 2680 } },
+  projects: { x: 90, y: 2240, width: 1000, height: 1560, pin: { x: 590, y: 2440 } },
+  contact: { x: 1150, y: 2550, width: 600, height: 1250, pin: { x: 1450, y: 2680 } },
 };
 
 /** Traversal order for the red string connecting sections across the map. */

@@ -32,14 +32,28 @@ const INTRO = {
 /** Header height to clear: fixed HUD is ~84px, plus a little breathing room. */
 const HEADER_CLEARANCE = 104;
 
-const SECTIONS: { Comp: ComponentType; h: number }[] = [
-  { Comp: EducationSection, h: 1100 },
-  { Comp: InterestsSection, h: 950 },
-  { Comp: ExperienceSection, h: 1200 },
-  { Comp: SkillsSection, h: 1150 },
-  { Comp: ProjectsSection, h: 1200 },
-  { Comp: ContactSection, h: 1150 },
+/**
+ * Order matches `NAV_IDS`, and each entry carries its own id so the column can
+ * put a permanent anchor above the section.
+ *
+ * That anchor is load-bearing: the section itself only gets its `id` once
+ * LazySection mounts it, and from the top of the page nothing is mounted yet,
+ * so every chip in the INDEX strip pointed at a target that did not exist and
+ * silently did nothing. The anchors below always exist, so navigation works
+ * from anywhere in the column.
+ */
+const SECTIONS: { Comp: ComponentType; h: number; id: string }[] = [
+  { Comp: EducationSection, h: 1100, id: "education" },
+  { Comp: InterestsSection, h: 950, id: "interests" },
+  { Comp: ExperienceSection, h: 1200, id: "experience" },
+  { Comp: SkillsSection, h: 1150, id: "skills" },
+  { Comp: ProjectsSection, h: 1200, id: "projects" },
+  { Comp: ContactSection, h: 1150, id: "contact" },
 ];
+
+/** Anchor id for a section, distinct from the section's own id so the two
+ *  never collide once the section mounts. */
+export const navAnchorId = (id: string) => `nav-${id}`;
 
 /**
  * An always-rendered anchor the whole-column red string routes through.
@@ -146,15 +160,10 @@ function MobileShell() {
 
               <LeadParagraph text={INTRO} />
 
-              {/* No onContact here on purpose: the contact section is lazily
-                  mounted, so there is nothing to scroll to yet. The fallback
-                  mailto is the better action on a phone anyway. */}
-              <div className="px-3">
-              </div>
-
-              {SECTIONS.map(({ Comp, h }, i) => (
-                <Fragment key={i}>
+              {SECTIONS.map(({ Comp, h, id }, i) => (
+                <Fragment key={id}>
                   <StringNode x={i % 2 === 1 ? 93 : 7} />
+                  <div id={navAnchorId(id)} aria-hidden />
                   <LazySection height={h}>
                     <Comp />
                   </LazySection>

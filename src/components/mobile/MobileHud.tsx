@@ -2,6 +2,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { useCaseFile } from "../../context/CaseFileContext";
 import { useNightShift } from "../../context/NightShiftContext";
 import { NODE_LABELS, QUICK_NAV_ORDER } from "../map/mapLayout";
+import { navAnchorId } from "./MobileView";
 
 /** Section ids that exist in the stacked column (home has no <section id>). */
 export const NAV_IDS = QUICK_NAV_ORDER.filter((id) => id !== "home");
@@ -28,7 +29,7 @@ export function MobileHud({ activeId = "" }: { activeId?: string }) {
         {NAV_IDS.map((id) => (
           <a
             key={id}
-            href={`#${id}`}
+            href={`#${navAnchorId(id)}`}
             className={`shrink-0 font-typewriter text-[10px] uppercase tracking-wide px-2 py-1 rounded-sm transition-colors ${
               activeId === id
                 ? "bg-blood-600 text-paper-50"
