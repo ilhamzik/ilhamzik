@@ -1,7 +1,7 @@
-import { useMemo } from "react";
 import { useCaseFile } from "../../context/CaseFileContext";
 import { useLanguage } from "../../context/LanguageContext";
 import type { CaseFile } from "../../types";
+import { seededFrom, seededIndex } from "../../lib/seeded";
 
 const COLORS = [
   { bg: "#f5e17a", tape: "#e3d4a8" },
@@ -23,8 +23,11 @@ interface StickyNoteProps {
 export function StickyNote({ caseFile, className = "", colorIndex }: StickyNoteProps) {
   const { openCase } = useCaseFile();
   const { t } = useLanguage();
-  const tilt = useMemo(() => Math.round((Math.random() - 0.5) * 14) - 3, []);
-  const color = COLORS[(colorIndex ?? Math.floor(Math.random() * COLORS.length)) % COLORS.length];
+  // Both derived from the note's own id, never `Math.random()`. The colour in
+  // particular was not even memoised, so it reshuffled on every re-render and
+  // the same note turned up yellow, pink and blue in successive screenshots.
+  const tilt = Math.round((seededFrom(caseFile.id, 1) - 0.5) * 14) - 3;
+  const color = COLORS[(colorIndex ?? seededIndex(caseFile.id, COLORS.length, 2)) % COLORS.length];
 
   return (
     <button

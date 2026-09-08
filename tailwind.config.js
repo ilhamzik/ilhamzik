@@ -55,15 +55,10 @@ export default {
           "0%": { transform: "scale(0.85) translateY(12px)", opacity: "0" },
           "100%": { transform: "scale(1) translateY(0)", opacity: "1" },
         },
-        sway: {
-          "0%, 100%": { transform: "rotate(var(--tilt, -3deg))" },
-          "50%": { transform: "rotate(calc(var(--tilt, -3deg) * -1))" },
-        },
       },
       animation: {
         stampIn: "stampIn 0.45s cubic-bezier(.2,.8,.2,1) forwards",
         popIn: "popIn 0.35s ease-out forwards",
-        sway: "sway 6s ease-in-out infinite",
       },
     },
   },

@@ -132,7 +132,7 @@ body {
 }
 
 /* Respect the OS "reduce motion" setting: calm the CSS keyframe animations
-   (stamp slam, pop-in, sway, pulse) and snap scrolling instead of gliding. */
+   (stamp slam, pop-in, pulse) and snap scrolling instead of gliding. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

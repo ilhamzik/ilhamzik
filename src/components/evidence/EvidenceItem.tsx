@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useCaseFile } from "../../context/CaseFileContext";
 import { useLanguage } from "../../context/LanguageContext";
 import type { CaseFile } from "../../types";
+import { seededFrom } from "../../lib/seeded";
 
 interface EvidenceItemProps {
   caseFile: CaseFile;
@@ -23,7 +24,13 @@ interface EvidenceItemProps {
 export function EvidenceItem({ caseFile, children, className = "", tilt, size = 120, width, height }: EvidenceItemProps) {
   const { openCase } = useCaseFile();
   const { t } = useLanguage();
-  const resolvedTilt = useMemo(() => tilt ?? Math.round((Math.random() - 0.5) * 14), [tilt]);
+  // Seeded off the case-file id rather than random: the map unmounts distant
+  // nodes, so a random tilt gave every card a new angle each time you panned
+  // away and came back.
+  const resolvedTilt = useMemo(
+    () => tilt ?? Math.round((seededFrom(caseFile.id) - 0.5) * 14),
+    [tilt, caseFile.id]
+  );
 
   return (
     <motion.button
@@ -33,7 +40,6 @@ export function EvidenceItem({ caseFile, children, className = "", tilt, size = 
       style={{
         width: width ?? size,
         height: height ?? size,
-        ["--tilt" as string]: `${resolvedTilt}deg`,
         transform: `rotate(${resolvedTilt}deg)`,
       }}
       whileHover={{ scale: 1.08, rotate: 0, zIndex: 30 }}
