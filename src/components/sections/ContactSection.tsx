@@ -54,11 +54,18 @@ export function ContactSection() {
               {t({ id: "Surat Elektronik", en: "Electronic Mail" })}
             </p>
             <a
-              href={`mailto:${contact.email}`}
-              className="group block border-b border-dashed border-ink-500/45 pb-1.5 text-center hover:border-blood-600 transition-colors"
+              href={`mailto:${contact.email}?subject=${encodeURIComponent(t(contact.emailSubject))}`}
+              aria-label={t({
+                id: `Kirim email ke Muhammad Ilham Zikri di ${contact.email}`,
+                en: `Email Muhammad Ilham Zikri at ${contact.email}`,
+              })}
+              className="group block cursor-pointer border-b border-dashed border-ink-500/45 pb-1.5 text-center hover:border-blood-600 focus-visible:border-blood-600 transition-colors"
             >
-              <span className="font-typewriter text-[13px] sm:text-[15px] text-blood-600 group-hover:text-blood-500 break-all">
+              <span className="font-typewriter text-[13px] sm:text-[15px] text-blood-600 underline decoration-dotted decoration-blood-600/40 underline-offset-[3px] group-hover:decoration-blood-500 group-hover:text-blood-500 break-all">
                 {contact.email}
+              </span>
+              <span className="mt-1 block font-typewriter text-[8px] uppercase tracking-[0.24em] text-ink-500/55 group-hover:text-blood-600 transition-colors">
+                {t(contact.emailHint)}
               </span>
             </a>
           </div>

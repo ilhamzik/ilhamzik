@@ -547,6 +547,14 @@ export const contact = {
     en: "Got a project, a question, or just want to say hi? This case file is still open for contact.",
   } as Bilingual,
   email: "zikriilham2@gmail.com",
+  emailHint: {
+    id: "klik untuk menulis surat →",
+    en: "click to compose a letter →",
+  } as Bilingual,
+  emailSubject: {
+    id: "Halo Ilham, saya menemukan berkas kasusmu",
+    en: "Hi Ilham, I found your case file",
+  } as Bilingual,
   links: [
     { label: "GitHub", href: "https://github.com/ilhamzik" },
     { label: "LinkedIn", href: "https://linkedin.com/in/ilhamzik" },
