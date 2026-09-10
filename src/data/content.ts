@@ -149,7 +149,7 @@ export const experience: ExperienceEntry[] = [
   {
     id: "exp-telkom",
     tag: { id: "BERKAS-A", en: "FILE-A" },
-    title: { id: "Praktikan, Tim CPO", en: "Intern, CPO Team" },
+    title: { id: "Praktikan, Divisi SDA", en: "Intern, SDA Division" },
     role: { id: "Data Analyst Intern @TelkomIndonesia", en: "Data Analyst Intern @TelkomIndonesia" },
     organization: { id: "SDA Division", en: "SDA Division" },
     period: { id: "Agu 2026 – Sekarang", en: "Aug 2026 – Present" },
@@ -503,8 +503,8 @@ export const caseSummary = {
     {
       label: { id: "Posisi sekarang", en: "Current post" } as Bilingual,
       value: {
-        id: "Data Analyst Intern, Tim CPO, Telkom Indonesia (Agu 2026 – Sekarang)",
-        en: "Data Analyst Intern, CPO Team, Telkom Indonesia (Aug 2026 – Present)",
+        id: "Data Analyst Intern, Divisi SDA, Telkom Indonesia (Agu 2026 – Sekarang)",
+        en: "Data Analyst Intern, SDA Division, Telkom Indonesia (Aug 2026 – Present)",
       } as Bilingual,
     },
     {
@@ -613,8 +613,8 @@ export const articles: Record<string, Bilingual> = {
     en: "Since his days at SDI PB Soedirman Cijantung, this East Jakarta kid has been confusing his teachers: feet on the football field, occasionally also entering math competitions, and both ran side by side all the way through SMPN 49 Jakarta. Everything changed when the pandemic hit right at the start of SMAN 39 Jakarta: the field shut down, leaving only Mobile Legends, Valorant, and late-night Netflix marathons. Luckily his trajectory straightened out again once he entered the Faculty of Computer Science, University of Indonesia, and four years later, walked out with a computer science degree and grades he'd describe as nothing special.",
   },
   experience: {
-    id: "Rekam jejak kerjanya dimulai dari balik layar booth Open House Fasilkom UI, lalu masuk ke dunia data lewat sebuah kedai kopi lokal, tempat analisis bundling produknya sukses menekan bahan baku terbuang. Aksinya berlanjut di tim kampanye pemilihan BEM, mengubah tumpukan data survei jadi dashboard yang benar-benar dipakai untuk ambil keputusan. Ceritanya kini berlanjut di kantor Telkom Indonesia sebagai praktikan di Tim CPO, baru sebulan, tapi sudah berkesempatan ikut serta di beberapa proyek tim.",
-    en: "His work record starts backstage at a Fasilkom UI Open House booth, then moves into the data world through a local coffee shop, where his product-bundling analysis successfully cut down wasted ingredients. The story continues on a BEM election campaign team, turning stacks of survey data into dashboards that actually got used to make decisions. It now continues at a Telkom Indonesia office as an intern on the CPO team, barely a month in, but already given the chance to take part in a few of the team's projects.",
+    id: "Rekam jejak kerjanya dimulai dari balik layar booth Open House Fasilkom UI, lalu masuk ke dunia data lewat sebuah kedai kopi lokal, tempat analisis bundling produknya sukses menekan bahan baku terbuang. Aksinya berlanjut di tim kampanye pemilihan BEM, mengubah tumpukan data survei jadi dashboard yang benar-benar dipakai untuk ambil keputusan. Ceritanya kini berlanjut di kantor Telkom Indonesia sebagai praktikan di Divisi SDA, baru sebulan, tapi sudah berkesempatan ikut serta di beberapa proyek tim.",
+    en: "His work record starts backstage at a Fasilkom UI Open House booth, then moves into the data world through a local coffee shop, where his product-bundling analysis successfully cut down wasted ingredients. The story continues on a BEM election campaign team, turning stacks of survey data into dashboards that actually got used to make decisions. It now continues at a Telkom Indonesia office as an intern in the SDA Division, barely a month in, but already given the chance to take part in a few of the team's projects.",
   },
   projects: {
     id: "Tumpukan berkas ini bukti bahwa rasa penasarannya nggak pernah berhenti di satu topik saja. Dimulai dari Telkom: dashboard live yang memantau rollout Astinet/SD-WAN ke ribuan gerai Indomaret, tool otomasi dashboard berbasis AI, dan dashboard untuk perayaan HUT RI perusahaan. Lalu berlanjut ke bedah data e-commerce Brasil untuk cari tahu kenapa paket telat tapi rating tetap bagus, skripsi yang mengubah obrolan dengan AI jadi taksonomi ilmiah lengkap dengan uji reliabilitas statistik, pemetaan 4.200 node jaringan web, sampai pembongkaran 33 ribu catatan serangan terorisme global. Semuanya demi satu tujuan sederhana: bikin data yang berantakan jadi masuk akal.",

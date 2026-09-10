@@ -1057,6 +1057,14 @@ seolah patch-nya tidak berefek. Selalu gerbangi dengan `npm run build`.
 
 ## Yang masih ditunggu dari user
 
+**Hierarki unit Telkom (dikoreksi 2026-09-10):** Telkom (perusahaan) -> Divisi
+SDA -> Unit CPO -> Sub-Unit RPD. User ada di RPD. Situs sebelumnya keliru
+menyebut "Tim CPO" sebagai timnya. Keputusan user: tampilkan **divisi saja**
+("Divisi SDA" / "SDA Division"), tanpa rantai akronim CPO/RPD. Sudah diberesin
+di `experience[0].title`, `caseSummary` baris "Posisi sekarang",
+`articles.experience`. `organization: "SDA Division"` dan caption foto memang
+sudah benar dari awal.
+
 Detail proyek Telkom **sudah terisi** (per 2026-09-07). Yang masih ditunggu:
 
 - **Screenshot dashboard** buat `CaseFile.exhibit`. Slot dan bar redaksinya
