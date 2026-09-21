@@ -34,13 +34,16 @@ export function useDialogFocus(open: boolean) {
       const el = ref.current;
       if (!el) return;
       const first = focusables()[0];
-      if (first) first.focus();
+      // `preventScroll` matters: a dialog taller than the viewport is its own
+      // scroll container, and focusing a control near the bottom scrolls it
+      // there, so the panel opens mid-document with its top sheared off.
+      if (first) first.focus({ preventScroll: true });
       else {
         // No controls inside (the easter-egg frame is nearly all artwork):
         // focus the panel itself so screen readers announce it and Tab has
         // somewhere to start.
         el.setAttribute("tabindex", "-1");
-        el.focus();
+        el.focus({ preventScroll: true });
       }
     });
 

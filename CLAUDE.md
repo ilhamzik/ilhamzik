@@ -603,6 +603,52 @@ Judulnya **"Agent K"** (permintaan user), pas sama trigger Ctrl+**K**, dengan
 `src/assets/photos/*-source.*`. Repo ini publik dan yang di-ship cuma siluet
 turunannya. Kalau perlu regenerate, minta user kirim ulang filenya dari luar
 repo. Yang ikut ke repo cuma `easter-egg-silhouette.png`.
+
+### Cara mendaratnya (2026-09-21)
+
+User: *"ketika ctrl+k (easter egg) landing. kayak gaenak gitu dia landingnya."*
+Penyebabnya bukan animasinya, tapi **dialognya kebuka dalam keadaan sudah
+ter-scroll ke bawah**.
+
+Bertumpuk (frame di atas, placard di bawah) tingginya ~990px, sementara
+containernya `max-h-[94vh] overflow-y-auto`. Di laptop mana pun yang lebih
+pendek dari itu dia jadi scroller, dan `useDialogFocus` memindahkan fokus ke
+baris dismiss yang ada di paling bawah, jadi browser menggulung containernya
+ke sana. Terukur di 1366x768: **scrollTop 273, rel emas bagian atas plus dua ornamen
+pojok atas plus seluruh kepala siluetnya kepotong di luar layar**. Di 1440x900
+kepotong 128px. Di 1920x1080 nyaris pas, jadi ini gampang lolos kalau cuma
+dicek di satu monitor besar.
+
+Tiga hal yang dibenerin:
+
+1. **`useDialogFocus` sekarang `focus({ preventScroll: true })`.** Ini berlaku
+   buat ketiga dialog (CaseFileModal, SummaryModal, SecretFrame). Aturan
+   umum: dialog yang jadi scroll containernya sendiri jangan pernah
+   di-`focus()` polos, kontrol yang kefokus bakal narik scroll ke posisinya.
+2. **Frame dan placard jadi bersebelahan mulai 960px** (`min-[960px]:flex-row`),
+   kayak label dinding galeri, dan frame-nya dibatasi tinggi viewport lewat
+   `max-w-[65vh]` (tingginya ~1.385x lebarnya). Frame tetap besar sesuai
+   permintaan user, tapi nggak pernah lebih tinggi dari layar.
+3. **Plakat kuningan `FILE X` itu `absolute`**, jadi dia nongol ~34px di bawah
+   frame tanpa menambah tinggi frame, dan `max-h` motong dia. Wrapper frame
+   sekarang punya `pb-[34px]` buat menyediakan ruangnya. Kalau mengubah
+   posisi plakat, ubah angka ini juga.
+
+Backdrop dikasih `backdrop-blur-sm` (sama kayak CaseFileModal): dengan
+`bg-ink-900/95` doang, headline WANTED dan sticky note di baliknya masih
+kebaca dan berebut perhatian sama frame-nya. Body scroll juga dikunci waktu
+kebuka, sama seperti CaseFileModal.
+
+Urutan animasinya sekarang punya tiga ketukan, bukan satu pop: frame
+**mendarat** (rotate -7 ke -1.5, spring), lalu stempel CLASSIFIED
+**digebrak** dari scale 2.6 (delay `FRAME_SETTLE` = 0.34s), lalu placard-nya
+dibaca baris demi baris (variants `staggerChildren` 0.075). Terukur lewat
+sampling `getComputedStyle` per 100ms, semuanya settle di ~1s.
+
+Verifikasinya di 11 ukuran viewport: semua mendarat `scrollTop: 0` dengan
+frame utuh dan plakat kelihatan. Yang masih perlu di-scroll buat baca
+placard-nya cuma jendela sempit-DAN-pendek (900x700, dan iPhone SE 375x667);
+di situ memang nggak muat dua-duanya, dan yang diprioritaskan gambarnya.
 
 ## ⚠️ User pernah lagi naruh aset di `dist/` (2026-09-07)
 
