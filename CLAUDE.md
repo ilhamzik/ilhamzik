@@ -596,8 +596,17 @@ Resep di `make-silhouette.py` (skrip ada di scratchpad session):
 Isi siluet **harus lebih gelap dari glow plate di belakangnya**. Percobaan
 sebelumnya isinya lebih terang dari background dan siluetnya hilang total.
 
-Judulnya **"Agent K"** (permintaan user), pas sama trigger Ctrl+**K**, dengan
+Judulnya **"K"** saja (permintaan user, 2026-09-22; sebelumnya "Agent K"),
+pas sama trigger Ctrl+**K**, dengan
 "Subjek Belum Teridentifikasi" jadi subtitle.
+
+Satu huruf **tidak bisa** dipakai di ukuran judul biasa: di `text-4xl` dia
+lebih sempit dari baris "SUBJECT UNIDENTIFIED" di bawahnya dan kebaca seperti
+salah ketik, bukan judul. Sekarang di-set sebagai monogram
+(`text-[58px] sm:text-[76px]`, `leading-[0.85]`). `tracking-wide` juga dibuang:
+di satu glyph itu cuma menambah celah di kanan yang bikin center-nya meleset.
+`aria-label` dialognya sekarang gabungan rubric + judul ("Sealed Archive: K"),
+karena "K" sendirian itu nama aksesibel yang nggak berguna.
 
 **Foto sumbernya sengaja TIDAK ada di repo** dan `.gitignore` memblokir
 `src/assets/photos/*-source.*`. Repo ini publik dan yang di-ship cuma siluet

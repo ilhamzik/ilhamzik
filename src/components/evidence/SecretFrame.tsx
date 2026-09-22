@@ -90,7 +90,7 @@ export function SecretFrame() {
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-label={t(secretFile.title)}
+            aria-label={`${t(secretFile.rubric)}: ${t(secretFile.title)}`}
             className="relative z-10 flex flex-wrap items-center justify-center gap-x-11 gap-y-5 max-h-[94vh] overflow-y-auto no-scrollbar"
             initial={{ opacity: 0, scale: 0.93, y: 30, rotate: -7 }}
             animate={{ opacity: 1, scale: 1, y: 0, rotate: -1.5 }}
@@ -234,7 +234,7 @@ export function SecretFrame() {
               </motion.p>
               <motion.h3
                 variants={line}
-                className="font-headline text-2xl sm:text-4xl font-black text-paper-100 mt-1.5 leading-none tracking-wide"
+                className="font-headline text-[58px] sm:text-[76px] font-black text-paper-100 mt-1 leading-[0.85] text-paper-100"
               >
                 {t(secretFile.title)}
               </motion.h3>

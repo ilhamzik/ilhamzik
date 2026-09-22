@@ -584,7 +584,7 @@ export const contact = {
 export const secretFile = {
   tag: { id: "BERKAS X", en: "FILE X" },
   rubric: { id: "Arsip Tertutup", en: "Sealed Archive" } as Bilingual,
-  title: { id: "Agent K", en: "Agent K" } as Bilingual,
+  title: { id: "K", en: "K" } as Bilingual,
   subtitle: { id: "Subjek Belum Teridentifikasi", en: "Subject Unidentified" } as Bilingual,
   caption: { id: "Cuma siluet yang masuk berkas. Sejauh ini.", en: "Only a silhouette made it into the file. So far." } as Bilingual,
   body: [
