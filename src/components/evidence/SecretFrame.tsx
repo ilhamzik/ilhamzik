@@ -26,8 +26,9 @@ const line: Variants = {
  * press-and-hold trigger dispatches (see `useHoldTrigger`), and sits above
  * everything else on the page, night shift and case modal included.
  *
- * Layout note: the frame and its placard sit side by side from 960px up, and
- * the frame is capped against viewport *height* (`max-w-[65vh]`, since its
+ * Layout note: the frame and its placard sit side by side whenever the row
+ * fits (plain `flex-wrap`, no breakpoint), and the frame is capped against
+ * viewport *height* (`max-w-[65vh]`, since its
  * height runs about 1.385x its width). Stacked, the pair came to ~990px tall,
  * so on any laptop shorter than that the panel turned into a scroller, and
  * because `useDialogFocus` moves focus to the dismiss line at the very bottom
@@ -90,7 +91,7 @@ export function SecretFrame() {
             role="dialog"
             aria-modal="true"
             aria-label={t(secretFile.title)}
-            className="relative z-10 flex flex-col items-center min-[960px]:flex-row min-[960px]:gap-11 max-h-[94vh] overflow-y-auto no-scrollbar"
+            className="relative z-10 flex flex-wrap items-center justify-center gap-x-11 gap-y-5 max-h-[94vh] overflow-y-auto no-scrollbar"
             initial={{ opacity: 0, scale: 0.93, y: 30, rotate: -7 }}
             animate={{ opacity: 1, scale: 1, y: 0, rotate: -1.5 }}
             exit={{ opacity: 0, scale: 0.96, y: 14, rotate: -4, transition: { duration: 0.18 } }}
@@ -211,13 +212,19 @@ export function SecretFrame() {
               </div>
             </div>
 
-            {/* The placard: under the frame when stacked, beside it as a
-                gallery wall label once there is room. */}
+            {/* The placard: a gallery wall label beside the frame, which
+                wraps below it when the row does not fit. The wrap is the
+                browser's call rather than a width breakpoint, because whether
+                the pair fits side by side depends on the frame's width, and
+                that is driven by viewport *height* (`max-w-[65vh]`). A
+                width-only breakpoint got this wrong on a 1366x768 laptop at
+                150% display scaling: 911x512 CSS px reads as "narrow", but the
+                frame there is only 333px and the pair fits easily. */}
             <motion.div
               variants={placard}
               initial="hidden"
               animate="show"
-              className="mt-4 sm:mt-6 min-[960px]:mt-0 w-[min(86vw,340px)] min-[960px]:w-[300px] shrink-0 text-center min-[960px]:text-left rotate-[1.5deg]"
+              className="w-[min(86vw,300px)] shrink-0 text-center rotate-[1.5deg]"
             >
               <motion.p
                 variants={line}
@@ -241,7 +248,7 @@ export function SecretFrame() {
                 {t(secretFile.caption)}
               </motion.p>
 
-              <div className="mt-3 space-y-2 max-w-[300px] mx-auto min-[960px]:mx-0">
+              <div className="mt-3 space-y-2">
                 {secretFile.body.map((para, i) => (
                   <motion.p
                     key={i}

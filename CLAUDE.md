@@ -625,7 +625,7 @@ Tiga hal yang dibenerin:
    buat ketiga dialog (CaseFileModal, SummaryModal, SecretFrame). Aturan
    umum: dialog yang jadi scroll containernya sendiri jangan pernah
    di-`focus()` polos, kontrol yang kefokus bakal narik scroll ke posisinya.
-2. **Frame dan placard jadi bersebelahan mulai 960px** (`min-[960px]:flex-row`),
+2. **Frame dan placard jadi bersebelahan** (`flex-wrap`, tanpa breakpoint),
    kayak label dinding galeri, dan frame-nya dibatasi tinggi viewport lewat
    `max-w-[65vh]` (tingginya ~1.385x lebarnya). Frame tetap besar sesuai
    permintaan user, tapi nggak pernah lebih tinggi dari layar.
@@ -647,8 +647,31 @@ sampling `getComputedStyle` per 100ms, semuanya settle di ~1s.
 
 Verifikasinya di 11 ukuran viewport: semua mendarat `scrollTop: 0` dengan
 frame utuh dan plakat kelihatan. Yang masih perlu di-scroll buat baca
-placard-nya cuma jendela sempit-DAN-pendek (900x700, dan iPhone SE 375x667);
-di situ memang nggak muat dua-duanya, dan yang diprioritaskan gambarnya.
+placard-nya cuma jendela sempit-DAN-tinggi (700x900, dan iPhone SE 375x667);
+di situ memang nggak muat dua-duanya, dan yang diprioritaskan gambarnya.
+
+### ⚠️ Breakpoint lebar itu salah alat buat layout yang dibatasi tinggi
+
+Versi pertama pakai `min-[960px]:flex-row`, dan user lapor **masih kescroll**.
+Sebabnya: muat-nggaknya bersebelahan tergantung lebar frame, dan lebar frame
+ditentukan **tinggi** viewport (`max-w-[65vh]`). Media query lebar nggak bisa
+menyatakan hubungan itu.
+
+Kasusnya bukan kasus pinggiran: laptop 1366x768 dengan **display scaling
+Windows 150%** punya viewport CSS 911x512. Lebarnya kebaca "sempit" jadi jatuh
+ke column, padahal di tinggi segitu frame-nya cuma 333px dan sebenarnya muat
+bersebelahan dengan sisa ruang banyak. Terukur: 282px masih perlu di-scroll.
+Sama di 1280x720 pada 150% (853x480) dan di jendela 800x600.
+
+Sekarang containernya cuma `flex flex-wrap` dengan `gap-x-11 gap-y-5`: browser
+yang menghitung, bersebelahan kalau barisnya muat, placard turun sendiri kalau
+nggak. Nol angka ajaib. Karena wrap nggak bisa dideteksi dari CSS, placard-nya
+sekarang **selalu `text-center`** (dulu `text-left` waktu bersebelahan) dan
+jaraknya diurus `gap-y`, bukan `mt-*` yang keyed breakpoint.
+
+**Aturan umum: kalau ukuran sebuah elemen dibatasi `vh`, jangan atur layoutnya
+pakai breakpoint lebar.** Pakai `flex-wrap`, biar browser yang memutuskan.
+
 
 ## ⚠️ User pernah lagi naruh aset di `dist/` (2026-09-07)
 
