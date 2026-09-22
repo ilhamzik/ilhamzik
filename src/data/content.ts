@@ -344,7 +344,7 @@ export const projects: ProjectEntry[] = [
         en: "Ran a data quality audit and exploratory analysis on Brazilian e-commerce transaction data (the Olist dataset), including root-cause investigation of order-item record mismatches. Analyzed revenue trends and month-over-month growth using SQL (CTEs, window functions), uncovering that a notable share of low-rated orders were, counterintuitively, delivered on time.",
       },
     ],
-    techStack: ["SQL (SQLite)", "Python", "Power BI"],
+    techStack: ["SQL (SQLite)", "Python"],
     capabilities: ["data-quality-audit", "sql-window", "growth-analysis", "root-cause"],
   },
   {
@@ -408,7 +408,6 @@ export const skills: SkillEntry[] = [
   { id: "skill-python", tag: { id: "SIDIK-02", en: "PRINT-02" }, title: { id: "Python", en: "Python" }, body: [{ id: "Bahasa utama untuk data cleaning, machine learning, dan riset.", en: "Primary language for data cleaning, machine learning, and research." }], proficiency: 4 },
   { id: "skill-ml", tag: { id: "SIDIK-03", en: "PRINT-03" }, title: { id: "Statistik & Machine Learning", en: "Statistics & Machine Learning" }, body: [{ id: "Klasifikasi, regresi, clustering, hingga validasi reliabilitas statistik.", en: "Classification, regression, clustering, through to statistical reliability validation." }], proficiency: 4 },
   { id: "skill-scikit", tag: { id: "SIDIK-04", en: "PRINT-04" }, title: { id: "Scikit-Learn", en: "Scikit-Learn" }, body: [{ id: "Dipakai membangun model klasifikasi/regresi di beberapa proyek.", en: "Used to build classification/regression models across several projects." }], proficiency: 4 },
-  { id: "skill-powerbi", tag: { id: "SIDIK-05", en: "PRINT-05" }, title: { id: "Power BI", en: "Power BI" }, body: [{ id: "Dashboard interaktif untuk visualisasi temuan analitik.", en: "Interactive dashboards for visualizing analytical findings." }], proficiency: 2 },
   { id: "skill-excel", tag: { id: "SIDIK-06", en: "PRINT-06" }, title: { id: "Excel", en: "Excel" }, body: [{ id: "Analisis dan pelaporan data cepat.", en: "Fast data analysis and reporting." }], proficiency: 2 },
   { id: "skill-cleaning", tag: { id: "SIDIK-07", en: "PRINT-07" }, title: { id: "Data Cleaning", en: "Data Cleaning" }, body: [{ id: "Audit kualitas data & investigasi akar masalah sebelum analisis.", en: "Data quality audits & root-cause investigation before analysis." }], proficiency: 4 },
   { id: "skill-git", tag: { id: "SIDIK-08", en: "PRINT-08" }, title: { id: "Git", en: "Git" }, body: [{ id: "Version control untuk kerja kode maupun kolaborasi.", en: "Version control for code work and collaboration." }], proficiency: 3 },
@@ -517,8 +516,8 @@ export const caseSummary = {
     {
       label: { id: "Perkakas utama", en: "Core toolkit" } as Bilingual,
       value: {
-        id: "SQL, Python, Power BI, Excel, Scikit-Learn, Git",
-        en: "SQL, Python, Power BI, Excel, Scikit-Learn, Git",
+        id: "SQL, Python, Scikit-Learn, Excel, Git",
+        en: "SQL, Python, Scikit-Learn, Excel, Git",
       } as Bilingual,
     },
   ],
@@ -629,8 +628,8 @@ export const articles: Record<string, Bilingual> = {
     en: "This stack of files is proof his curiosity never stays on one topic for long. It starts at Telkom: a live dashboard tracking Astinet/SD-WAN rollout across thousands of Indomaret stores, an AI-assisted dashboard automation tool, and a dashboard built for the company's HUT RI celebration. Then it wanders into dissecting Brazilian e-commerce data to figure out why late packages still got good ratings, a thesis that turned conversations with an AI into a scientific taxonomy complete with statistical reliability testing, mapping a 4,200-node web network, and cracking open 33,000 global terrorism incident records. All in service of one simple goal: making messy data make sense.",
   },
   skills: {
-    id: "Kalau ditanya senjata andalan buat bongkar-bongkar data, daftarnya cukup panjang: dari SQL dan Python untuk menggali informasi, sampai Power BI untuk bikin temuan itu enak dilihat orang lain. Tapi menurut pengakuannya sendiri, senjata yang paling sering dipakai bukan salah satu dari itu, melainkan rasa nggak enakan kalau ada data kotor yang dibiarkan lolos sebelum dianalisis.",
-    en: "Ask for his go-to weapons for cracking open data and the list runs long: SQL and Python for digging up information, Power BI for making the findings presentable. But by his own admission, the most-used weapon isn't any of those. It's a nagging discomfort whenever dirty data slips through unchecked before analysis.",
+    id: "Kalau ditanya senjata andalan buat bongkar-bongkar data, daftarnya cukup panjang: dari SQL dan Python untuk menggali informasi, sampai Scikit-Learn untuk memodelkannya. Tapi menurut pengakuannya sendiri, senjata yang paling sering dipakai bukan salah satu dari itu, melainkan rasa nggak enakan kalau ada data kotor yang dibiarkan lolos sebelum dianalisis.",
+    en: "Ask for his go-to weapons for cracking open data and the list runs long: SQL and Python for digging up information, Scikit-Learn for modelling it. But by his own admission, the most-used weapon isn't any of those. It's a nagging discomfort whenever dirty data slips through unchecked before analysis.",
   },
   interests: {
     id: "Di luar urusan data, hidupnya dikendalikan oleh tiga hal yang sebetulnya nggak ada hubungannya sama sekali: satu klub sepak bola yang disukai gara-gara lambangnya di PlayStation, satu member girl group yang jadi bias tanpa alasan yang bisa dijelaskan logika, dan satu motto sederhana yang diam-diam jadi kompas di balik keputusan-keputusan besarnya.",

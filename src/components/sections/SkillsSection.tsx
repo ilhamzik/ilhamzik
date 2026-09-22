@@ -9,7 +9,6 @@ import gitLogo from "../../assets/logos/git.svg";
 import sqliteLogo from "../../assets/logos/sqlite.svg";
 import scikitLearnLogo from "../../assets/logos/scikitlearn.svg";
 import excelLogo from "../../assets/logos/excel.svg";
-import powerbiLogo from "../../assets/logos/powerbi.svg";
 
 /**
  * Official brand logos for skills that are actual named tools/products.
@@ -21,7 +20,6 @@ const SKILL_LOGOS: Record<string, string> = {
   "skill-sql": sqliteLogo, // no logo exists for the SQL language itself; SQLite is the actual engine used
   "skill-python": pythonLogo,
   "skill-scikit": scikitLearnLogo,
-  "skill-powerbi": powerbiLogo,
   "skill-excel": excelLogo,
   "skill-git": gitLogo,
 };

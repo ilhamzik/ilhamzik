@@ -73,7 +73,7 @@ angka biasa, bukan gaya prosa. Pertahankan aturan ini untuk narasi baru.
 - ✅ Teks redaksi hover/klik-to-reveal (`RedactedText.tsx`, dipakai di sticky note rahasia Telkom)
 - ✅ Amplop tersegel dengan animasi buka (`SealedEnvelope.tsx`, dipakai untuk unduh CV)
 - ✅ Kursor kaca pembesar custom (bukan `zoom-in` browser bawaan lagi — SVG inline di `.magnifier-cursor`, index.css)
-- ✅ Meter "Case Completion" (`X/30` per 2026-09-08, dihitung otomatis, pojok kanan atas via `CaseFileContext`) + overlay "KASUS DITUTUP" saat 100%
+- ✅ Meter "Case Completion" (`X/29` per 2026-09-22, dihitung otomatis, pojok kanan atas via `CaseFileContext`) + overlay "KASUS DITUTUP" saat 100%
 - ✅ Maskot detektif kecil dengan speech-bubble hint kontekstual (`DetectiveGuide.tsx`, hint berubah sesuai progress)
 - ✅ Noda kopi fisik di beberapa titik kosong map (`PaperDecor.tsx`) + tepi sobek di seluruh world (`torn-edge-top/bottom` pada World Canvas)
 - ⬜ Tiket bioskop/boarding pass sobek — BELUM, perlu momen personal spesifik dari user dulu (jangan dikarang tanpa fakta).
@@ -187,9 +187,9 @@ Kalau user lapor masih ada yang aneh di device tertentu, mulai dari
 
 Skill yang punya brand/produk nyata sekarang pakai logo resmi asli (bukan
 ilustrasi generik) — diambil dari `devicons/devicon` (Python, Git, SQLite,
-Scikit-Learn — warna asli multi-tone) dan `simple-icons` untuk Excel/Power BI
+Scikit-Learn — warna asli multi-tone) dan `simple-icons` untuk Excel
 (produk Microsoft, tidak ada di devicon; SVG-nya monokrom by design jadi
-warna resmi di-inject manual: Excel `#217346`, Power BI `#F2C811`). Disimpan
+warna resmi di-inject manual: Excel `#217346`). Disimpan
 di `src/assets/logos/`, di-map lewat `SKILL_LOGOS` di `SkillsSection.tsx`.
 
 **Sengaja TIDAK dikasih logo**: "Statistik & Machine Learning" dan "Data
@@ -201,6 +201,32 @@ carikan logo, ikuti pola yang sama (biarkan pakai fallback fingerprint).
 "SQL" sendiri juga nggak punya logo resmi (itu bahasa/standar, bukan produk)
 — dipakaikan logo SQLite karena itu database engine konkret yang dipakai di
 salah satu proyek (`proj-ecommerce`), bukan klaim bahwa SQL = SQLite.
+
+### Power BI DIHAPUS atas permintaan user (2026-09-22)
+
+User: *"kayanya aku mau apus power bi aja deh. karena kurasa aku ga enjoy.
+aku lebih suka dashboarding dengan ngoding website/app walaupun fullstack."*
+Jadi ini keputusan sadar soal apa yang mau dia tawarkan, bukan kelalaian.
+**Jangan tambahkan lagi tanpa dia minta.** Yang ikut dibersihkan: entri
+`skill-powerbi` di `skills`, `SKILL_LOGOS` + `powerbi.svg` (file dihapus),
+baris "Perkakas utama" di `caseSummary`, `articles.skills` (Power BI diganti
+Scikit-Learn, yang memang sudah jadi skill terdaftar), `knowsAbout` di JSON-LD
+`index.html`, dan `techStack` proyek Olist (`proj-ecommerce`).
+
+Dua ekor yang ditinggalkan sengaja:
+
+- **Nomor `tag` nggak dirapikan**, jadi sekarang ada lompatan SIDIK-05 /
+  PRINT-05. Ini konsisten sama aturan di atas, dan di situs arsip begini
+  nomor yang bolong justru kebaca seperti berkas yang ditarik.
+- **`height` node `skills` di `mapLayout.ts` nggak diukur ulang.** Sekarang
+  dia over-estimate, dan itu aman: field ini cuma menentukan kapan node
+  di-mount/unmount, over-estimate nggak pernah motong konten dan nggak bisa
+  bikin overlap baru (sectionnya jadi lebih pendek, bukan lebih tinggi).
+
+⚠️ **`public/CV-Muhammad-Ilham-Zikri.pdf` kemungkinan besar masih menyebut
+Power BI**, dan itu file dari user, bukan yang di-generate repo ini. Amplop
+tersegel di section kontak mengunduh file itu apa adanya. Kalau user mau
+konsisten, dia yang harus kirim CV versi baru.
 
 ## Papan miniatur di kolom HP: `BoardMap` (2026-09-08)
 
