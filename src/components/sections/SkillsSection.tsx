@@ -6,6 +6,9 @@ import { useLanguage } from "../../context/LanguageContext";
 
 import pythonLogo from "../../assets/logos/python.svg";
 import gitLogo from "../../assets/logos/git.svg";
+import reactLogo from "../../assets/logos/react.svg";
+import nodeLogo from "../../assets/logos/nodejs.svg";
+import postgresLogo from "../../assets/logos/postgresql.svg";
 import sqliteLogo from "../../assets/logos/sqlite.svg";
 import scikitLearnLogo from "../../assets/logos/scikitlearn.svg";
 import excelLogo from "../../assets/logos/excel.svg";
@@ -22,6 +25,9 @@ const SKILL_LOGOS: Record<string, string> = {
   "skill-scikit": scikitLearnLogo,
   "skill-excel": excelLogo,
   "skill-git": gitLogo,
+  "skill-react": reactLogo,
+  "skill-node": nodeLogo,
+  "skill-postgres": postgresLogo,
 };
 
 /**

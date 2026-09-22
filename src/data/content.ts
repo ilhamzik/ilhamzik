@@ -410,6 +410,9 @@ export const skills: SkillEntry[] = [
   { id: "skill-scikit", tag: { id: "SIDIK-04", en: "PRINT-04" }, title: { id: "Scikit-Learn", en: "Scikit-Learn" }, body: [{ id: "Dipakai membangun model klasifikasi/regresi di beberapa proyek.", en: "Used to build classification/regression models across several projects." }], proficiency: 4 },
   { id: "skill-excel", tag: { id: "SIDIK-06", en: "PRINT-06" }, title: { id: "Excel", en: "Excel" }, body: [{ id: "Analisis dan pelaporan data cepat.", en: "Fast data analysis and reporting." }], proficiency: 2 },
   { id: "skill-cleaning", tag: { id: "SIDIK-07", en: "PRINT-07" }, title: { id: "Data Cleaning", en: "Data Cleaning" }, body: [{ id: "Audit kualitas data & investigasi akar masalah sebelum analisis.", en: "Data quality audits & root-cause investigation before analysis." }], proficiency: 4 },
+  { id: "skill-react", tag: { id: "SIDIK-09", en: "PRINT-09" }, title: { id: "React", en: "React" }, body: [{ id: "Dashboard dibangun sebagai aplikasi web sendiri, bukan diklik di tool BI.", en: "Dashboards built as web applications of their own, not clicked together in a BI tool." }], proficiency: 3 },
+  { id: "skill-node", tag: { id: "SIDIK-10", en: "PRINT-10" }, title: { id: "Node.js", en: "Node.js" }, body: [{ id: "Backend dan pipeline data di balik aplikasi pelaporan harian.", en: "The backend and data pipeline behind daily reporting applications." }], proficiency: 3 },
+  { id: "skill-postgres", tag: { id: "SIDIK-11", en: "PRINT-11" }, title: { id: "PostgreSQL", en: "PostgreSQL" }, body: [{ id: "Basis data untuk aplikasi pelaporan yang jalan di produksi.", en: "The database behind reporting applications running in production." }], proficiency: 3 },
   { id: "skill-git", tag: { id: "SIDIK-08", en: "PRINT-08" }, title: { id: "Git", en: "Git" }, body: [{ id: "Version control untuk kerja kode maupun kolaborasi.", en: "Version control for code work and collaboration." }], proficiency: 3 },
 ];
 
@@ -516,8 +519,8 @@ export const caseSummary = {
     {
       label: { id: "Perkakas utama", en: "Core toolkit" } as Bilingual,
       value: {
-        id: "SQL, Python, Scikit-Learn, Excel, Git",
-        en: "SQL, Python, Scikit-Learn, Excel, Git",
+        id: "SQL, Python, React, Node.js, PostgreSQL, Scikit-Learn, Git",
+        en: "SQL, Python, React, Node.js, PostgreSQL, Scikit-Learn, Git",
       } as Bilingual,
     },
   ],
@@ -628,8 +631,8 @@ export const articles: Record<string, Bilingual> = {
     en: "This stack of files is proof his curiosity never stays on one topic for long. It starts at Telkom: a live dashboard tracking Astinet/SD-WAN rollout across thousands of Indomaret stores, an AI-assisted dashboard automation tool, and a dashboard built for the company's HUT RI celebration. Then it wanders into dissecting Brazilian e-commerce data to figure out why late packages still got good ratings, a thesis that turned conversations with an AI into a scientific taxonomy complete with statistical reliability testing, mapping a 4,200-node web network, and cracking open 33,000 global terrorism incident records. All in service of one simple goal: making messy data make sense.",
   },
   skills: {
-    id: "Kalau ditanya senjata andalan buat bongkar-bongkar data, daftarnya cukup panjang: dari SQL dan Python untuk menggali informasi, sampai Scikit-Learn untuk memodelkannya. Tapi menurut pengakuannya sendiri, senjata yang paling sering dipakai bukan salah satu dari itu, melainkan rasa nggak enakan kalau ada data kotor yang dibiarkan lolos sebelum dianalisis.",
-    en: "Ask for his go-to weapons for cracking open data and the list runs long: SQL and Python for digging up information, Scikit-Learn for modelling it. But by his own admission, the most-used weapon isn't any of those. It's a nagging discomfort whenever dirty data slips through unchecked before analysis.",
+    id: "Kalau ditanya senjata andalan buat bongkar-bongkar data, daftarnya cukup panjang: dari SQL dan Python untuk menggali informasi, sampai Scikit-Learn untuk memodelkannya. Dashboardnya sendiri tidak diklik di tool BI, tapi dibangun sebagai aplikasi web: React di depan, Node.js dan PostgreSQL di belakang. Tapi menurut pengakuannya sendiri, senjata yang paling sering dipakai bukan salah satu dari itu, melainkan rasa nggak enakan kalau ada data kotor yang dibiarkan lolos sebelum dianalisis.",
+    en: "Ask for his go-to weapons for cracking open data and the list runs long: SQL and Python for digging up information, Scikit-Learn for modelling it. The dashboards themselves are not clicked together in a BI tool but built as web applications: React at the front, Node.js and PostgreSQL behind it. But by his own admission, the most-used weapon isn't any of those. It's a nagging discomfort whenever dirty data slips through unchecked before analysis.",
   },
   interests: {
     id: "Di luar urusan data, hidupnya dikendalikan oleh tiga hal yang sebetulnya nggak ada hubungannya sama sekali: satu klub sepak bola yang disukai gara-gara lambangnya di PlayStation, satu member girl group yang jadi bias tanpa alasan yang bisa dijelaskan logika, dan satu motto sederhana yang diam-diam jadi kompas di balik keputusan-keputusan besarnya.",

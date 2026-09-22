@@ -73,7 +73,7 @@ angka biasa, bukan gaya prosa. Pertahankan aturan ini untuk narasi baru.
 - ✅ Teks redaksi hover/klik-to-reveal (`RedactedText.tsx`, dipakai di sticky note rahasia Telkom)
 - ✅ Amplop tersegel dengan animasi buka (`SealedEnvelope.tsx`, dipakai untuk unduh CV)
 - ✅ Kursor kaca pembesar custom (bukan `zoom-in` browser bawaan lagi — SVG inline di `.magnifier-cursor`, index.css)
-- ✅ Meter "Case Completion" (`X/29` per 2026-09-22, dihitung otomatis, pojok kanan atas via `CaseFileContext`) + overlay "KASUS DITUTUP" saat 100%
+- ✅ Meter "Case Completion" (`X/32` per 2026-09-22, dihitung otomatis, pojok kanan atas via `CaseFileContext`) + overlay "KASUS DITUTUP" saat 100%
 - ✅ Maskot detektif kecil dengan speech-bubble hint kontekstual (`DetectiveGuide.tsx`, hint berubah sesuai progress)
 - ✅ Noda kopi fisik di beberapa titik kosong map (`PaperDecor.tsx`) + tepi sobek di seluruh world (`torn-edge-top/bottom` pada World Canvas)
 - ⬜ Tiket bioskop/boarding pass sobek — BELUM, perlu momen personal spesifik dari user dulu (jangan dikarang tanpa fakta).
@@ -227,6 +227,52 @@ Dua ekor yang ditinggalkan sengaja:
 Power BI**, dan itu file dari user, bukan yang di-generate repo ini. Amplop
 tersegel di section kontak mengunduh file itu apa adanya. Kalau user mau
 konsisten, dia yang harus kirim CV versi baru.
+
+### React / Node.js / PostgreSQL masuk menggantikan itu (2026-09-22)
+
+User menunjuk ke `~/Desktop/grind/telkom/` : *"semua yang ada disana cara aku
+buat dashboarding"*. Isinya lima proyek Telkom, dan **tidak satu pun lewat tool
+BI klik-klik**:
+
+| Proyek | Bentuknya |
+| --- | --- |
+| DATIN & HSI Daily Report | Node + Express, PostgreSQL, deploy serverless, mirror dua arah ke Sheets lewat Apps Script |
+| Indo Marco | React + Vite, Express/TS, Postgres, Docker two-stage, poller + cache 15 menit |
+| BMPD Connectivity | React + Vite + Recharts, baca file Excel langsung di browser (`xlsx`) |
+| CPOAutoDashboard | Node + Express, chart SVG tulis tangan tanpa library, LLM multi-provider + validator gate |
+| HUT RI 81 Event | Django, metrics API yang di-poll, plus otomasi Sheets ke PowerPoint di Python |
+
+Folder `telkom/cv-credits/` berisi ledger CV tulisan user sendiri per proyek.
+**Itu sumber yang benar** kalau butuh fakta soal kerjaan Telkom, jangan
+menyimpulkan sendiri dari kode.
+
+Yang ditambahkan ke situs: `skill-react`, `skill-node`, `skill-postgres`
+(SIDIK/PRINT-09, 10, 11), logo resmi dari devicon, plus `knowsAbout` di JSON-LD
+dan baris "Perkakas utama" di `caseSummary`. `articles.skills` sekarang bilang
+terang-terangan bahwa dashboardnya dibangun sebagai aplikasi web.
+
+**Batasnya ditarik sadar, jangan dilewati tanpa user minta:** Docker, Vercel,
+hosting, Apps Script, deployment, CI semuanya **tidak** dimasukkan, walaupun
+ada di repo-repo itu. User memilih opsi "sedang" waktu ditanya. Alasannya ada
+di `cv-credits/cv-draft-2026-09.md` tulisan user sendiri: daftar itu bikin dia
+*"terbaca sebagai web developer yang kebetulan pegang data"*.
+
+⚠️ **`proficiency: 3` untuk ketiganya itu tebakan Claude, belum dikonfirmasi
+user.** Dipilih 3 (bukan 4) karena catatan user sendiri menyebut coding-nya
+AI-assisted sementara analisisnya murni dia. Kalau user pernah menyebut angka
+lain, pakai angkanya.
+
+`NODES.skills.height` naik **1290 -> 1410** karena kartunya 7 jadi 10 (satu baris
+grid tambahan). Diukur ulang lewat `gallery.html?s=skills&w=900`: 1144 di
+jendela lebar, **1394 di jendela sempit** (ambil yang besar). Overlap
+diverifikasi ulang secara analitik untuk ketujuh node di dua lebar jendela:
+nol overlap, clearance tersempit tetap experience/skills 44px di kasus sempit,
+sama seperti sebelumnya (skills tumbuh ke bawah, bukan ke arah experience).
+Skripnya `overlap2.mjs` di scratchpad: dia mem-parse `NODES` langsung dari
+`mapLayout.ts` lalu mengukur tiap `.max-w-5xl` lewat rantai
+`offsetLeft`/`offsetTop`, jadi bebas transform peta. **Cara ini lebih baik
+daripada zoom-out di peta asli**, karena `minScale` 0.4 bikin world 2950x3840
+nggak pernah muat penuh di layar, jadi cuma 4 dari 7 node yang ter-mount.
 
 ## Papan miniatur di kolom HP: `BoardMap` (2026-09-08)
 
