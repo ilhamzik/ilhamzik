@@ -155,8 +155,8 @@ export const experience: ExperienceEntry[] = [
     period: { id: "Agu 2026 – Sekarang", en: "Aug 2026 – Present" },
     body: [
       {
-        id: "Baru memasuki bulan kedua magang, dan sudah ikut membangun beberapa sistem nyata: dashboard pemantauan rollout Astinet/SD-WAN untuk jaringan Indomaret, tool otomasi dashboard berbasis AI, dan dashboard live plus otomasi presentasi untuk perayaan HUT RI perusahaan. Ketiganya sudah boleh diceritakan, lihat Ruang Bukti untuk detailnya.",
-        en: "Just entering the second month of this internship, and already helped build a few real systems: a rollout-monitoring dashboard for Indomaret's Astinet/SD-WAN network, an AI-assisted dashboard automation tool, and a live dashboard plus presentation automation for the company's HUT RI celebration. All three are fair game to talk about now, see the Exhibit Room for the details.",
+        id: "Baru memasuki bulan kedua magang, dan sudah ikut membangun beberapa sistem nyata: dashboard pemantauan rollout Astinet/SD-WAN untuk jaringan Indomaret, tool otomasi dashboard berbasis AI, dashboard live plus otomasi presentasi untuk perayaan HUT RI perusahaan, dan analisis data proyek yang merumuskan cara mengukur performa PM, yang sebagian rekomendasinya sudah dipakai tim. Semuanya sudah boleh diceritakan, lihat Ruang Bukti untuk detailnya.",
+        en: "Just entering the second month of this internship, and already helped build a few real systems: a rollout-monitoring dashboard for Indomaret's Astinet/SD-WAN network, an AI-assisted dashboard automation tool, a live dashboard plus presentation automation for the company's HUT RI celebration, and a project-data analysis that worked out how to measure PM performance, with several of its recommendations since adopted by the team. All of it is fair game to talk about now, see the Exhibit Room for the details.",
       },
     ],
     stamp: { id: "AKTIF", en: "ACTIVE" },
@@ -258,6 +258,7 @@ export const capabilityCatalog: Record<string, { label: Bilingual; area: Capabil
 
   "dashboard-design": { label: { id: "Desain Dashboard", en: "Dashboard Design" }, area: "bi" },
   "kpi-monitoring": { label: { id: "Pemantauan KPI", en: "KPI Monitoring" }, area: "bi" },
+  "metric-framework": { label: { id: "Desain Kerangka Metrik", en: "Metric Framework Design" }, area: "bi" },
   drilldown: { label: { id: "Analisis Drill-down", en: "Drill-down Analysis" }, area: "bi" },
   "exec-reporting": { label: { id: "Pelaporan Eksekutif", en: "Executive Reporting" }, area: "bi" },
   "self-service-bi": { label: { id: "BI Mandiri", en: "Self-Service BI" }, area: "bi" },
@@ -269,6 +270,7 @@ export const capabilityCatalog: Record<string, { label: Bilingual; area: Capabil
 
   "predictive-modeling": { label: { id: "Pemodelan Prediktif", en: "Predictive Modeling" }, area: "modeling" },
   segmentation: { label: { id: "Segmentasi", en: "Segmentation" }, area: "modeling" },
+  "hypothesis-testing": { label: { id: "Uji Hipotesis Statistik", en: "Statistical Hypothesis Testing" }, area: "modeling" },
   "model-evaluation": { label: { id: "Evaluasi Model", en: "Model Evaluation" }, area: "modeling" },
   "text-classification": { label: { id: "Klasifikasi Teks", en: "Text Classification" }, area: "modeling" },
   "taxonomy-design": { label: { id: "Desain Taksonomi", en: "Taxonomy Design" }, area: "modeling" },
@@ -280,8 +282,34 @@ export const capabilityCatalog: Record<string, { label: Bilingual; area: Capabil
 
 export const projects: ProjectEntry[] = [
   {
-    id: "proj-rollout-dashboard",
+    id: "proj-pm-metrics",
     tag: { id: "BUKTI A", en: "EXHIBIT A" },
+    title: { id: "Kerangka Metrik Performa PM & Analisis Data Proyek", en: "PM Performance Metric Framework & Project Data Analysis" },
+    subtitle: { id: "Proyek internal, Telkom Indonesia, Sep 2026", en: "Internal project, Telkom Indonesia, Sep 2026" },
+    body: [
+      {
+        id: "Permintaannya cuma satu kalimat: dashboard proyek tim juga harus bisa “memantau performa PM dan Co-PM”, tanpa ada yang tahu persis artinya apa. Alih-alih menyodorkan daftar KPI generik, datanya diprofil dulu. 178 proyek dimuat ke SQLite, semua metrik turunan dihitung di satu view, termasuk median yang dirakit dari window function karena SQLite nggak punya MEDIAN. Hasilnya kerangka 27 metrik di 6 pilar, dan tiap metrik diberi skor kekuatan sinyal 1–5 serta dibela oleh temuan yang bisa direproduksi lewat query.",
+        en: "The ask was a single sentence: the team's project dashboard should also “track PM and Co-PM performance”, and nobody knew exactly what that meant. Instead of proposing a generic KPI list, he profiled the data first. 178 projects went into SQLite, every derived metric was computed in one view, including medians assembled from window functions because SQLite has no MEDIAN. The result was a 27-metric framework across 6 pillars, each metric rated 1–5 on signal strength and backed by a finding a query can reproduce.",
+      },
+      {
+        id: "Temuan utamanya: ketepatan waktu turun dari 48% saat pekerjaan teknis selesai ke 22% saat proyek ditutup formal, jadi sebagian besar “keterlambatan” datang dari administrasi penutupan, bukan dari lapangan. Keadilannya diuji, bukan diasumsikan: skor dinormalkan terhadap ukuran proyek yang terbukti memengaruhi lama pengerjaan (jumlah order, Spearman ρ = 0,29), dan sinyal peringatan dini untuk target yang terlalu ketat di-backtest dulu (71% lawan 38% terlambat) sebelum dipasang ke dashboard.",
+        en: "The headline finding: on-time performance drops from 48% at technical completion to 22% at formal project closure, so most of the “lateness” comes from administrative close-out, not the field. Fairness was tested rather than assumed: scores are normalised against the project-size factor that actually drives delivery time (order count, Spearman ρ = 0.29), and an early-warning signal for unusually tight targets was backtested first (71% vs 38% late) before it went into the dashboard.",
+      },
+      {
+        id: "Sebagian rekomendasinya sudah dipakai tim: beberapa metrik fase pertama diadopsi, dan fitur dashboard yang diturunkan dari analisis ini (sinyal target ketat, progres yang dihitung dari order, aturan kualitas data) tetap dipakai di dashboard live.",
+        en: "Several of the recommendations were adopted by the team: some of the phase-one metrics were taken up, and the dashboard features derived from this analysis (the tight-target signal, progress computed from actual orders, the data-quality rules) remain in use on the live dashboard.",
+      },
+    ],
+    techStack: ["SQL (SQLite)", "Python", "Pandas", "SciPy", "Jupyter"],
+    capabilities: ["metric-framework", "sql-window", "data-quality-audit", "hypothesis-testing", "kpi-monitoring"],
+    metrics: [
+      { value: { id: "27", en: "27" }, label: { id: "Metrik dirancang di 6 pilar", en: "Metrics designed across 6 pillars" } },
+      { value: { id: "48% → 22%", en: "48% → 22%" }, label: { id: "Tepat waktu: selesai teknis → tutup formal", en: "On time: technical completion → formal closure" } },
+    ],
+  },
+  {
+    id: "proj-rollout-dashboard",
+    tag: { id: "BUKTI B", en: "EXHIBIT B" },
     title: { id: "Dashboard Pemantauan Rollout Infrastruktur Live", en: "Live Infrastructure Rollout Monitoring Dashboard" },
     subtitle: { id: "Telkom Indonesia × Indomaret, Agu 2026 – Sekarang", en: "Telkom Indonesia × Indomaret, Aug 2026 – Present" },
     body: [
@@ -299,7 +327,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-dashboard-tool",
-    tag: { id: "BUKTI B", en: "EXHIBIT B" },
+    tag: { id: "BUKTI C", en: "EXHIBIT C" },
     title: { id: "Tool Otomasi Dashboard Berbasis AI", en: "AI-Assisted Dashboard Automation Tool" },
     subtitle: { id: "Proyek internal, Telkom Indonesia, Agu 2026 – Sekarang", en: "Internal tool, Telkom Indonesia, Aug 2026 – Present" },
     body: [
@@ -317,7 +345,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-hutri",
-    tag: { id: "BUKTI C", en: "EXHIBIT C" },
+    tag: { id: "BUKTI D", en: "EXHIBIT D" },
     title: { id: "Dashboard & Otomasi Presentasi Perayaan HUT RI", en: "HUT RI Celebration Dashboard & Presentation Automation" },
     subtitle: { id: "Proyek internal, Telkom Indonesia, Agu 2026", en: "Internal project, Telkom Indonesia, Aug 2026" },
     body: [
@@ -335,7 +363,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-ecommerce",
-    tag: { id: "BUKTI D", en: "EXHIBIT D" },
+    tag: { id: "BUKTI E", en: "EXHIBIT E" },
     title: { id: "Analisis Penjualan & Pengiriman E-Commerce", en: "E-Commerce Sales & Delivery Performance Analysis" },
     subtitle: { id: "Proyek pribadi (sedang berjalan), Jul 2026", en: "Personal project (in progress), Jul 2026" },
     body: [
@@ -349,7 +377,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-thesis",
-    tag: { id: "BUKTI E", en: "EXHIBIT E" },
+    tag: { id: "BUKTI F", en: "EXHIBIT F" },
     title: { id: "Klasifikasi Pola Prompt GenAI (Skripsi)", en: "GenAI Prompt Pattern Classification (Thesis)" },
     subtitle: { id: "Skripsi Sarjana, Fasilkom UI, Feb–Jun 2026", en: "Undergraduate Thesis, Fasilkom UI, Feb–Jun 2026" },
     body: [
@@ -367,7 +395,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-webgraph",
-    tag: { id: "BUKTI F", en: "EXHIBIT F" },
+    tag: { id: "BUKTI G", en: "EXHIBIT G" },
     title: { id: "Analisis Jaringan Web & Deteksi Komunitas", en: "Web Graph Network Analysis and Community Detection" },
     subtitle: { id: "Proyek Kelompok Data Mining, Feb–Jun 2025", en: "Data Mining Course Group Project, Feb–Jun 2025" },
     body: [
@@ -385,7 +413,7 @@ export const projects: ProjectEntry[] = [
   },
   {
     id: "proj-terrorism",
-    tag: { id: "BUKTI G", en: "EXHIBIT G" },
+    tag: { id: "BUKTI H", en: "EXHIBIT H" },
     title: { id: "Analisis Data Terorisme Global & Model ML", en: "Global Terrorism Data Analysis and ML Model" },
     subtitle: { id: "Proyek Akhir KASDD, Agu–Des 2024", en: "KASDD Course Final Project, Aug–Dec 2024" },
     body: [
@@ -627,8 +655,8 @@ export const articles: Record<string, Bilingual> = {
     en: "His work record starts backstage at a Fasilkom UI Open House booth, then moves into the data world through a local coffee shop, where his product-bundling analysis successfully cut down wasted ingredients. The story continues on a BEM election campaign team, turning stacks of survey data into dashboards that actually got used to make decisions. It now continues at a Telkom Indonesia office as an intern in the SDA Division, barely a month in, but already given the chance to take part in a few of the team's projects.",
   },
   projects: {
-    id: "Tumpukan berkas ini bukti bahwa rasa penasarannya nggak pernah berhenti di satu topik saja. Dimulai dari Telkom: dashboard live yang memantau rollout Astinet/SD-WAN ke ribuan gerai Indomaret, tool otomasi dashboard berbasis AI, dan dashboard untuk perayaan HUT RI perusahaan. Lalu berlanjut ke bedah data e-commerce Brasil untuk cari tahu kenapa paket telat tapi rating tetap bagus, skripsi yang mengubah obrolan dengan AI jadi taksonomi ilmiah lengkap dengan uji reliabilitas statistik, pemetaan 4.200 node jaringan web, sampai pembongkaran 33 ribu catatan serangan terorisme global. Semuanya demi satu tujuan sederhana: bikin data yang berantakan jadi masuk akal.",
-    en: "This stack of files is proof his curiosity never stays on one topic for long. It starts at Telkom: a live dashboard tracking Astinet/SD-WAN rollout across thousands of Indomaret stores, an AI-assisted dashboard automation tool, and a dashboard built for the company's HUT RI celebration. Then it wanders into dissecting Brazilian e-commerce data to figure out why late packages still got good ratings, a thesis that turned conversations with an AI into a scientific taxonomy complete with statistical reliability testing, mapping a 4,200-node web network, and cracking open 33,000 global terrorism incident records. All in service of one simple goal: making messy data make sense.",
+    id: "Tumpukan berkas ini bukti bahwa rasa penasarannya nggak pernah berhenti di satu topik saja. Dimulai dari Telkom: analisis data proyek yang membuktikan bahwa keterlambatan terbesar justru terjadi di meja administrasi, bukan di lapangan, dashboard live yang memantau rollout Astinet/SD-WAN ke ribuan gerai Indomaret, tool otomasi dashboard berbasis AI, dan dashboard untuk perayaan HUT RI perusahaan. Lalu berlanjut ke bedah data e-commerce Brasil untuk cari tahu kenapa paket telat tapi rating tetap bagus, skripsi yang mengubah obrolan dengan AI jadi taksonomi ilmiah lengkap dengan uji reliabilitas statistik, pemetaan 4.200 node jaringan web, sampai pembongkaran 33 ribu catatan serangan terorisme global. Semuanya demi satu tujuan sederhana: bikin data yang berantakan jadi masuk akal.",
+    en: "This stack of files is proof his curiosity never stays on one topic for long. It starts at Telkom: a project-data analysis proving that the biggest delays happen at the admin desk, not in the field, a live dashboard tracking Astinet/SD-WAN rollout across thousands of Indomaret stores, an AI-assisted dashboard automation tool, and a dashboard built for the company's HUT RI celebration. Then it wanders into dissecting Brazilian e-commerce data to figure out why late packages still got good ratings, a thesis that turned conversations with an AI into a scientific taxonomy complete with statistical reliability testing, mapping a 4,200-node web network, and cracking open 33,000 global terrorism incident records. All in service of one simple goal: making messy data make sense.",
   },
   skills: {
     id: "Kalau ditanya senjata andalan buat bongkar-bongkar data, daftarnya cukup panjang: dari SQL dan Python untuk menggali informasi, sampai Scikit-Learn untuk memodelkannya. Dashboardnya sendiri tidak diklik di tool BI, tapi dibangun sebagai aplikasi web: React di depan, Node.js dan PostgreSQL di belakang. Tapi menurut pengakuannya sendiri, senjata yang paling sering dipakai bukan salah satu dari itu, melainkan rasa nggak enakan kalau ada data kotor yang dibiarkan lolos sebelum dianalisis.",
@@ -678,8 +706,8 @@ export const stickyNotes: Partial<Record<string, CaseFile>> = {
     title: { id: "Soal proyek di Telkom", en: "About the Telkom projects" },
     body: [
       {
-        id: "Update: ternyata semuanya bisa dibongkar. Tiga berkas, satu partner ritel raksasa, nol drama NDA. Detail lengkap ada di Ruang Bukti.",
-        en: "Update: turns out it could all be cracked open after all. Three case files, one giant retail partner, zero NDA drama. Full details in the Exhibit Room.",
+        id: "Update: ternyata semuanya bisa dibongkar. Empat berkas, satu partner ritel raksasa, nol drama NDA. Detail lengkap ada di Ruang Bukti.",
+        en: "Update: turns out it could all be cracked open after all. Four case files, one giant retail partner, zero NDA drama. Full details in the Exhibit Room.",
       },
     ],
     redacted: {
