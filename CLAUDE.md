@@ -223,10 +223,21 @@ Dua ekor yang ditinggalkan sengaja:
   di-mount/unmount, over-estimate nggak pernah motong konten dan nggak bisa
   bikin overlap baru (sectionnya jadi lebih pendek, bukan lebih tinggi).
 
-⚠️ **`public/CV-Muhammad-Ilham-Zikri.pdf` kemungkinan besar masih menyebut
-Power BI**, dan itu file dari user, bukan yang di-generate repo ini. Amplop
-tersegel di section kontak mengunduh file itu apa adanya. Kalau user mau
-konsisten, dia yang harus kirim CV versi baru.
+**`public/CV-Muhammad-Ilham-Zikri.pdf` sudah sinkron (2026-09-28).** Dulu file
+ini masih menyebut Power BI dan tidak pernah ikut dibersihkan. Sekarang dia
+hasil ekspor dari Google Doc CV milik user
+(`docs.google.com/document/d/19YDnfxGbtzVEdOfZdYzhlQ8Q9uzrQ_bGm0fj4mRTS4Q`,
+diedit lewat Claude in Chrome untuk lamaran Bank Mandiri ODP IT jalur data).
+Terverifikasi: 1 halaman, nol "Power BI", nol em dash, dan memuat
+`https://www.ilhamzik.online/` di baris kontak.
+
+**Google Doc itu sumbernya, bukan PDF ini.** Kalau isinya perlu berubah lagi,
+edit doc-nya lalu ekspor ulang ke path yang sama (`content.ts:resumeHref` dan
+`index.html` menunjuk ke nama file ini, jangan diganti). Aturan isi CV-nya ada
+di `~/Desktop/grind/telkom/cv-credits/BRIEF-edit-cv-google-doc.md`: tanpa Power
+BI, tanpa em dash, tanpa nama klien/rupiah/nama orang, tetap satu halaman.
+React/Node/Docker sengaja TIDAK ada di CV walau ada di situs ini, itu keputusan
+sadar user (alasannya di `cv-credits/cv-draft-2026-09.md`).
 
 ### React / Node.js / PostgreSQL masuk menggantikan itu (2026-09-22)
 
@@ -684,51 +695,51 @@ karena "K" sendirian itu nama aksesibel yang nggak berguna.
 `src/assets/photos/*-source.*`. Repo ini publik dan yang di-ship cuma siluet
 turunannya. Kalau perlu regenerate, minta user kirim ulang filenya dari luar
 repo. Yang ikut ke repo cuma `easter-egg-silhouette.png`.
-
-### Cara mendaratnya (2026-09-21)
-
-User: *"ketika ctrl+k (easter egg) landing. kayak gaenak gitu dia landingnya."*
-Penyebabnya bukan animasinya, tapi **dialognya kebuka dalam keadaan sudah
-ter-scroll ke bawah**.
-
-Bertumpuk (frame di atas, placard di bawah) tingginya ~990px, sementara
-containernya `max-h-[94vh] overflow-y-auto`. Di laptop mana pun yang lebih
-pendek dari itu dia jadi scroller, dan `useDialogFocus` memindahkan fokus ke
-baris dismiss yang ada di paling bawah, jadi browser menggulung containernya
-ke sana. Terukur di 1366x768: **scrollTop 273, rel emas bagian atas plus dua ornamen
-pojok atas plus seluruh kepala siluetnya kepotong di luar layar**. Di 1440x900
-kepotong 128px. Di 1920x1080 nyaris pas, jadi ini gampang lolos kalau cuma
-dicek di satu monitor besar.
-
-Tiga hal yang dibenerin:
-
-1. **`useDialogFocus` sekarang `focus({ preventScroll: true })`.** Ini berlaku
-   buat ketiga dialog (CaseFileModal, SummaryModal, SecretFrame). Aturan
-   umum: dialog yang jadi scroll containernya sendiri jangan pernah
-   di-`focus()` polos, kontrol yang kefokus bakal narik scroll ke posisinya.
-2. **Frame dan placard jadi bersebelahan** (`flex-wrap`, tanpa breakpoint),
-   kayak label dinding galeri, dan frame-nya dibatasi tinggi viewport lewat
-   `max-w-[65vh]` (tingginya ~1.385x lebarnya). Frame tetap besar sesuai
-   permintaan user, tapi nggak pernah lebih tinggi dari layar.
-3. **Plakat kuningan `FILE X` itu `absolute`**, jadi dia nongol ~34px di bawah
-   frame tanpa menambah tinggi frame, dan `max-h` motong dia. Wrapper frame
-   sekarang punya `pb-[34px]` buat menyediakan ruangnya. Kalau mengubah
-   posisi plakat, ubah angka ini juga.
-
-Backdrop dikasih `backdrop-blur-sm` (sama kayak CaseFileModal): dengan
-`bg-ink-900/95` doang, headline WANTED dan sticky note di baliknya masih
-kebaca dan berebut perhatian sama frame-nya. Body scroll juga dikunci waktu
-kebuka, sama seperti CaseFileModal.
-
-Urutan animasinya sekarang punya tiga ketukan, bukan satu pop: frame
-**mendarat** (rotate -7 ke -1.5, spring), lalu stempel CLASSIFIED
-**digebrak** dari scale 2.6 (delay `FRAME_SETTLE` = 0.34s), lalu placard-nya
-dibaca baris demi baris (variants `staggerChildren` 0.075). Terukur lewat
-sampling `getComputedStyle` per 100ms, semuanya settle di ~1s.
-
-Verifikasinya di 11 ukuran viewport: semua mendarat `scrollTop: 0` dengan
-frame utuh dan plakat kelihatan. Yang masih perlu di-scroll buat baca
-placard-nya cuma jendela sempit-DAN-tinggi (700x900, dan iPhone SE 375x667);
+
+### Cara mendaratnya (2026-09-21)
+
+User: *"ketika ctrl+k (easter egg) landing. kayak gaenak gitu dia landingnya."*
+Penyebabnya bukan animasinya, tapi **dialognya kebuka dalam keadaan sudah
+ter-scroll ke bawah**.
+
+Bertumpuk (frame di atas, placard di bawah) tingginya ~990px, sementara
+containernya `max-h-[94vh] overflow-y-auto`. Di laptop mana pun yang lebih
+pendek dari itu dia jadi scroller, dan `useDialogFocus` memindahkan fokus ke
+baris dismiss yang ada di paling bawah, jadi browser menggulung containernya
+ke sana. Terukur di 1366x768: **scrollTop 273, rel emas bagian atas plus dua ornamen
+pojok atas plus seluruh kepala siluetnya kepotong di luar layar**. Di 1440x900
+kepotong 128px. Di 1920x1080 nyaris pas, jadi ini gampang lolos kalau cuma
+dicek di satu monitor besar.
+
+Tiga hal yang dibenerin:
+
+1. **`useDialogFocus` sekarang `focus({ preventScroll: true })`.** Ini berlaku
+   buat ketiga dialog (CaseFileModal, SummaryModal, SecretFrame). Aturan
+   umum: dialog yang jadi scroll containernya sendiri jangan pernah
+   di-`focus()` polos, kontrol yang kefokus bakal narik scroll ke posisinya.
+2. **Frame dan placard jadi bersebelahan** (`flex-wrap`, tanpa breakpoint),
+   kayak label dinding galeri, dan frame-nya dibatasi tinggi viewport lewat
+   `max-w-[65vh]` (tingginya ~1.385x lebarnya). Frame tetap besar sesuai
+   permintaan user, tapi nggak pernah lebih tinggi dari layar.
+3. **Plakat kuningan `FILE X` itu `absolute`**, jadi dia nongol ~34px di bawah
+   frame tanpa menambah tinggi frame, dan `max-h` motong dia. Wrapper frame
+   sekarang punya `pb-[34px]` buat menyediakan ruangnya. Kalau mengubah
+   posisi plakat, ubah angka ini juga.
+
+Backdrop dikasih `backdrop-blur-sm` (sama kayak CaseFileModal): dengan
+`bg-ink-900/95` doang, headline WANTED dan sticky note di baliknya masih
+kebaca dan berebut perhatian sama frame-nya. Body scroll juga dikunci waktu
+kebuka, sama seperti CaseFileModal.
+
+Urutan animasinya sekarang punya tiga ketukan, bukan satu pop: frame
+**mendarat** (rotate -7 ke -1.5, spring), lalu stempel CLASSIFIED
+**digebrak** dari scale 2.6 (delay `FRAME_SETTLE` = 0.34s), lalu placard-nya
+dibaca baris demi baris (variants `staggerChildren` 0.075). Terukur lewat
+sampling `getComputedStyle` per 100ms, semuanya settle di ~1s.
+
+Verifikasinya di 11 ukuran viewport: semua mendarat `scrollTop: 0` dengan
+frame utuh dan plakat kelihatan. Yang masih perlu di-scroll buat baca
+placard-nya cuma jendela sempit-DAN-tinggi (700x900, dan iPhone SE 375x667);
 di situ memang nggak muat dua-duanya, dan yang diprioritaskan gambarnya.
 
 ### ⚠️ Breakpoint lebar itu salah alat buat layout yang dibatasi tinggi
@@ -1205,6 +1216,29 @@ seolah patch-nya tidak berefek. Selalu gerbangi dengan `npm run build`.
   bounding rect `.max-w-5xl` tiap section secara pairwise, di jendela lebar
   DAN sempit. Caranya ada di `card-previews/README.md`.
 
+## Exhibit A: analisis performa PM di BMPD (2026-09-28)
+
+Sumbernya `telkom/cv-credits/bmpd-pm-performance-analysis.md`. Masuk sebagai
+`proj-pm-metrics`, ditaruh **paling depan** (EXHIBIT A) karena ini satu-satunya
+berkas yang berakhir di rekomendasi yang dipakai. Semua exhibit lain bergeser
+satu huruf (Indomaret sekarang B, ..., terorisme H). Huruf di `ExhibitTag`
+diambil dari `tag`, jadi nggak ada tempat lain yang perlu diubah.
+
+**Dampak yang dikonfirmasi user, dan cuma ini:** beberapa metrik fase 1
+diadopsi, dan fitur dashboard hasil analisisnya (sinyal target ketat, progres
+dari order, aturan kualitas data) tetap dipakai. Closing SLA dan cleansing data
+**tidak** dikonfirmasi, jangan diklaim. User memilih frasa "sebagian
+rekomendasi dipakai" tanpa angka dan tanpa keterangan saksi.
+
+Batas privasi dari ledger-nya: nama klien, nilai rupiah, dan nama orang nggak
+boleh masuk. Kata "BMPD" juga sengaja nggak dipakai di copy, cukup "proyek
+internal". Angka relatif (48% ke 22%, 27 metrik, 71% lawan 38%) sudah cukup.
+
+`projects.height` 1560 -> **1640** (terukur 1617 lebar / 1556 sempit, dulu
+1533/1490; paragraf artikel yang lebih panjang yang bikin naik, bukan baris
+grid). Karena itu `WORLD_HEIGHT` **3840 -> 3920**. Projects cuma tumbuh ke
+bawah, ke area kosong, jadi overlap nggak mungkin bertambah.
+
 ## Yang masih ditunggu dari user
 
 **Hierarki unit Telkom (dikoreksi 2026-09-10):** Telkom (perusahaan) -> Divisi
@@ -1226,7 +1260,11 @@ Detail proyek Telkom **sudah terisi** (per 2026-09-07). Yang masih ditunggu:
   mengarang URL**: link mati lebih buruk daripada nggak ada link.
 - **2 sampai 3 keterangan saksi lagi** (supervisor Telkom, tim BEM). Baru ada
   satu, dari pemilik Tentang Kopi. Lihat aturan kejujurannya di atas.
-- **Domain final**, buat mengabsolutkan `og:image`.
+- ~~**Domain final**~~ SUDAH ADA (2026-09-28): **https://www.ilhamzik.online/**
+  (user menyebutnya sendiri, dan URL itu juga sudah dia pasang di baris kontak
+  CV-nya). Jadi pekerjaan yang tadinya nunggu ini sekarang bisa jalan:
+  absolutkan `og:image`/`twitter:image` di `index.html` dan tambah `og:url`.
+  **Belum dikerjakan**, user belum minta.
 
 Semua yang lain (nama sekolah SD/SMP/SMA, cerita masa sekolah, 2 minat tambahan di luar Man United) sudah lengkap per 2026-08-30.
 
